@@ -46,7 +46,6 @@ class ArtistController extends Controller
         $artist->save();
 
         return redirect()->route('artist.index');
-
     }
 
     /**
@@ -97,6 +96,8 @@ class ArtistController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        Artist::destroy($id);
+
+        return redirect()->route('artist.index');
     }
 }
