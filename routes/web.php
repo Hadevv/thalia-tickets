@@ -32,10 +32,6 @@ Route::delete('/artist/{id}', [ArtistController::class, 'destroy'])
 
 Route::get('/artist/create', [ArtistController::class, 'create'])->name('artist.create');
 
-
-
-
-
-
+Route::post('/artist', [ArtistController::class, 'store'])->name('artist.store');
 
 require __DIR__ . '/auth.php';

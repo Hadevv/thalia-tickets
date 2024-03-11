@@ -25,7 +25,7 @@ class ArtistController extends Controller
      */
     public function create()
     {
-        //
+        return view('artist.create');
     }
 
     /**
@@ -33,7 +33,20 @@ class ArtistController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'firstname' => 'required|max:60',
+            'lastname' => 'required|max:60',
+        ]);
+
+        $artist = new Artist();
+
+        $artist->firstname = $validated['firstname'];
+        $artist->lastname = $validated['lastname'];
+
+        $artist->save();
+
+        return redirect()->route('artist.index');
+
     }
 
     /**
