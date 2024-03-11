@@ -15,7 +15,8 @@ class ArtistsTableSeeder extends Seeder
 
     public function run(): void
     {
-        // Artist::truncate();
+        Artist::truncate();
+    
         $artists = [
             ['firstname' => 'Daniel', 'lastname' => 'Marcelin'],
             ['firstname' => 'Philippe', 'lastname' => 'Laurent'],
