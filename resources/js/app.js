@@ -7,11 +7,14 @@ window.Alpine = Alpine;
 Alpine.start();
 
 import Pagination from './components/Pagination.vue';
-import { createApp } from 'vue'
-const app = createApp()
+import { createApp } from 'vue';
 
-app.component('Pagination', Pagination );
+const app = createApp({
+    components: {
+        Pagination
+    }
+});
 
-app.mount('#app')
+app.mount('#app');
 
 
