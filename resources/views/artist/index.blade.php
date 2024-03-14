@@ -16,6 +16,7 @@
                     <table>
                         <thead>
                             <tr>
+                                <pagination></pagination>
                                 <th>Firstname</th>
                                 <th>Lastname</th>
                             </tr>
