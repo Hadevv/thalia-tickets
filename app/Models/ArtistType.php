@@ -5,21 +5,16 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Locality extends Model
+class ArtistType extends Model
 {
     use HasFactory;
 
+    protected $table = 'artist_type';
+
     protected $fillable = [
-        'postal_code',
-        'locality'
+        'artist_id',
+        'type_id'
     ];
 
-    protected $table = 'localities';
-
     public $timestamps = false;
-
-    public function locations()
-    {
-        return $this->hasMany(Location::class);
-    }
 }

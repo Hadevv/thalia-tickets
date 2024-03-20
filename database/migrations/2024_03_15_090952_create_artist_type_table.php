@@ -11,18 +11,17 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('localities', function (Blueprint $table) {
+        Schema::create('artist_type', function (Blueprint $table) {
             $table->id();
-            $table->string('postal_code', 6);
-            $table->string('locality', 60);
+            $table->foreignId('artist_id')->constrained()->onDelete('cascade')->onUpdate('cascade');
+            $table->foreignId('type_id')->constrained()->onDelete('cascade')->onUpdate('cascade');
         });
     }
-
     /**
      * Reverse the migrations.
      */
     public function down(): void
     {
-        Schema::dropIfExists('localities');
+        Schema::dropIfExists('artist_type');
     }
 };

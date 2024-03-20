@@ -2,24 +2,24 @@
 
 namespace Database\Seeders;
 
+use App\Models\ArtistType;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
-use App\Models\Role;
 
-class RoleSeeder extends Seeder
+class ArtistTypeSeeder extends Seeder
 {
     /**
      * Run the database seeds.
      */
     public function run(): void
     {
-        Role::truncate();
 
-        DB::table('roles')->insert([
-            ['role' => 'admin'],
-            ['role' => 'membre'],
-            ['role' => 'internaute'],
-        ]);
+        DB::table('artist_type')->truncate();
+
+        
+
+
+
     }
 }
