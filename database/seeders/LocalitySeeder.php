@@ -1,41 +1,42 @@
 <?php
 
-namespace Database\Seeders;
-
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
-use Illuminate\Database\Seeder;
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\DB;
 use App\Models\Locality;
+use Illuminate\Support\Facades\Schema;
 
-class LocalitySeeder extends Seeder
+
+class CreateLocationsTable extends Migration
 {
     /**
-     * Run the database seeds.
+     * Run the migrations.
+     *
+     * @return void
      */
-    public function run(): void
+    public function up()
     {
         Locality::truncate();
 
-        DB::table('localities')->insert([
-            ['postal_code' => '1000', 'locality' => 'Bruxelles'],
-            ['postal_code' => '1150', 'locality' => 'Woluwe-Saint-Pierre'],
-            ['postal_code' => '1080', 'locality' => 'Molenbeek-Saint-Jean'],
-            ['postal_code' => '1081', 'locality' => 'Koekelberg'],
-            ['postal_code' => '1082', 'locality' => 'Berchem-Sainte-Agathe'],
-            ['postal_code' => '1083', 'locality' => 'Ganshoren'],
-            ['postal_code' => '1090', 'locality' => 'Jette'],
-            ['postal_code' => '1140', 'locality' => 'Evere'],
-            ['postal_code' => '1030', 'locality' => 'Schaerbeek'],
-            ['postal_code' => '1020', 'locality' => 'Laeken'],
-            ['postal_code' => '1000', 'locality' => 'Bruxelles'],
-            ['postal_code' => '1040', 'locality' => 'Etterbeek'],
-            ['postal_code' => '1050', 'locality' => 'Ixelles'],
-            ['postal_code' => '1060', 'locality' => 'Saint-Gilles'],
-            ['postal_code' => '1070', 'locality' => 'Anderlecht'],
-            ['postal_code' => '1190', 'locality' => 'Forest'],
-            ['postal_code' => '1180', 'locality' => 'Uccle'],
-            ['postal_code' => '1170', 'locality' => 'Watermael-Boitsfort'],
-            ['postal_code' => '1160', 'locality' => 'Auderghem'],
-        ]);
+        Schema::create('locations', function (Blueprint $table) {
+            $table->id();
+            $table->string('slug', 60)->unique();
+            $table->string('designation', 60);
+            $table->string('address', 255);
+            $table->foreignId('locality_id')->constrained()->onDelete('cascade')->onUpdate('cascade');
+            $table->string('website', 255)->nullable();
+            $table->string('phone', 20)->nullable();
+            $table->string('email', 255)->nullable();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        Schema::dropIfExists('locations');
     }
 }

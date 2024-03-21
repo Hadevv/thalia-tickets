@@ -18,3 +18,5 @@ class ArtistType extends Model
 
     public $timestamps = false;
 }
+
+

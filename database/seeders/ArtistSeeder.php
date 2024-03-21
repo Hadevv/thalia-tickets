@@ -17,7 +17,7 @@ class ArtistSeeder extends Seeder
     {
         Artist::truncate();
 
-        DB::table('artists')->insert([
+        $artists = [
             ['firstname' => 'Daniel', 'lastname' => 'Marcelin'],
             ['firstname' => 'Philippe', 'lastname' => 'Laurent'],
             ['firstname' => 'Marius', 'lastname' => 'Von Mayenburg'],
@@ -29,6 +29,10 @@ class ArtistSeeder extends Seeder
             ['firstname' => 'Guillaume', 'lastname' => 'Alexandre'],
             ['firstname' => 'Claude', 'lastname' => 'Semal'],
             ['firstname' => 'Laurence', 'lastname' => 'Warin'],
-        ]);
+            ['firstname' => 'Pierre', 'lastname' => 'Wayburn'],
+            ['firstname' => 'Gwendoline', 'lastname' => 'Gauthier'],
+        ];
+
+        DB::table('artists')->insert($artists);
     }
 }

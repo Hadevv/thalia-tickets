@@ -14,12 +14,8 @@ class ArtistTypeSeeder extends Seeder
      */
     public function run(): void
     {
-
-        DB::table('artist_type')->truncate();
-
-        
-
-
-
+        ArtistType::truncate();
     }
+
+
 }
