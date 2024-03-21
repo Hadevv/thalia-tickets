@@ -23,6 +23,9 @@
                     <x-nav-link :href="route('type.index')" :active="request()->routeIs('type.index')">
                         {{ __('Type') }}
                     </x-nav-link>
+                    <x-nav-link :href="route('locality.index')" :active="request()->routeIs('locality.index')">
+                        {{ __('Locality') }}
+                    </x-nav-link>
 
                 </div>
             </div>
