@@ -26,6 +26,7 @@ class DatabaseSeeder extends Seeder
             LocationSeeder::class,
             RoleSeeder::class,
             LocationSeeder::class,
+            ArtistTypeSeeder::class,
         ]);
     }
 }

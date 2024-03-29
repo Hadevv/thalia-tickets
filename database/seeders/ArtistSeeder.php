@@ -2,20 +2,24 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use App\Models\Artist;
+
 
 class ArtistSeeder extends Seeder
 {
     /**
      * Run the database seeds.
      */
-
     public function run(): void
     {
+        //empty the table first
+        DB::statement('SET FOREIGN_KEY_CHECKS=0');
         Artist::truncate();
+        DB::statement('SET FOREIGN_KEY_CHECKS=1');
+
+        //Define the data
 
         $artists = [
             ['firstname' => 'Daniel', 'lastname' => 'Marcelin'],
@@ -32,6 +36,8 @@ class ArtistSeeder extends Seeder
             ['firstname' => 'Pierre', 'lastname' => 'Wayburn'],
             ['firstname' => 'Gwendoline', 'lastname' => 'Gauthier'],
         ];
+
+        //Insert the data in the table
 
         DB::table('artists')->insert($artists);
     }

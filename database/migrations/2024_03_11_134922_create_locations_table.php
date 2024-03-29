@@ -1,4 +1,5 @@
 <?php
+
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -28,10 +29,10 @@ class CreateLocationsTable extends Migration
         Schema::table('locations', function (Blueprint $table) {
             // Ajouter une contrainte de clé étrangère à la colonne locality_id
             $table->foreign('locality_id')
-                  ->references('id')
-                  ->on('localities')
-                  ->onDelete('cascade')
-                  ->onUpdate('cascade');
+                ->references('id')
+                ->on('localities')
+                ->onDelete('cascade')
+                ->onUpdate('cascade');
         });
 
         Schema::enableForeignKeyConstraints(); // Réactiver les contraintes de clé étrangère
