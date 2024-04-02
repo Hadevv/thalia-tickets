@@ -2,23 +2,18 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Type;
-use App\Http\Requests\StoreTypeRequest;
-use App\Http\Requests\UpdateTypeRequest;
+use App\Models\Reservation;
+use App\Http\Requests\StoreReservationRequest;
+use App\Http\Requests\UpdateReservationRequest;
 
-class TypeController extends Controller
+class ReservationController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $types = Type::all();
-
-        return view('type.index', [
-            'types' => $types,
-            'resource' => 'types',
-        ]);
+        //
     }
 
     /**
@@ -32,7 +27,7 @@ class TypeController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreTypeRequest $request)
+    public function store(StoreReservationRequest $request)
     {
         //
     }
@@ -40,19 +35,15 @@ class TypeController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(Reservation $reservation)
     {
-        $type = Type::find($id);
-
-        return view('type.show', [
-            'type' => $type,
-        ]);
+        //
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Type $type)
+    public function edit(Reservation $reservation)
     {
         //
     }
@@ -60,7 +51,7 @@ class TypeController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateTypeRequest $request, Type $type)
+    public function update(UpdateReservationRequest $request, Reservation $reservation)
     {
         //
     }
@@ -68,7 +59,7 @@ class TypeController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Type $type)
+    public function destroy(Reservation $reservation)
     {
         //
     }

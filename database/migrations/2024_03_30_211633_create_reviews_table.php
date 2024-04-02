@@ -11,25 +11,27 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('artist_type', function (Blueprint $table) {
+        Schema::create('reviews', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('artist_id');
-            $table->foreignId('type_id');
-
-            $table->foreign('artist_id')->references('id')->on('artists')
+            $table->foreignId('user_id')->references('id')->on('users')
                 ->onDelete('restrict')
                 ->onUpdate('cascade');
-
-            $table->foreign('type_id')->references('id')->on('types')
+            $table->foreignId('show_id')->references('id')->on('shows')
                 ->onDelete('restrict')
                 ->onUpdate('cascade');
+            $table->text('review');
+            $table->tinyInteger('stars')->unsigned();
+            $table->boolean('validated')->default(0);
+            $table->timestamp('created_at')->useCurrent();
+            $table->timestamp('updated_at')->useCurrent();
         });
     }
+
     /**
      * Reverse the migrations.
      */
     public function down(): void
     {
-        Schema::dropIfExists('artist_type');
+        Schema::dropIfExists('reviews');
     }
 };

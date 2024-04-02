@@ -23,4 +23,8 @@ class Artist extends Model
     {
         return $this->belongsToMany(Type::class);
     }
+    public function artistTypes()
+    {
+        return $this->hasMany(ArtistType::class);
+    }
 }

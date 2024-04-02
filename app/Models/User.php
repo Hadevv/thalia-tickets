@@ -44,4 +44,34 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    public function isAdmin()
+    {
+        return $this->roles->contains('admin');
+    }
+
+    public function isMember()
+    {
+        return $this->roles->contains('member');
+    }
+
+    public function isAffiliate()
+    {
+        return $this->roles->contains('affiliate');
+    }
+
+    public function isRole($role)
+    {
+        return $this->roles->contains($role);
+    }
+
+    public function roles()
+    {
+        return $this->belongsToMany(Role::class);
+    }
+
+    public function representations()
+    {
+        return $this->hasMany(Representation::class);
+    }
 }

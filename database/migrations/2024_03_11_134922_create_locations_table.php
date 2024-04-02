@@ -13,14 +13,14 @@ class CreateLocationsTable extends Migration
      */
     public function up()
     {
-        Schema::disableForeignKeyConstraints(); // Désactiver les contraintes de clé étrangère temporairement
+        Schema::disableForeignKeyConstraints();
 
         Schema::create('locations', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('locality_id')->nullable();
+            $table->foreignId('locality_id');
             $table->string('slug', 60)->unique();
             $table->string('designation', 60);
-            $table->string('address', 255)->nullable();
+            $table->string('address', 255);
             $table->string('website', 255)->nullable();
             $table->string('phone', 30)->nullable();
             $table->timestamps();
@@ -31,11 +31,11 @@ class CreateLocationsTable extends Migration
             $table->foreign('locality_id')
                 ->references('id')
                 ->on('localities')
-                ->onDelete('cascade')
+                ->onDelete('restrict')
                 ->onUpdate('cascade');
         });
 
-        Schema::enableForeignKeyConstraints(); // Réactiver les contraintes de clé étrangère
+        Schema::enableForeignKeyConstraints();
     }
 
     /**

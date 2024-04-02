@@ -2,23 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Type;
-use App\Http\Requests\StoreTypeRequest;
-use App\Http\Requests\UpdateTypeRequest;
+use App\Models\Price;
+use Illuminate\Http\Request;
 
-class TypeController extends Controller
+class PriceController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $types = Type::all();
-
-        return view('type.index', [
-            'types' => $types,
-            'resource' => 'types',
-        ]);
+        //
     }
 
     /**
@@ -32,7 +26,7 @@ class TypeController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreTypeRequest $request)
+    public function store(Request $request)
     {
         //
     }
@@ -40,19 +34,15 @@ class TypeController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(Price $price)
     {
-        $type = Type::find($id);
-
-        return view('type.show', [
-            'type' => $type,
-        ]);
+        //
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Type $type)
+    public function edit(Price $price)
     {
         //
     }
@@ -60,7 +50,7 @@ class TypeController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateTypeRequest $request, Type $type)
+    public function update(Request $request, Price $price)
     {
         //
     }
@@ -68,7 +58,7 @@ class TypeController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Type $type)
+    public function destroy(Price $price)
     {
         //
     }
