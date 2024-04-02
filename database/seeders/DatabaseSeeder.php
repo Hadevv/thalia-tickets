@@ -13,7 +13,7 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        User::factory(10)->create();
+        // User::factory(10)->create();
 
         // User::factory()->create([
         //     'name' => 'Test User',
@@ -21,12 +21,21 @@ class DatabaseSeeder extends Seeder
         // ]);
 
         $this->call([
-            ArtistSeeder::class,
             TypeSeeder::class,
-            LocationSeeder::class,
-            RoleSeeder::class,
             LocalitySeeder::class,
+            LocationSeeder::class,
+            ArtistSeeder::class,
+            RoleSeeder::class,
+            ShowSeeder::class,
+            RepresentationSeeder::class,
             ArtistTypeSeeder::class,
+            ArtistTypeShowSeeder::class,
+            UserSeeder::class,
+            UserRoleSeeder::class,
+            PriceSeeder::class,
+            ReservationSeeder::class,
+            RepresentationReservationSeeder::class,
+            ReviewSeeder::class,
         ]);
     }
 }

@@ -15,8 +15,13 @@ class LocationSeeder extends Seeder
      */
     public function run(): void
     {
+        //Empty the table first
+        DB::statement('SET FOREIGN_KEY_CHECKS=0');
         Location::truncate();
+        DB::statement('SET FOREIGN_KEY_CHECKS=1');
 
+
+        //Define data
         $locations = [
             [
                 'slug' => null,
@@ -50,8 +55,18 @@ class LocationSeeder extends Seeder
                 'website' => 'http://www.espacemagh.be',
                 'phone' => '+32 (0)2/274.05.10',
             ],
+
+            [
+                'slug' => null,
+                'designation' => 'Centre culturel des Riches-Claires',
+                'address' => '24 rue des Riches-Claires',
+                'locality_postal_code' => '1000',
+                'website' => 'http://www.lesrichesclaires.be/',
+                'phone' => '02/548 25 70',
+            ]
         ];
 
+        //Insert data in the table
         foreach ($locations as &$data) { //& permet de modifier directement la valeur de l'élément dans le tableau en l'occurrence $data
             //Recherche de la localité correspondant au code postal
             $locality = Locality::firstWhere('postal_code', $data['locality_postal_code']); // firstWhere() permet de récupérer la première occurrence correspondant à la condition donnée

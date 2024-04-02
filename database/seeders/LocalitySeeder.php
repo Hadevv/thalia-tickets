@@ -14,16 +14,10 @@ class LocalitySeeder extends Seeder
      */
     public function run(): void
     {
-        /** Nous désactivons la vérification des contraintes de clés étrangères avant de vider la table, puis nous la réactivons.
-         *  Attention à  ne faire cela qu’en mode développement, pas en production.
-         */
-        //empty the table first
 
         DB::statement('SET FOREIGN_KEY_CHECKS=0');
-        Locality::truncate(); // on utiliser la table Locality pour vider la table plutôt que DB::table('localities')->truncate() car on a déjà défini le modèle Locality
+        Locality::truncate();
         DB::statement('SET FOREIGN_KEY_CHECKS=1');
-
-        //Define the data 19 communes de Bruxelles
 
         $localities = [
             ['postal_code' => '1000', 'locality' => 'Bruxelles'],
@@ -46,8 +40,6 @@ class LocalitySeeder extends Seeder
             ['postal_code' => '1190', 'locality' => 'Forest'],
             ['postal_code' => '1200', 'locality' => 'Woluwe-Saint-Lambert'],
         ];
-
-        //Insert the data in the table
 
         DB::table('localities')->insert($localities);
     }
