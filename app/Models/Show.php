@@ -15,6 +15,7 @@ class Show extends Model
         'title',
         'poster_url',
         'duration',
+        'description',
         'created_in',
         'location_id',
         'bookable',
