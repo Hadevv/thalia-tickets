@@ -9,29 +9,33 @@ class Show extends Model
 {
     use HasFactory;
 
+
     protected $fillable = [
-        'location_id',
         'slug',
         'title',
         'poster_url',
+        'duration',
+        'created_in',
+        'location_id',
         'bookable',
-        'price',
-        'description',
-        'created_at',
     ];
 
     protected $table = 'shows';
 
     public $timestamps = false;
 
+
+    public function representations()
+    {
+        return $this->hasMany(Representation::class);
+    }
+
     public function location()
     {
         return $this->belongsTo(Location::class);
     }
-
-    public function artists()
+    public function artistTypes()
     {
-        return $this->belongsToMany(Artist::class, 'artist_type_show', 'show_id', 'artist_id');
+        return $this->belongsToMany(ArtistType::class);
     }
 }
-
