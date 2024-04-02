@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('title', 255);
             $table->string('slug', 60)->unique();
-            // $table->text('description')->nullable();
+            $table->text('description')->nullable();
             $table->string('poster_url', 255)->nullable();
             $table->foreignId('location_id')->nullable();
             $table->boolean('bookable')->default(false);
