@@ -57,6 +57,7 @@ Route::get('/type/{id}', [TypeController::class, 'show'])
 Route::get('/locality', [LocalityController::class, 'index'])->name('locality.index');
 Route::get('/locality/{id}', [LocalityController::class, 'show'])
     ->where('id', '[0-9]+')->name('locality.show');
+
 /*
 |--------------------------------------------------------------------------
 | Role Routes

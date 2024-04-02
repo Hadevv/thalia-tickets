@@ -40,9 +40,9 @@ class LocalityController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Locality $locality)
+    public function show(string $id)
     {
-        $locality = Locality::find($locality->id);
+        $locality = Locality::find($id);
 
         return view('locality.show', [
             'locality' => $locality,
