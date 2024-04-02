@@ -30,7 +30,7 @@ class ArtistType extends Model
     {
         return $this->belongsToMany(Show::class);
     }
-    public function artistType()
+    public function artistTypes()
     {
         return $this->belongsToMany(ArtistType::class);
     }
