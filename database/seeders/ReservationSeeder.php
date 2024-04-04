@@ -29,7 +29,7 @@ class ReservationSeeder extends Seeder
             ],
 
             [
-                'user_login' => 'nils',
+                'user_login' => 'antoine',
                 'booking_date' => '2012-10-08 10:00:00',
                 'status' => null,
             ],

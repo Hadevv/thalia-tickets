@@ -45,7 +45,7 @@ class RepresentationReservationSeeder extends Seeder
                 'show_slug' => 'ayiti',
                 'location_slug' => 'espace-delvaux-la-venerie',
                 'representation_date' => '2012-10-12 13:30:00',
-                'user_login' => 'nils',
+                'user_login' => 'antoine',
                 'reservation_date' => '2012-10-08 10:00:00',
                 'reservation_status' => null,
                 'price_type' => 'Étudiant',
