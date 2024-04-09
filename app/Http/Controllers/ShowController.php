@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Show;
+use App\Models\Artist;
 use App\Http\Requests\StoreShowRequest;
 use App\Http\Requests\UpdateShowRequest;
 
@@ -13,7 +14,12 @@ class ShowController extends Controller
      */
     public function index()
     {
-        //
+        $shows = Show::all();
+
+        return view('show.index', [
+            'shows' => $shows,
+            'resource' => 'shows',
+        ]);
     }
 
     /**
@@ -21,7 +27,12 @@ class ShowController extends Controller
      */
     public function create()
     {
-        //
+        // créer des artistes pour les associer à un spectacle
+        $artists = Artist::all();
+
+        return view('show.create', [
+            'artists' => $artists,
+        ]);
     }
 
     /**
@@ -35,9 +46,14 @@ class ShowController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Show $show)
+    public function show(string $id)
     {
-        //
+        $show = Show::find($id);
+
+        return view('show.show', [
+            'show' => $show,
+        ]);
+
     }
 
     /**

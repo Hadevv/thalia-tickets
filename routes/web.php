@@ -6,6 +6,7 @@ use App\Http\Controllers\TypeController;
 use App\Http\Controllers\LocalityController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\RepresentationController;
+use App\Http\Controllers\ShowController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -80,5 +81,13 @@ Route::get('/role/{id}', [RoleController::class, 'show'])
 Route::get('/representation', [RepresentationController::class, 'index'])->name('representation.index');
 Route::get('/representation/{id}', [RepresentationController::class, 'show'])
     ->where('id', '[0-9]+')->name('representation.show');
+/*
+|--------------------------------------------------------------------------
+| Show Routes
+|--------------------------------------------------------------------------
+*/
+Route::get('/show', [ShowController::class, 'index'])->name('show.index');
+Route::get('/show/{id}', [ShowController::class, 'show'])
+    ->where('id', '[0-9]+')->name('show.show');
 
 require __DIR__ . '/auth.php';
