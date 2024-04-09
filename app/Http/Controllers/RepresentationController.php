@@ -13,7 +13,12 @@ class RepresentationController extends Controller
      */
     public function index()
     {
-        //
+        $representations = Representation::all();
+
+        return view('representation.index', [
+            'representations' => $representations,
+            'resource' => 'representations',
+        ]);
     }
 
     /**
@@ -35,9 +40,13 @@ class RepresentationController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Representation $representation)
+    public function show(string $id)
     {
-        //
+        $representation = Representation::find($id);
+
+        return view('representation.show', [
+            'representation' => $representation,
+        ]);
     }
 
     /**

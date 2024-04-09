@@ -26,7 +26,9 @@
                     <x-nav-link :href="route('locality.index')" :active="request()->routeIs('locality.index')">
                         {{ __('Locality') }}
                     </x-nav-link>
-
+                    <x-nav-link :href="route('representation.index')" :active="request()->routeIs('representation.index')">
+                        {{ __('Representation') }}
+                    </x-nav-link>
                 </div>
             </div>
 
