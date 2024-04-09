@@ -2,11 +2,31 @@
     <form method="POST" action="{{ route('register') }}">
         @csrf
 
-        <!-- Name -->
+        <!-- Firstname -->
         <div>
-            <x-input-label for="name" :value="__('Name')" />
-            <x-text-input id="name" class="block mt-1 w-full" type="text" name="name" :value="old('name')" required autofocus autocomplete="name" />
-            <x-input-error :messages="$errors->get('name')" class="mt-2" />
+            <x-input-label for="name" :value="__('Firstname')" />
+            <x-text-input id="name" class="block mt-1 w-full" type="text" name="firstname" :value="old('firstname')" required autofocus autocomplete="name" />
+            <x-input-error :messages="$errors->get('firstname')" class="mt-2" />
+        </div>
+        <!-- Lastname -->
+        <div>
+            <x-input-label for="name" :value="__('Lastname')" />
+            <x-text-input id="name" class="block mt-1 w-full" type="text" name="lastname" :value="old('lastname')" required autofocus autocomplete="name" />
+            <x-input-error :messages="$errors->get('lastname')" class="mt-2" />
+        </div>
+
+        <!-- Login -->
+        <div class="mt-4">
+            <x-input-label for="login" :value="__('Login')" />
+            <x-text-input id="login" class="block mt-1 w-full" type="text" name="login" :value="old('login')" required autofocus autocomplete="username" />
+            <x-input-error :messages="$errors->get('login')" class="mt-2" />
+        </div>
+
+        <!-- Langue -->
+        <div class="mt-4">
+            <x-input-label for="langue" :value="__('Langue')" />
+            <x-select id="langue" class="block mt-1 w-full" name="langue" :options="['fr' => 'Français', 'en' => 'English']" :selected="old('langue')" required />
+            <x-input-error :messages="$errors->get('langue')" class="mt-2" />
         </div>
 
         <!-- Email Address -->
