@@ -18,9 +18,12 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
-        'name',
+        'login',
+        'firstname',
+        'lastname',
         'email',
         'password',
+        'langue',
     ];
 
     /**
@@ -52,8 +55,7 @@ class User extends Authenticatable
     }
 
     public function isMember()
-    {
-        return $this->roles->contains('member');
+    {        return $this->roles->contains('member');
     }
 
     public function isAffiliate()
