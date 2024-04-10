@@ -35,10 +35,12 @@ class LocationController extends Controller
     /**
      * Display the specified resource.
      */
+
     public function show(Location $location)
     {
         //
     }
+
 
     /**
      * Show the form for editing the specified resource.

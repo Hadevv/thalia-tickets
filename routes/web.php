@@ -73,6 +73,7 @@ Route::get('/role/{id}', [RoleController::class, 'show'])
 | Location Routes
 |--------------------------------------------------------------------------
 */
+
 /*
 |--------------------------------------------------------------------------
 | Representation Routes
@@ -89,5 +90,7 @@ Route::get('/representation/{id}', [RepresentationController::class, 'show'])
 Route::get('/show', [ShowController::class, 'index'])->name('show.index');
 Route::get('/show/{id}', [ShowController::class, 'show'])
     ->where('id', '[0-9]+')->name('show.show');
+Route::get('/show/search', [ShowController::class, 'search'])->name('show.search');
+
 
 require __DIR__ . '/auth.php';
