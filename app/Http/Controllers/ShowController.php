@@ -58,7 +58,6 @@ public function search(Request $request)
 
     return $shows;
 }
-
     /**
      * Show the form for creating a new resource.
      */
@@ -87,6 +86,14 @@ public function search(Request $request)
     {
         $show = Show::find($id);
 
+        $show->load('representations');
+
+        foreach ($show->representations as $representation) {
+            if (is_string($representation->schedule)) {
+                $representation->schedule = \Carbon\Carbon::parse($representation->schedule);
+            }
+        }
+        
         return view('show.show', [
             'show' => $show,
         ]);
