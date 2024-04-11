@@ -53,7 +53,7 @@ class Show extends Model
     {
         return $this->artistTypes()
                     ->whereHas('type', function ($query) {
-                        $query->where('type', 'acteur');
+                        $query->where('type', 'comédien');
                     })
                     ->with('artist')
                     ->get()
