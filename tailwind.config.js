@@ -14,14 +14,14 @@ export default {
     theme: {
         extend: {
             colors: {
-                'primary': '#FFD700',
-                'secondary': '#FFA500',
+                'primary': '#5a67d8',
+                'secondary': '#5a67d8',
                 'danger': '#FF0000',
                 'success': '#008000',
                 'info': '#00FFFF',
                 'warning': '#FFA500',
                 'dark': '#000000',
-                'brezee' : '#5a67d8',
+                'brezee' :'#5a67d8',
             },
             fontFamily: {
                 sans: ['Figtree', ...defaultTheme.fontFamily.sans],
