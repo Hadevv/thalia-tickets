@@ -6,6 +6,7 @@ use App\Http\Controllers\TypeController;
 use App\Http\Controllers\LocalityController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\RepresentationController;
+use App\Http\Controllers\ReservationController;
 use App\Http\Controllers\ShowController;
 use Illuminate\Support\Facades\Route;
 
@@ -92,5 +93,6 @@ Route::get('/show/{id}', [ShowController::class, 'show'])
     ->where('id', '[0-9]+')->name('show.show');
 Route::get('/show/search', [ShowController::class, 'search'])->name('show.search');
 
-
+Route::post('/create-payment-checkout', [ReservationController::class, 'store'])->name('create-payment-checkout');
+Route::get('/representation/{id}/booking', [RepresentationController::class, 'booking'])->where('id', '[0-9]+')->name('representation.booking');
 require __DIR__ . '/auth.php';

@@ -87,7 +87,7 @@
                                         <td>{{ $representation->location->designation }}</td>
                                         <td>
                                             @if ($show->bookable && $show->representations->count() > 0)
-                                                <a href="{{ route('representation.show', $representation->id) }}" class="text-indigo-600 font-semibold text-sm dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-200">Réserver</a>
+                                                <a href="{{ route('representation.booking', $representation->id) }}" class="text-indigo-600 font-semibold text-sm dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-200">Réserver</a>
                                             @else
                                                 <span class="text-red-500 text-sm font-semibold">Non réservable</span>
                                             @endif

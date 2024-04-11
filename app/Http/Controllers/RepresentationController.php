@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Representation;
+use App\Models\Price;
 use App\Http\Requests\StoreRepresentationRequest;
 use App\Http\Requests\UpdateRepresentationRequest;
 
@@ -44,6 +45,8 @@ class RepresentationController extends Controller
     {
         $representation = Representation::find($id);
 
+
+
         return view('representation.show', [
             'representation' => $representation,
         ]);
@@ -71,5 +74,21 @@ class RepresentationController extends Controller
     public function destroy(Representation $representation)
     {
         //
+    }
+
+    public function booking(string $id){
+
+        $representation = Representation::find($id);
+
+        if (is_string($representation->schedule)) {
+            $representation->schedule = \Carbon\Carbon::parse($representation->schedule);
+        }
+
+        $currentPrices = Price::all();
+
+        return view('representation.booking', [
+            'representation' => $representation,
+            'currentPrices' => $currentPrices,
+        ]);
     }
 }
