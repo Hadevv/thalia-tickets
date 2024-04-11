@@ -13,6 +13,16 @@ export default {
 
     theme: {
         extend: {
+            colors: {
+                'primary': '#FFD700',
+                'secondary': '#FFA500',
+                'danger': '#FF0000',
+                'success': '#008000',
+                'info': '#00FFFF',
+                'warning': '#FFA500',
+                'dark': '#000000',
+                'brezee' : '#5a67d8',
+            },
             fontFamily: {
                 sans: ['Figtree', ...defaultTheme.fontFamily.sans],
             },
