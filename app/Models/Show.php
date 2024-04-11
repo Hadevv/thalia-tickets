@@ -39,4 +39,25 @@ class Show extends Model
     {
         return $this->belongsToMany(ArtistType::class);
     }
+        public function authors()
+    {
+        return $this->artistTypes()
+                    ->whereHas('type', function ($query) {
+                        $query->where('type', 'auteur');
+                    })
+                    ->with('artist')
+                    ->get()
+                    ->pluck('artist');
+    }
+    public function actors()
+    {
+        return $this->artistTypes()
+                    ->whereHas('type', function ($query) {
+                        $query->where('type', 'acteur');
+                    })
+                    ->with('artist')
+                    ->get()
+                    ->pluck('artist');
+    }
 }
+
