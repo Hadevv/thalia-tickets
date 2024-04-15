@@ -45,8 +45,6 @@ class RepresentationController extends Controller
     {
         $representation = Representation::find($id);
 
-
-
         return view('representation.show', [
             'representation' => $representation,
         ]);
@@ -84,7 +82,7 @@ class RepresentationController extends Controller
             $representation->schedule = \Carbon\Carbon::parse($representation->schedule);
         }
 
-        $currentPrices = Price::all();
+        $currentPrices = Price::where('end_date', '=', null)->get();
 
         return view('representation.booking', [
             'representation' => $representation,

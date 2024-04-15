@@ -11,7 +11,7 @@ class RepresentationReservation extends Model
 
     protected $fillable = [
         'representation_id',
-        'locality_id',
+        'reservation_id',
         'quantity',
         'price_id'
     ];

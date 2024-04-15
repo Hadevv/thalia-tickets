@@ -6,9 +6,12 @@ use App\Http\Controllers\TypeController;
 use App\Http\Controllers\LocalityController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\RepresentationController;
-use App\Http\Controllers\ReservationController;
 use App\Http\Controllers\ShowController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\StripeWebhookController;
+use App\Http\Controllers\ReservationController;
+
+use App\Http\Controllers\Admin\AdminController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -95,4 +98,26 @@ Route::get('/show/search', [ShowController::class, 'search'])->name('show.search
 
 Route::post('/create-payment-checkout', [ReservationController::class, 'store'])->name('create-payment-checkout');
 Route::get('/representation/{id}/booking', [RepresentationController::class, 'booking'])->where('id', '[0-9]+')->name('representation.booking');
+Route::get('/reservation/{id}/confirmation', [ReservationController::class, 'confirmation'])->where('id', '[0-9]+')->name('reservation.confirmation');
+Route::get('/reservation/{id}/cancel', [ReservationController::class, 'cancel'])->where('id', '[0-9]+')->name('reservation.cancel');
+/*
+|--------------------------------------------------------------------------
+| Admin Routes
+|--------------------------------------------------------------------------
+*/
+
+Route::get('/admin', AdminController::class)->name('admin.index');
+Route::delete('/admin/show/{id}', [ShowController::class,'destroy'])->where('id', '[0-9]+')->name('show.destroy');
+Route::get('/admin/show/edit/{id}', [ShowController::class,'edit'])->where('id', '[0-9]+')->name('show.edit');
+Route::put('/admin/show/{id}', [ShowController::class,'update'])->where('id', '[0-9]+')->name('show.update');
+Route::get('/admin/show/create', [ShowController::class,'create'])->name('show.create');
+Route::post('/admin/show', [ShowController::class,'store'])->name('show.store');
+
+
+Route::delete('/admin/artist/{id}', [ArtistController::class,'destroy'])->where('id', '[0-9]+')->name('artist.destroy');
+
+
+
+
+
 require __DIR__ . '/auth.php';

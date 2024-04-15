@@ -2,12 +2,17 @@
 
 <div class="flex flex-col max-h-m bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg p-2 mb-2">
     <div class="flex w-full">
-        
+
 
         <div class="w-32 mr-10 flex-shrink-0">
-        @if ($show->poster_url)
-            <img src="{{ asset('images/' . $show->poster_url) }}" alt="{{ $show->title }}" class="object-cover w-full h-auto">
+            @if ($show->poster_url)
+            @if (Str::startsWith($show->poster_url, ['http://', 'https://']))
+                <img src="{{ $show->poster_url }}" alt="{{ $show->title }}" class="object-cover w-full h-auto">
+            @else
+                <img src="{{ asset('images/' . $show->poster_url) }}" alt="{{ $show->title }}" class="object-cover w-full h-auto">
+            @endif
         @endif
+
         </div>
         <div class="flex flex-col w-full">
             <h2 class="text-lg font-semibold text-gray-900 dark:text-gray-100">{{ $show->title }}</h2>

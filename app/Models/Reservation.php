@@ -28,4 +28,15 @@ class Reservation extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function total()
+    {
+        $total = 0;
+        foreach ($this->representation_reservations as $representation_reservation) {
+            $total += $representation_reservation->price->price;
+        }
+        
+        return $total;
+
+    }
 }
