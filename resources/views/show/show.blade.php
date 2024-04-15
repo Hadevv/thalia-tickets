@@ -23,6 +23,7 @@
                         @if ($show->poster_url)
                             <img src="{{ asset('images/' . $show->poster_url) }}" alt="{{ $show->title }}" class="object-cover w-full h-auto">
                         @endif
+                        
                         </div>
                         <div class="flex flex-col w-full">
                             <h2 class="text-xl font-semibold text-gray-900 dark:text-gray-100">{{ $show->title }}</h2>
@@ -82,9 +83,27 @@
                             <tbody>
                                 @foreach ($show->representations as $representation)
                                     <tr>
-                                        <td>{{ $representation->schedule->format('l d F Y') }}</td>
-                                        <td>{{ $representation->schedule->format('H:i') }}</td>
-                                        <td>{{ $representation->location->designation }}</td>
+                                        <td>
+                                            @if ($representation->schedule instanceof \Carbon\Carbon)
+                                                {{ $representation->schedule->format('l d F Y') }}
+                                            @else
+                                                {{ $representation->schedule }}
+                                            @endif
+                                        </td>
+                                        <td>
+                                            @if ($representation->schedule instanceof \Carbon\Carbon)
+                                                {{ $representation->schedule->format('H:i') }}
+                                            @else
+                                                {{ $representation->schedule }} <!-- Supposons que c'est une heure déjà formatée -->
+                                            @endif
+                                        </td>
+
+                                            @isset($representation->location->designation)
+                                                {{ $representation->location->designation }}
+                                            @else
+                                                à définir
+                                            @endisset
+                                        </td>
                                         <td>
                                             @if ($show->bookable && $show->representations->count() > 0)
                                                 <a href="{{ route('representation.booking', $representation->id) }}" class="text-indigo-600 font-semibold text-sm dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-200">Réserver</a>
