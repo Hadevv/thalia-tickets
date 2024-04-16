@@ -14,7 +14,7 @@ class ArtistController extends Controller
     {
         $artists = Artist::all();
 
-        return view('artist.index', [
+        return view('admin.artist.index', [
             'artists' => $artists,
             'resource' => 'artistes'
         ]);

@@ -113,6 +113,13 @@ Route::put('/admin/show/{id}', [ShowController::class,'update'])->where('id', '[
 Route::get('/admin/show/create', [ShowController::class,'create'])->name('show.create');
 Route::post('/admin/show', [ShowController::class,'store'])->name('show.store');
 
+Route::get('/admin/artist', [ArtistController::class,'index'])->name('admin.artist.index');
+Route::get('/admin/artist/create', [ArtistController::class,'create'])->name('artist.create');
+Route::post('/admin/artist', [ArtistController::class,'store'])->name('artist.store');
+Route::get('/admin/artist/{id}', [ArtistController::class,'show'])->where('id', '[0-9]+')->name('artist.show');
+Route::get('/admin/artist/edit/{id}', [ArtistController::class,'edit'])->where('id', '[0-9]+')->name('artist.edit');
+Route::put('/admin/artist/{id}', [ArtistController::class,'update'])->where('id', '[0-9]+')->name('artist.update');
+
 
 Route::delete('/admin/artist/{id}', [ArtistController::class,'destroy'])->where('id', '[0-9]+')->name('artist.destroy');
 

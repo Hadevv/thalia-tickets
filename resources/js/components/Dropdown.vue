@@ -7,8 +7,8 @@
             </svg>
         </button>
         <div v-if="isOpen" @click="isOpen = false" class="absolute mt-1 w-48 rounded-md shadow-lg bg-white z-50 overflow-visible border border-indigo-600">
-            <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-gray-100 text-sm">Excel</a>
-            <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-gray-100 text-sm">Pdf</a>
+            <a href="#" class="block px-4 py-1 text-gray-700 hover:bg-gray-100 text-sm">Excel</a>
+            <a href="#" class="block px-4 py-1 text-gray-700 hover:bg-gray-100 text-sm">Pdf</a>
         </div>
     </div>
 </template>
