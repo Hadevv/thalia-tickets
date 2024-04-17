@@ -29,7 +29,6 @@ class UserSeeder extends Seeder
                 'password' => 'epfc123',
                 'langue' => 'fr',
                 'created_at' => '',
-
             ],
 
             [

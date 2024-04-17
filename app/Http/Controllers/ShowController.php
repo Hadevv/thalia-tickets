@@ -20,6 +20,8 @@ class ShowController extends Controller
      */
     public function index(Request $request)
     {
+        // dd(session('locale'));
+        
         $search = $request->input('search');
         $lieux = Locality::pluck('locality')->toArray();
 
