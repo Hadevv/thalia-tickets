@@ -30,6 +30,9 @@
                     <x-show-card :show="$show" />
                 @endforeach
             </div>
+            <div class="p-6">
+                {{ $shows->links() }}
+            </div>
         </div>
     </div>
 </x-app-layout>

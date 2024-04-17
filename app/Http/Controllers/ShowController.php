@@ -12,6 +12,7 @@ use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\File;
 
+
 class ShowController extends Controller
 {
     /**
@@ -25,9 +26,8 @@ class ShowController extends Controller
         if ($search) {
             $shows = $this->search($request);
         } else {
-            $shows = Show::all();
+            $shows = Show::paginate(3);
         }
-
         return view('show.index', [
             'shows' => $shows,
             'resource' => 'shows',
