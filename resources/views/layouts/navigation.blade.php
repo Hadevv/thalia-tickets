@@ -1,12 +1,17 @@
 <nav x-data="{ open: false }" class="bg-white dark:bg-gray-800 border-b border-gray-100 dark:border-gray-700">
     <!-- Primary Navigation Menu -->
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex justify-between h-16">
+        <div class="flex
+            justify-between
+            h-16
+            dark:bg-gray-800
+            border-b
+        ">
             <div class="flex">
                 <!-- Logo -->
                 <div class="shrink-0 flex items-center">
                     <a href="{{ route('dashboard') }}">
-                        <x-application-logo class="block h-9 w-auto fill-current text-gray-800 dark:text-gray-200" />
+                        <img src="{{ asset('images/theater.png') }}" class="block h-8 w-auto fill-current text-gray-800 dark:text-gray-200" />
                     </a>
                 </div>
 
@@ -16,16 +21,8 @@
                         {{ __('Spectacle') }}
                     </x-nav-link>
                     {{-- Guest Links --}}
-                    @guest
-                        <x-nav-link :href="route('login')" :active="request()->routeIs('login')">
-                            {{ __('Login') }}
-                        </x-nav-link>
-                        @if (Route::has('register'))
-                            <x-nav-link :href="route('register')" :active="request()->routeIs('register')">
-                                {{ __('Register') }}
-                            </x-nav-link>
-                        @endif
-                    @endguest
+
+
 
                     {{-- Auth Links --}}
                     @auth
@@ -55,6 +52,16 @@
 
             <!-- Settings Dropdown -->
             <div class="hidden sm:flex sm:items-center sm:ms-6">
+                @guest
+                    <x-nav-link :href="route('login')" :active="request()->routeIs('login')">
+                        {{ __('Login') }}
+                    </x-nav-link>
+                    @if (Route::has('register'))
+                        <x-nav-link :href="route('register')" :active="request()->routeIs('register')">
+                            {{ __('Register') }}
+                        </x-nav-link>
+                    @endif
+                @endguest
                 @auth
                     <x-dropdown align="right" width="48">
                         <x-slot name="trigger">

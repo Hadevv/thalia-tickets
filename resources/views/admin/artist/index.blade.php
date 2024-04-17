@@ -8,12 +8,10 @@
         <div class="py-8 px-4 sm:px-6 lg:px-8">
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900 dark:text-gray-100">
-                    <div class="flex justify-between items-center mb-2 z-100">
+                    <div class="flex justify-between items-center mb-12 z-100">
                         <dropdown></dropdown>
-                        <x-admin-nav>
-                            
-                        </x-admin-nav>
-                        {{-- <a href="{{ route('artist.create') }}" class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-1 px-2 rounded focus:outline-none focus:shadow-outline">Ajouter un artiste</a> --}}
+                        <x-admin-nav />
+                        <a href="{{ route('artist.create') }}" class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-1 px-2 rounded focus:outline-none focus:shadow-outline">Ajouter un artiste</a>
                     </div>
                 </div>
             </div>
