@@ -52,6 +52,8 @@ class ShowController extends Controller
     /**
      * Search for a specified resource.
      */
+
+    //  http://127.0.0.1:8000/api/show/search?q=Ayiti
     public function search(Request $request)
     {
         return ShowResource::collection(Show::search($request->input('q'))->get());
