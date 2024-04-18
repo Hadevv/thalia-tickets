@@ -30,5 +30,7 @@ class Representation extends Model
     {
         return $this->hasMany(RepresentationReservation::class);
     }
+
     
+
 }

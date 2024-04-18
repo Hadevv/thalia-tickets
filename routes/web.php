@@ -8,7 +8,6 @@ use App\Http\Controllers\RoleController;
 use App\Http\Controllers\RepresentationController;
 use App\Http\Controllers\ShowController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\StripeWebhookController;
 use App\Http\Controllers\ReservationController;
 use App\Http\Controllers\LocaleController;
 use App\Http\Middleware\SetLocaleFromUser;
@@ -26,7 +25,7 @@ use App\Http\Controllers\Admin\AdminController;
     */
     Route::prefix('lang')->middleware([SetLocaleFromUser::class])->group(function () {
         Route::get('/{lang?}', [LocaleController::class, 'setLocale'])->name('locale.set');
-        
+
     });
     /*
     |--------------------------------------------------------------------------

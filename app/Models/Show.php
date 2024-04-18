@@ -37,27 +37,45 @@ class Show extends Model
     }
     public function artistTypes()
     {
-        return $this->belongsToMany(ArtistType::class);
+        return $this->belongsToMany(ArtistType::class, 'artist_type_show', 'artist_type_id', 'show_id');
     }
-        public function authors()
+    public function authors()
     {
         return $this->artistTypes()
-                    ->whereHas('type', function ($query) {
-                        $query->where('type', 'auteur');
-                    })
-                    ->with('artist')
-                    ->get()
-                    ->pluck('artist');
+            ->whereHas('type', function ($query) {
+                $query->where('type', 'auteur');
+            })
+            ->with('artist')
+            ->get()
+            ->pluck('artist');
     }
     public function actors()
     {
         return $this->artistTypes()
-                    ->whereHas('type', function ($query) {
-                        $query->where('type', 'comédien');
-                    })
-                    ->with('artist')
-                    ->get()
-                    ->pluck('artist');
+            ->whereHas('type', function ($query) {
+                $query->where('type', 'comédien');
+            })
+            ->with('artist')
+            ->get()
+            ->pluck('artist');
+    }
+    // API
+    public function artists()
+    {
+        return $this->belongsToMany(Artist::class, 'artist_type_show', 'show_id', 'artist_type_id')
+            ->withPivot('id')
+            ->with('artistTypes.type');
+    }
+
+    public function types()
+    {
+        return $this->belongsToMany(Type::class, 'artist_type_show', 'show_id', 'artist_type_id')
+            ->withPivot('id')
+            ->with('artistTypes.artist');
+    }
+
+    public static function search($query)
+    {
+        return self::where('title', 'like', "%$query%");
     }
 }
-
