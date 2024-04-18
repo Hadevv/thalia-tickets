@@ -4,6 +4,11 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Artist;
+use App\Exports\ArtistsExport;
+use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Support\Facades\Log;
+use App\Http\Requests\ArtistRequest;
+use App\Imports\ArtistsImport;
 
 class ArtistController extends Controller
 {
@@ -99,5 +104,29 @@ class ArtistController extends Controller
         Artist::destroy($id);
 
         return redirect()->route('artist.index');
+    }
+
+    /**
+     * ADMIN cela serais plus malin de le mettre dans adminController
+     */
+
+
+    public function export()
+    {
+        return Excel::download(new ArtistsExport, 'artists.xlsx');
+    }
+    
+    public function import(ArtistRequest $request) 
+    {
+        try{
+
+            Excel::import(new ArtistsImport, $request->file('file'));
+            return response()->json(['data'=>'Users imported successfully.',201]);
+        }catch(\Exception $ex){
+            Log::info($ex);
+            return response()->json(['data'=>'Some error has occur.',400]);
+
+        }
+        
     }
 }

@@ -114,6 +114,13 @@ use App\Http\Controllers\Admin\AdminController;
 
 /*
 |--------------------------------------------------------------------------
+| Export Routes
+|--------------------------------------------------------------------------
+*/
+Route::post('/artists-import', [ArtistController::class, 'import']);
+Route::get('/artists-export', [ArtistController::class, 'export']);
+/*
+|--------------------------------------------------------------------------
 | Admin Routes
 |--------------------------------------------------------------------------
 */
@@ -133,5 +140,6 @@ Route::get('/admin/artist/edit/{id}', [ArtistController::class,'edit'])->where('
 Route::put('/admin/artist/{id}', [ArtistController::class,'update'])->where('id', '[0-9]+')->name('artist.update');
 
 Route::delete('/admin/artist/{id}', [ArtistController::class,'destroy'])->where('id', '[0-9]+')->name('artist.destroy');
+
 
 require __DIR__ . '/auth.php';
