@@ -3,25 +3,27 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900 dark:text-gray-100">
-                    <h1>Reservation confirmation</h1>
-                    <p>Your reservation has been confirmed.</p>
-                    <p>Reservation number: {{ $reservation->id }}</p>
-                    <p>Show: {{ $reservation->show->title }}</p>
-                    <p>Date: {{ $reservation->show->date }}</p>
-                    <p>Number of seats: {{ $reservation->seats }}</p>
-                    <p>Price: {{ $reservation->price }} €</p>
-                    <p>Reservation date: {{ $reservation->created_at }}</p>
-                    <a href="{{ route('reservation.cancel', $reservation->id) }}" class="
-                        bg-red-500
-                        hover:bg-red-700
-                        text-white
-                        font-bold
-                        py-2
-                        px-4
-                        rounded
-                        mt-4
-                        inline-block
-                    ">Cancel reservation</a>
+                    <div class="container">
+                        <div class="row justify-content-center">
+                            <div class="col-md-8">
+                                <div class="card">
+                                    <div class="card-header">Confirmation de réservation</div>
+                                    <div class="card-body">
+                                        <p>Merci pour votre réservation !</p>
+                                        <p>Détails de la réservation :</p>
+                                        <ul>
+                                            <li>ID de la réservation : {{ $reservation->id }}</li>
+                                            <li>Date de réservation : {{ $reservation->booking_date }}</li>
+                                            <li>Status : {{ $reservation->status }}</li>
+                                        </ul>
+                                        <p>vous allez resevoir un mail de confirmation avec les détails de la réservation.</p>
+                                    </div>
+                                    <a href="{{ route('/show') }}"> x Retour</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
