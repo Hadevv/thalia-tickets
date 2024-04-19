@@ -51,21 +51,7 @@ class User extends Authenticatable
 
     public function isAdmin()
     {
-        return $this->roles->contains('admin');
-    }
-
-    public function isMember()
-    {        return $this->roles->contains('member');
-    }
-
-    public function isAffiliate()
-    {
-        return $this->roles->contains('affiliate');
-    }
-
-    public function isRole($role)
-    {
-        return $this->roles->contains($role);
+        return $this->roles()->where('role', 'admin')->exists();
     }
 
     public function roles()
