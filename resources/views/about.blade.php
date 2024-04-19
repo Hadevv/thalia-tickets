@@ -5,7 +5,7 @@
         </h2>
     </x-slot>
 
-    <div class="py-20">
+    <div class="py-10">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="px-4 sm:px-6 lg:px-8">
                 <div class="p-4">
