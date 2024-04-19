@@ -21,7 +21,7 @@ class ShowController extends Controller
     public function index(Request $request)
     {
         // dd(session('locale'));
-        
+
         $search = $request->input('search');
         $lieux = Locality::pluck('locality')->toArray();
 
@@ -59,7 +59,7 @@ class ShowController extends Controller
             ->orWhereHas('artistTypes.type', function ($query) use ($search) {
                 $query->where('type', 'like', '%' . $search . '%');
             })
-            ->get();
+            ->paginate(3);
 
         return $shows;
     }
