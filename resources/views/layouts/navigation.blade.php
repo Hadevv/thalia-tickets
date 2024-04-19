@@ -21,7 +21,6 @@
                         {{ __('Spectacle') }}
                     </x-nav-link>
                     {{-- Guest Links --}}
-
                     {{-- Auth Links --}}
                     @auth
                         {{-- ajout d'artist dans la navigation --}}
@@ -47,7 +46,12 @@
                     @endauth
                 </div>
             </div>
-
+            <!-- Feed -->
+            <a href="/feed" class="inset-y-0 right-0 flex items-center rounded-r-md px-2 focus:outline-none pointer-cursor">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5 text-gray-400">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12.75 19.5v-.75a7.5 7.5 0 0 0-7.5-7.5H4.5m0-6.75h.75c7.87 0 14.25 6.38 14.25 14.25v.75M6 18.75a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z" />
+                </svg>
+            </a>
             <!-- Settings Dropdown -->
             <div class="hidden sm:flex sm:items-center sm:ms-6">
                 @guest
@@ -60,6 +64,7 @@
                         </x-nav-link>
                     @endif
                 @endguest
+
                 <!-- Langue Dropdown -->
                 <x-dropdown align="right" width="40">
                     <x-slot name="trigger">

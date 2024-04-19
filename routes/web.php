@@ -114,12 +114,17 @@ use App\Http\Controllers\Admin\AdminController;
 
 /*
 |--------------------------------------------------------------------------
-| Export Routes
+| Export & Import Routes
 |--------------------------------------------------------------------------
 */
 Route::post('/artists-import', [ArtistController::class, 'import'])->name('artists-import');
 Route::get('/artists-export', [ArtistController::class, 'export'])->name('artists-export');
-
+/*
+|--------------------------------------------------------------------------
+| Routes FEED RSS
+|--------------------------------------------------------------------------
+*/
+Route::feeds();
 /*
 |--------------------------------------------------------------------------
 | Admin Routes

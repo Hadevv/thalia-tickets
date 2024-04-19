@@ -4,8 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Spatie\Feed\Feedable;
+use Spatie\Feed\FeedItem;
+use Carbon\Carbon;
 
-class Representation extends Model
+class Representation extends Model implements Feedable
 {
     use HasFactory;
 
@@ -31,6 +34,20 @@ class Representation extends Model
         return $this->hasMany(RepresentationReservation::class);
     }
 
-    
+    public function toFeedItem(): FeedItem
+    {
+        return FeedItem::create()
+            ->id($this->id)
+            ->title($this->show->title)
+            ->summary($this->show->description)
+            ->updated(Carbon::now())
+            ->link(route('representation.show', $this->id))
+            ->authorName("Bob Sull")
+            ->authorEmail("bob@sull.com");
+    }
 
+    public static function getFeedItems()
+    {
+    return Representation::all();
+    }
 }
