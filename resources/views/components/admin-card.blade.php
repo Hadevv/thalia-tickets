@@ -1,7 +1,5 @@
 <div class="col-span-1 divide-y divide-gray-200 rounded-lg bg-white shadow border border-2 border-indigo-700">
     <div class="flex w-40 items-center justify-between">
-        
-    </div>
         <div class="-mt-px flex divide-x divide-gray-200">
             <div class="flex w-0 flex-1">
                 <a href="mailto:{{ $email }}" class="relative -mr-px inline-flex w-0 flex-1 items-center justify-center gap-x-3 rounded-bl-lg border border-transparent py-2 text-sm font-semibold text-gray-900">
@@ -32,4 +30,5 @@
                 </a>
             </div>
         </div>
+    </div>
 </div>

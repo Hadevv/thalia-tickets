@@ -5,14 +5,14 @@
         </h2>
     </x-slot>
 
-    <div class="py-10">
+    <div class="py-2 bg-white shadow-sm sm:rounded-lg">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="px-4 sm:px-6 lg:px-8">
                 <div class="p-4">
                     <h2 class="font-semibold text-2xl text-gray-800 leading-tight">
                         {{ __('Privacy Policy') }}
                     </h2>
-                    <div class="mt-10">
+                    <div class="mt-8">
                         <h2 class="text-sm font-semibold">Cookie</h2>
                         <p class="mt-2">If you have an account and you log in to the site, a temporary cookie will be created to persist your login state. This cookie will be automatically destroyed when you log out of the site.</p>
                     </div>

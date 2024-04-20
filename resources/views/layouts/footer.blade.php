@@ -1,5 +1,5 @@
-<footer class="bg-gray-50 mt-auto">
-    <div class="mx-auto max-w-7xl text-xs px-6 py-12 md:flex md:items-center md:justify-between lg:px-8">
+<footer class="bg-gray-50 mt-auto bg-white shadow-sm sm:rounded-lg">
+    <div class="mx-auto max-w-7xl text-xs px-6 py-6 md:flex md:items-center md:justify-between lg:px-8">
         <div class="flex justify-center space-x-6 md:order-2">
             <a href="{{ route('about') }}" class="text-gray-400 hover:text-gray-500">
                 <span class="text-sm">About</span>
