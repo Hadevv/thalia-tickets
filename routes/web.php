@@ -96,7 +96,7 @@ Route::get('/role/{id}', [RoleController::class, 'show'])
 Route::get('/representation', [RepresentationController::class, 'index'])->name('representation.index');
 Route::get('/representation/{id}', [RepresentationController::class, 'show'])
     ->where('id', '[0-9]+')->name('representation.show');
-/*
+    /*
     |--------------------------------------------------------------------------
     | Show Routes
     |--------------------------------------------------------------------------
@@ -105,10 +105,22 @@ Route::get('/show', [ShowController::class, 'index'])->name('show.index');
 Route::get('/show/{id}', [ShowController::class, 'show'])
     ->where('id', '[0-9]+')->name('show.show');
 Route::get('/show/search', [ShowController::class, 'search'])->name('show.search');
-
-Route::post('/create-payment-checkout', [ReservationController::class, 'store'])->name('create-payment-checkout');
+    /*
+    |--------------------------------------------------------------------------
+    | Reservation payement Routes
+    |--------------------------------------------------------------------------
+    */
+    // panier
+Route::get('reservation/cart', [ReservationController::class, 'cart'])->name('reservation.cart');
+    // remove un element du panier
+Route::delete('reservation/cart/remove/{id}', [ReservationController::class, 'remove'])->name('reservation.cart.remove');
+    // checkout dans la vue representation
+Route::post('/create-payment-checkout', [ReservationController::class, 'checkout'])->name('create-payment-checkout');
+    // page reservation
 Route::get('/representation/{id}/booking', [RepresentationController::class, 'booking'])->where('id', '[0-9]+')->name('representation.booking');
+    // confirmation
 Route::get('/reservation/{id}/confirmation', [ReservationController::class, 'confirmation'])->where('id', '[0-9]+')->name('reservation.confirmation');
+    // cancel
 Route::get('/reservation/{id}/cancel', [ReservationController::class, 'cancel'])->where('id', '[0-9]+')->name('reservation.cancel');
 
 /*
@@ -124,6 +136,13 @@ Route::get('/artists-export', [ArtistController::class, 'export'])->name('artist
 |--------------------------------------------------------------------------
 */
 Route::feeds();
+/*
+|--------------------------------------------------------------------------
+| Routes Footer
+|--------------------------------------------------------------------------
+*/
+Route::view('/privacy', 'privacy')->name('privacy');
+Route::view('/about', 'about')->name('about');
 /*
 |--------------------------------------------------------------------------
 | Admin Routes

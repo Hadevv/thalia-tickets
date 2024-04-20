@@ -16,12 +16,16 @@ use Illuminate\Support\Facades\Log;
 
 class ReservationController extends Controller
 {
+    /**
+     * Display a listing of the resource.
+     */
     public function index()
     {
         $reservations = Reservation::where('user_id', auth()->id())->get();
         return view('reservation.index', compact('reservations'));
     }
-    public function store(Request $request)
+
+    public function checkout(Request $request)
     {
         try {
 
@@ -120,5 +124,37 @@ class ReservationController extends Controller
         Log::info('Reservation status updated', ['reservation_id' => $reservation->id, 'status' => $reservation->status]);
 
         return redirect()->route('reservation.cancel')->with('cancel', 'Réservation annulée');
+    }
+
+    // Panier de réservation
+
+    public function cart()
+    {
+        $reservations = Reservation::where('user_id', auth()->id())
+            ->where('status', 'pending')
+            ->get();
+            
+        return view('reservation.cart.index', compact('reservations'))->with('success', 'Réservation ajoutée au panier');
+    }
+
+    public function remove(string $id)
+    {
+        try {
+            $reservation = Reservation::find($id);
+
+            if (!$reservation) {
+                Log::warning('Reservation not found', ['reservation_id' => $id]);
+                return redirect()->route('home')->with('error', 'Réservation introuvable.');
+            }
+
+            $reservation->delete();
+
+            Log::info('Reservation deleted', ['reservation_id' => $reservation->id]);
+
+            return redirect()->route('reservation.cart.remove')->with('success', 'Réservation supprimée');
+        } catch (\Exception $e) {
+            Log::error($e->getMessage());
+            return back()->with('error', 'Une erreur est survenue lors de la suppression de la réservation.');
+        }
     }
 }
