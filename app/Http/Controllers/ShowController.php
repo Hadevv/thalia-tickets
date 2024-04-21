@@ -11,7 +11,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\File;
-
+use Illuminate\Support\Facades\Log;
 
 class ShowController extends Controller
 {
@@ -111,21 +111,31 @@ class ShowController extends Controller
      * @throws \Exception
      * @throws \Throwable
      */
-    public function show(string $id)
+
+    public function show(string $id, string $slug)
     {
-        $show = Show::find($id);
+        try {
+            $show = Show::where('id', $id)->where('slug', $slug)->firstOrFail();
 
-        $show->load('representations');
+            $show->load('representations');
 
-        foreach ($show->representations as $representation) {
-            if (is_string($representation->schedule)) {
-                $representation->schedule = \Carbon\Carbon::parse($representation->schedule);
+            foreach ($show->representations as $representation) {
+                if (is_string($representation->schedule)) {
+                    $representation->schedule = \Carbon\Carbon::parse($representation->schedule);
+                }
             }
-        }
 
-        return view('show.show', [
-            'show' => $show,
-        ]);
+            return view('show.show', [
+                'show' => $show,
+            ]);
+
+        } catch (\Exception $e) {
+            // Log de l'exception
+            Log::error("Error fetching show with ID {$id} and slug {$slug}: {$e->getMessage()}");
+
+            // Redirection avec un message d'erreur
+            return redirect()->route('show.index')->with('error', 'Erreur lors de la récupération du spectacle.');
+        }
     }
 
     /**
@@ -179,17 +189,29 @@ class ShowController extends Controller
      */
     public function destroy(string $id)
     {
-        // Supprimer les enregistrements dépendants de la table reviews
-        \App\Models\Review::where('show_id', $id)->delete();
+        try {
+            // Trouver le spectacle par son ID
+            $show = Show::findOrFail($id);
 
-        // Supprimer les enregistrements dépendants de la table representations
-        \App\Models\Representation::where('show_id', $id)->delete();
+            // Supprimer toutes les représentations liées au spectacle
+            $show->representations()->delete();
 
-        // Supprimer l'enregistrement de la table shows
-        \App\Models\Show::destroy($id);
+            // Supprimer toutes les avis liés au spectacle
+            $show->reviews()->delete();
 
-        session()->flash('notification', 'Le spectacle a bien été supprimé !');
+            // Supprimer le spectacle
+            $show->delete();
 
-        return redirect()->route('admin.index');
+            session()->flash('notification', 'Le spectacle a bien été supprimé !');
+
+            return redirect()->route('admin.index');
+
+        } catch (\Exception $e) {
+            // Log de l'exception
+            Log::error("Error deleting show with ID {$id}: {$e->getMessage()}");
+
+            // Redirection avec un message d'erreur
+            return redirect()->route('admin.index')->with('error', 'Erreur lors de la suppression du spectacle.');
+        }
     }
 }

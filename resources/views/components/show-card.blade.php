@@ -35,7 +35,7 @@
             </div>
             <div class="pt-2 dark:border-gray-700 mt-2">
                 <div class="flex justify-between">
-                    <a href="{{ route('show.show', $show->id) }}" class="text-indigo-600 font-semibold text-sm dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-200">En savoir plus</a>
+                    <a href="{{ route('show.show', ['id' => $show->id, 'slug' => $show->slug]) }}" class="text-indigo-600 font-semibold text-sm dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-200">En savoir plus</a>
                     @if ($show->bookable && $show->representations->count() > 0)
                         <span class="text-green-500 text-sm font-semibold">Réservable</span>
                     @else

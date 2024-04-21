@@ -102,8 +102,10 @@ Route::get('/representation/{id}', [RepresentationController::class, 'show'])
     |--------------------------------------------------------------------------
     */
 Route::get('/show', [ShowController::class, 'index'])->name('show.index');
-Route::get('/show/{id}', [ShowController::class, 'show'])
-    ->where('id', '[0-9]+')->name('show.show');
+Route::get('/show/{id}-{slug}', [ShowController::class, 'show'])
+    ->where(['id' => '[0-9]+', 'slug' => '[a-z0-9-]+'])
+    ->name('show.show');
+
 Route::get('/show/search', [ShowController::class, 'search'])->name('show.search');
     /*
     |--------------------------------------------------------------------------
@@ -111,9 +113,11 @@ Route::get('/show/search', [ShowController::class, 'search'])->name('show.search
     |--------------------------------------------------------------------------
     */
     // panier
-Route::get('reservation/cart', [ReservationController::class, 'cart'])->name('reservation.cart');
+Route::get('/reservation/cart', [ReservationController::class, 'cart'])->name('reservation.cart');
     // remove un element du panier
-Route::delete('reservation/cart/remove/{id}', [ReservationController::class, 'remove'])->name('reservation.cart.remove');
+Route::delete('/reservation/cart/remove/{id}', [ReservationController::class, 'remove'])->name('reservation.cart.remove');
+    // remove all
+Route::delete('/reservation/cart/removeall', [ReservationController::class, 'removeall'])->name('reservation.cart.removeall');
     // checkout dans la vue representation
 Route::post('/create-payment-checkout', [ReservationController::class, 'checkout'])->name('create-payment-checkout');
     // page reservation
@@ -122,6 +126,8 @@ Route::get('/representation/{id}/booking', [RepresentationController::class, 'bo
 Route::get('/reservation/{id}/confirmation', [ReservationController::class, 'confirmation'])->where('id', '[0-9]+')->name('reservation.confirmation');
     // cancel
 Route::get('/reservation/{id}/cancel', [ReservationController::class, 'cancel'])->where('id', '[0-9]+')->name('reservation.cancel');
+    // payement de tout le panier
+Route::post('/reservation/pay-all', [ReservationController::class, 'payCart'])->name('reservation.payall');
 
 /*
 |--------------------------------------------------------------------------

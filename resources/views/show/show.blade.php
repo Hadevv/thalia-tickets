@@ -23,7 +23,7 @@
                         @if ($show->poster_url)
                             <img src="{{ asset('images/' . $show->poster_url) }}" alt="{{ $show->title }}" class="object-cover w-full h-auto">
                         @endif
-                        
+
                         </div>
                         <div class="flex flex-col w-full">
                             <h2 class="text-xl font-semibold text-gray-900 dark:text-gray-100">{{ $show->title }}</h2>
@@ -97,12 +97,12 @@
                                                 {{ $representation->schedule }} <!-- Supposons que c'est une heure déjà formatée -->
                                             @endif
                                         </td>
-
-                                            @isset($representation->location->designation)
+                                        <td>
+                                            @if ($representation->location)
                                                 {{ $representation->location->designation }}
                                             @else
-                                                à définir
-                                            @endisset
+                                                Non défini
+                                            @endif
                                         </td>
                                         <td>
                                             @if ($show->bookable && $show->representations->count() > 0)
