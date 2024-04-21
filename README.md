@@ -48,3 +48,8 @@
         "lieu": "Lieu du spectacle 2"
     }
 ]
+```
+
+### API theatre-contemporain.net et theatre-video.net 
+Le point d'entrée de l'API theatre-contemporain.net est https://www.theatre-contemporain.net/api/
+https://www.ressources-theatre.net/doc/api/ 
