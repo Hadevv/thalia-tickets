@@ -28,6 +28,7 @@ class ReservationController extends Controller
     public function checkout(Request $request)
     {
         try {
+            $action = $request->input('action');
 
             $request->validate([
                 'representation_id' => 'required|exists:representations,id',
@@ -76,6 +77,10 @@ class ReservationController extends Controller
                         ];
                     }
                 }
+            }
+
+            if ($action === 'addToCart') {
+                return redirect()->route('reservation.cart')->with('success', 'Réservation ajoutée au panier');
             }
 
             $checkout_session = \Stripe\Checkout\Session::create([

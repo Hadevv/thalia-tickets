@@ -32,11 +32,15 @@
                                 <strong class="text-gray-600 dark:text-gray-400">Total :</strong>
                                 <span x-text="total + '€'" id="total" class="text-gray-900 dark:text-gray-100">0€</span>
                             </div>
-                            <button type="submit" x-bind:disabled="!hasSelectedPlaces" class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-1 px-2 rounded focus:outline-none focus:shadow-outline">Continuer vers le paiement</button>
+                            <div class="flex items-center justify-between mt-4">
+                                <button type="submit" x-bind:disabled="!hasSelectedPlaces" class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-1 px-2 rounded focus:outline-none focus:shadow-outline">Continuer vers le paiement</button>
+
+                                <button type="submit" name="action" value="addToCart" class="bg-gray-600 hover:bg-gray-700 text-white font-semibold py-1 px-2 rounded focus:outline-none focus:shadow-outline">Ajouter au panier</button>
+                            </div>
                         </form>
                     </article>
 
-                    
+
 
                     <div class="mt-4">
                         <a href="{{ route('show.show', $representation->show->id) }}" class="
