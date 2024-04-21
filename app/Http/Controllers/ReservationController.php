@@ -111,6 +111,9 @@ class ReservationController extends Controller
 
     public function cancel(string $id)
     {
+
+        Log::info('Cancel method called', ['reservation_id' => $id]);
+
         $reservation = Reservation::find($id);
 
         if (!$reservation) {
@@ -123,7 +126,7 @@ class ReservationController extends Controller
 
         Log::info('Reservation status updated', ['reservation_id' => $reservation->id, 'status' => $reservation->status]);
 
-        return redirect()->route('reservation.cancel')->with('cancel', 'Réservation annulée');
+        return view('reservation.cancel', compact('reservation'))->with('success', 'Réservation annulée avec succès.');
     }
 
     // Panier de réservation
@@ -133,7 +136,7 @@ class ReservationController extends Controller
         $reservations = Reservation::where('user_id', auth()->id())
             ->where('status', 'pending')
             ->get();
-            
+
         return view('reservation.cart.index', compact('reservations'))->with('success', 'Réservation ajoutée au panier');
     }
 
@@ -146,6 +149,8 @@ class ReservationController extends Controller
                 Log::warning('Reservation not found', ['reservation_id' => $id]);
                 return redirect()->route('home')->with('error', 'Réservation introuvable.');
             }
+            // Supprimer les entrées liées dans representation_reservation
+            $reservation->representation_reservations()->delete();
 
             $reservation->delete();
 

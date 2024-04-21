@@ -34,8 +34,10 @@
                             </div>
                             <button type="submit" x-bind:disabled="!hasSelectedPlaces" class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-1 px-2 rounded focus:outline-none focus:shadow-outline">Continuer vers le paiement</button>
                         </form>
-
                     </article>
+
+                    
+
                     <div class="mt-4">
                         <a href="{{ route('show.show', $representation->show->id) }}" class="
                             text-indigo-600
