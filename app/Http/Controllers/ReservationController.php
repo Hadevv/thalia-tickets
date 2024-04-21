@@ -19,10 +19,17 @@ class ReservationController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    private function calculateCartTotal()
     {
-        $reservations = Reservation::where('user_id', auth()->id())->get();
-        return view('reservation.index', compact('reservations'));
+        $reservations = Reservation::where('user_id', auth()->id())
+            ->where('status', 'pending')
+            ->get();
+
+        $total = $reservations->map(function ($reservation) {
+            return $reservation->total();
+        })->sum();
+
+        return $total;
     }
 
     public function checkout(Request $request)
@@ -138,11 +145,12 @@ class ReservationController extends Controller
 
     public function cart()
     {
+        $total = $this->calculateCartTotal();
         $reservations = Reservation::where('user_id', auth()->id())
             ->where('status', 'pending')
             ->get();
 
-        return view('reservation.cart.index', compact('reservations'))->with('success', 'Réservation ajoutée au panier');
+        return view('reservation.cart.index', compact('reservations', 'total'))->with('success', 'Réservation ajoutée au panier');
     }
 
     public function remove(string $id)
@@ -165,6 +173,64 @@ class ReservationController extends Controller
         } catch (\Exception $e) {
             Log::error($e->getMessage());
             return back()->with('error', 'Une erreur est survenue lors de la suppression de la réservation.');
+        }
+    }
+
+    public function removeall()
+    {
+        try {
+            $reservations = Reservation::where('user_id', auth()->id())
+                ->where('status', 'pending')
+                ->get();
+
+            foreach ($reservations as $reservation) {
+                // Supprimer les entrées liées dans representation_reservation
+                $reservation->representation_reservations()->delete();
+                $reservation->delete();
+            }
+
+            return view('reservation.cart.removeall');
+        } catch (\Exception $e) {
+            Log::error($e->getMessage());
+            return back()->with('error', 'Une erreur est survenue lors de la suppression des réservations.');
+        }
+    }
+
+    public function payCart()
+    {
+        try {
+            $total = $this->calculateCartTotal();
+
+            if ($total <= 0) {
+                return redirect()->route('reservation.cart')->with('error', 'Le panier est vide.');
+            }
+
+            \Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
+
+            $checkout_session = \Stripe\Checkout\Session::create([
+                'payment_method_types' => ['card'],
+                'line_items' => [[
+                    'price_data' => [
+                        'currency' => 'eur',
+                        'unit_amount' => $total * 100,
+                        'product_data' => [
+                            'name' => 'Total du panier',
+                        ],
+                    ],
+                    'quantity' => 1,
+                ]],
+                'mode' => 'payment',
+                'success_url' => route('reservation.confirmation', ['id' => 'reservation_id_placeholder']),
+                'cancel_url' => route('reservation.cancel', ['id' => 'reservation_id_placeholder']),
+            ]);
+
+            $success_url = str_replace('reservation_id_placeholder', $checkout_session->id, route('reservation.confirmation', ['id' => $checkout_session->id]));
+            $cancel_url = str_replace('reservation_id_placeholder', $checkout_session->id, route('reservation.cancel', ['id' => $checkout_session->id]));
+
+            return redirect($checkout_session->url);
+        } catch (\Exception $e) {
+            Log::error($e->getMessage());
+            return back()->with('error', 'Une erreur est survenue lors du paiement.');
         }
     }
 }
