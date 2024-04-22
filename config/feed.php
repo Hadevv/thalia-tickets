@@ -32,12 +32,12 @@ return [
             /*
              * The format of the feed. Acceptable values are 'rss', 'atom', or 'json'.
              */
-            'format' => 'atom',
+            'format' => 'rss',
             // 'format' => 'rss',
             /*
              * The view that will render the feed.
              */
-            'view' => 'feed::atom',
+            'view' => 'feed::rss',
             // 'view' => 'feed::rss',
 
             /*
