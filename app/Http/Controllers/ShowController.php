@@ -12,57 +12,81 @@ use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Validation\ValidationException;
 
 class ShowController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
+
     public function index(Request $request)
     {
-        // dd(session('locale'));
+        try {
+            $search = $request->input('search');
+            $lieux = Locality::pluck('locality')->toArray();
 
-        $search = $request->input('search');
-        $lieux = Locality::pluck('locality')->toArray();
+            if ($search) {
+                $shows = $this->search($request);
+            } else {
+                $shows = Show::paginate(3);
+            }
 
-        if ($search) {
-            $shows = $this->search($request);
-        } else {
-            $shows = Show::paginate(3);
+            return view('show.index', [
+                'shows' => $shows,
+                'resource' => 'shows',
+                'lieux' => $lieux,
+                'search' => $search,
+            ]);
+
+        } catch (\Exception $e) {
+            Log::error("Error in ShowController@index: {$e->getMessage()}");
+            return redirect()->route('show.index')->with('error', 'Une erreur est survenue lors de la récupération des spectacles.');
         }
-        return view('show.index', [
-            'shows' => $shows,
-            'resource' => 'shows',
-            'lieux' => $lieux,
-            'search' => $search,
-        ]);
     }
+
     public function search(Request $request)
     {
         $search = $request->input('search');
+        $dateFrom = $request->input('date_from');
+        $dateTo = $request->input('date_to');
+        $location = $request->input('location');
 
-        $shows = Show::where(function ($query) use ($search) {
-            // search in shows
-            $query->where('title', 'like', '%' . $search . '%')
-                ->orWhere('description', 'like', '%' . $search . '%');
-        })
-            // search in artists
-            ->orWhereHas('artistTypes.artist', function ($query) use ($search) {
-                $query->where('firstname', 'like', '%' . $search . '%')
-                    ->orWhere('lastname', 'like', '%' . $search . '%');
-            })
-            // search in localities
-            ->orWhereHas('location.locality', function ($query) use ($search) {
-                $query->where('locality', 'like', '%' . $search . '%');
-            })
-            // search in types
-            ->orWhereHas('artistTypes.type', function ($query) use ($search) {
-                $query->where('type', 'like', '%' . $search . '%');
-            })
-            ->paginate(3);
+        $query = Show::query();
 
-        return $shows;
+        if ($search) {
+            $query->where(function ($query) use ($search) {
+                $query->where('title', 'like', '%' . $search . '%')
+                    ->orWhere('description', 'like', '%' . $search . '%');
+            })
+                ->orWhereHas('artistTypes.artist', function ($query) use ($search) {
+                    $query->where('firstname', 'like', '%' . $search . '%')
+                        ->orWhere('lastname', 'like', '%' . $search . '%');
+                })
+                ->orWhereHas('location.locality', function ($query) use ($search) {
+                    $query->where('locality', 'like', '%' . $search . '%');
+                })
+                ->orWhereHas('artistTypes.type', function ($query) use ($search) {
+                    $query->where('type', 'like', '%' . $search . '%');
+                });
+        }
+
+        if ($dateFrom && $dateTo) {
+            $query->whereHas('representations', function ($query) use ($dateFrom, $dateTo) {
+                $query->whereBetween('schedule', [$dateFrom, $dateTo]);
+            });
+        }
+
+        if ($location) {
+            $query->whereHas('location.locality', function ($query) use ($location) {
+                $query->where('locality', $location);
+            });
+        }
+
+        return $query->paginate(3);
     }
+
     /**
      * Show the form for creating a new resource.
      */

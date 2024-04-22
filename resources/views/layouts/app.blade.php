@@ -41,4 +41,10 @@
         @endunless
     </div>
 </body>
+    <script>
+        function submitForm() {
+            console.log("Form submitted");
+            document.getElementById('filterForm').submit();
+        }
+    </script>
 </html>
