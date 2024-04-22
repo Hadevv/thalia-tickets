@@ -14,10 +14,10 @@ use App\Http\Middleware\SetLocaleFromUser;
 
 use App\Http\Controllers\Admin\AdminController;
 
-
 Route::get('/', function () {
     return view('home');
-});
+})->name('home');
+
 /*
     |--------------------------------------------------------------------------
     | Langue Routes
