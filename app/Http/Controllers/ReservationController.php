@@ -13,6 +13,7 @@ use App\Http\Controllers\PaymentController;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Stripe\Stripe;
 
 class ReservationController extends Controller
 {
@@ -44,7 +45,7 @@ class ReservationController extends Controller
                 'places.senior' => 'nullable|integer|min:0',
             ]);
 
-            \Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
+            Stripe::setApiKey(env('STRIPE_SECRET'));
 
             $reservation = new Reservation([
                 'user_id' => auth()->id(),
@@ -116,6 +117,9 @@ class ReservationController extends Controller
         $reservation->status = 'confirmed';
         $reservation->save();
 
+        // Event : Envoyer un email de confirmation
+        event(new \App\Events\ReservationConfirmed($reservation));
+
         Log::info('Reservation status updated', ['reservation_id' => $reservation->id, 'status' => $reservation->status]);
 
         return view('reservation.confirmation', compact('reservation'))->with('success', 'Réservation confirmée avec succès.');
@@ -123,7 +127,6 @@ class ReservationController extends Controller
 
     public function cancel(string $id)
     {
-
         Log::info('Cancel method called', ['reservation_id' => $id]);
 
         $reservation = Reservation::find($id);
@@ -214,7 +217,9 @@ class ReservationController extends Controller
                         'currency' => 'eur',
                         'unit_amount' => $total * 100,
                         'product_data' => [
-                            'name' => 'Total du panier',
+                            // payement du panier entier
+                            'name' => 'Paiement du panier',
+                            'description' => 'Paiement du panier de réservation',
                         ],
                     ],
                     'quantity' => 1,
