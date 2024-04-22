@@ -48,16 +48,11 @@
                         </form>
                     </article>
 
-
-
                     <div class="mt-4">
-                        <a href="{{ route('show.show', $representation->show->id) }}" class="
-                            text-indigo-600
-                            font-semibold
-                            text-sm
-                            dark:text-indigo-400
-                            hover:text-indigo-800
-                            dark:hover:text-indigo-200">Voir le spectacle</a>
+                        <a href="{{ route('show.show', ['id' => $representation->show->id, 'slug' => $representation->show->slug]) }}"
+                           class="text-indigo-600 font-semibold text-sm dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-200">
+                            Voir le spectacle
+                        </a>
                     </div>
                 </div>
             </div>

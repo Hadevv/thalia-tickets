@@ -35,8 +35,7 @@ class Reservation extends Model
         foreach ($this->representation_reservations as $representation_reservation) {
             $total += $representation_reservation->price->price;
         }
-        
-        return $total;
 
+        return $total;
     }
 }
