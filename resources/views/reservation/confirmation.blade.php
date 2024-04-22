@@ -18,7 +18,7 @@
                                         </ul>
                                         <p>vous allez resevoir un mail de confirmation avec les détails de la réservation.</p>
                                     </div>
-                                    <a href="{{ route('/show') }}"> x Retour</a>
+                                    <a href="{{ route('home') }}" class="inline-flex items-center px-6 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700 focus:outline-none focus:bg-indigo-700">Retour</a>
                                 </div>
                             </div>
                         </div>
