@@ -14,6 +14,8 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Stripe\Stripe;
+use Stripe\Invoice;
+use Stripe\PaymentIntent;
 
 class ReservationController extends Controller
 {
@@ -51,6 +53,7 @@ class ReservationController extends Controller
                 'user_id' => auth()->id(),
                 'booking_date' => now(),
                 'status' => 'pending',
+                'stripe_invoice_id' => 'test',
             ]);
 
             $reservation->save();
@@ -91,14 +94,25 @@ class ReservationController extends Controller
                 return redirect()->route('reservation.cart')->with('success', 'Réservation ajoutée au panier');
             }
 
+            // Création de la session de paiement Stripe Checkout
             $checkout_session = \Stripe\Checkout\Session::create([
                 'payment_method_types' => ['card'],
                 'line_items' => $line_items,
                 'mode' => 'payment',
                 'success_url' => route('reservation.confirmation', ['id' => $reservation->id]),
                 'cancel_url' => route('reservation.cancel', ['id' => $reservation->id]),
+                // Attentions /!\
+                'invoice_creation' => [
+                    'enabled' => true,
+                ],
             ]);
+            $reservation->stripe_invoice_id = $checkout_session->id;
+            $reservation->save();
+
+            session(['checkout_session_id' => $checkout_session->id]);
+
             return redirect($checkout_session->url);
+
         } catch (\Exception $e) {
             Log::error($e->getMessage());
             return back()->with('error', 'Une erreur est survenue lors de la création de la réservation.');
@@ -114,16 +128,34 @@ class ReservationController extends Controller
             return redirect()->route('home')->with('error', 'Réservation introuvable.');
         }
 
-        $reservation->status = 'confirmed';
-        $reservation->save();
+        try {
+            Stripe::setApiKey(env('STRIPE_SECRET'));
 
-        // Event : Envoyer un email de confirmation
-        event(new \App\Events\ReservationConfirmed($reservation));
+            // Récupérer la session de paiement Stripe avec l'ID sauvegardé
+            $checkout_session_id = session('checkout_session_id');
+            if (!$checkout_session_id) {
+                Log::warning('Checkout session ID not found', ['reservation_id' => $id]);
+                return redirect()->route('home')->with('error', 'Session de paiement introuvable.');
+            }
 
-        Log::info('Reservation status updated', ['reservation_id' => $reservation->id, 'status' => $reservation->status]);
+            // Mettre à jour l'ID de la facture Stripe et le statut de la réservation
+            $reservation->stripe_invoice_id = $checkout_session_id;
+            $reservation->status = 'confirmed';
+            $reservation->save();
 
-        return view('reservation.confirmation', compact('reservation'))->with('success', 'Réservation confirmée avec succès.');
+            // Event : Envoyer un email de confirmation
+            event(new \App\Events\ReservationConfirmed($reservation));
+
+            Log::info('Reservation status updated', ['reservation_id' => $reservation->id, 'status' => $reservation->status]);
+
+            return view('reservation.confirmation', compact('reservation'))->with('success', 'Réservation confirmée avec succès.');
+
+        } catch (\Exception $e) {
+            Log::error($e->getMessage());
+            return redirect()->route('my-reservations.index')->with('error', 'Une erreur est survenue lors de la mise à jour de la réservation.');
+        }
     }
+
 
     public function cancel(string $id)
     {

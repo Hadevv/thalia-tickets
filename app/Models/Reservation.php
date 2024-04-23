@@ -13,6 +13,7 @@ class Reservation extends Model
         'user_id',
         'booking_date',
         'status',
+        'stripe_invoice_id'
     ];
 
     protected $table = 'reservations';

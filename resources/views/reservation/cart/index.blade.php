@@ -77,7 +77,7 @@
                                 </form>
                             </div>
                             <div class="mt-6 flex justify-start items-center">
-                                <a href="{{ route('reservation.cart') }}" class="inline-flex items-center px-6 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700 focus:outline-none focus:bg-indigo-700">Retour au panier</a>
+                                <a href="{{ route('show.index') }}" class="inline-flex items-center px-6 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700 focus:outline-none focus:bg-indigo-700">Retour au Spectacle</a>
                             </div>
                         </div>
                         @else
