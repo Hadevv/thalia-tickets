@@ -117,15 +117,18 @@
                             <x-dropdown-link :href="route('profile.edit')">
                                 {{ __('Profile') }}
                             </x-dropdown-link>
+                            <x-dropdown-link :href="route('my-reservations.index')">
+                                {{ __('Mes reservations') }}
+                            </x-dropdown-link>
                             @if (Auth::user()->isAdmin())
                                 <x-dropdown-link :href="route('admin.index')">
                                     {{ __('Admin') }}
                                 </x-dropdown-link>
                             @endif
+
                             <!-- Authentication -->
                             <form method="POST" action="{{ route('logout') }}">
                                 @csrf
-
                                 <x-dropdown-link :href="route('logout')"
                                         onclick="event.preventDefault();
                                                     this.closest('form').submit();">
