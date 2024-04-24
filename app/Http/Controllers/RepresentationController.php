@@ -6,6 +6,7 @@ use App\Models\Representation;
 use App\Models\Price;
 use App\Http\Requests\StoreRepresentationRequest;
 use App\Http\Requests\UpdateRepresentationRequest;
+use App\Models\Seat;
 
 class RepresentationController extends Controller
 {
@@ -78,6 +79,8 @@ class RepresentationController extends Controller
 
         $representation = Representation::find($id);
 
+        $seats = Seat::all();
+
         if (is_string($representation->schedule)) {
             $representation->schedule = \Carbon\Carbon::parse($representation->schedule);
         }
@@ -87,6 +90,7 @@ class RepresentationController extends Controller
         return view('representation.booking', [
             'representation' => $representation,
             'currentPrices' => $currentPrices,
+            'seats' => $seats,
         ]);
     }
 }
