@@ -10,12 +10,10 @@ use App\Models\Price;
 use App\Models\Representation;
 use App\Models\RepresentationReservation;
 use App\Http\Controllers\PaymentController;
-use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Stripe\Stripe;
-use Stripe\Invoice;
-use Stripe\PaymentIntent;
+use App\Models\Seat;
 
 class ReservationController extends Controller
 {
@@ -38,7 +36,11 @@ class ReservationController extends Controller
     public function checkout(Request $request)
     {
         try {
+            //dd($request->all());
             $action = $request->input('action');
+            $selectedSeats = $request->input('selected_seats');
+
+            //dd($request->input('selected_seats'), $selectedSeats);
 
             $request->validate([
                 'representation_id' => 'required|exists:representations,id',
@@ -68,24 +70,38 @@ class ReservationController extends Controller
                     $price = $currentPrices->firstWhere('type', $type);
                     if ($price) {
                         $scheduleDate = \Carbon\Carbon::parse($representation->schedule);
-                        RepresentationReservation::create([
-                            'representation_id' => $representationId,
-                            'reservation_id' => $reservationId,
-                            'price_id' => $price->id,
-                            'quantity' => $quantity,
-                        ]);
-                        $description = 'Réservation pour ' . $representation->show->title . ' le ' . $scheduleDate->format('d/m/Y H:i') . ' à ' . $representation->location->designation;
-                        $line_items[] = [
-                            'price_data' => [
-                                'currency' => 'eur',
-                                'unit_amount' => $price->price * 100,
-                                'product_data' => [
-                                    'name' => "{$quantity}x {$type} - {$representation->show->title}",
-                                    'description' => $description,
-                                ],
-                            ],
-                            'quantity' => $quantity,
-                        ];
+
+                        // Récupérer le siège par son numéro
+                        $seatNumber = $selectedSeats[0] ?? null;
+
+                        if ($seatNumber) {
+                            $seat = Seat::where('seat_number', $seatNumber)->first();
+
+                            if ($seat && $seat->status == 'available') {
+                                RepresentationReservation::create([
+                                    'representation_id' => $representationId,
+                                    'reservation_id' => $reservationId,
+                                    'price_id' => $price->id,
+                                    'quantity' => $quantity,
+                                    'seat_id' => $seat->id,
+                                ]);
+
+                                // Mettre à jour le statut du siège
+
+                                $description = 'Réservation pour ' . $representation->show->title . ' le ' . $scheduleDate->format('d/m/Y H:i') . ' à ' . $representation->location->designation;
+                                $line_items[] = [
+                                    'price_data' => [
+                                        'currency' => 'eur',
+                                        'unit_amount' => $price->price * 100,
+                                        'product_data' => [
+                                            'name' => "{$quantity}x {$type} - {$representation->show->title}",
+                                            'description' => $description,
+                                        ],
+                                    ],
+                                    'quantity' => $quantity,
+                                ];
+                            }
+                        }
                     }
                 }
             }
@@ -106,6 +122,10 @@ class ReservationController extends Controller
                     'enabled' => true,
                 ],
             ]);
+
+            $seat->status = 'reserved';
+            $seat->save();
+
             $reservation->stripe_invoice_id = $checkout_session->id;
             $reservation->save();
 
@@ -166,6 +186,15 @@ class ReservationController extends Controller
         if (!$reservation) {
             Log::warning('Reservation not found', ['reservation_id' => $id]);
             return redirect()->route('home')->with('error', 'Réservation introuvable.');
+        }
+        $seats = $reservation->representation_reservations()
+            ->get()
+            ->map(function ($representationReservation) {
+                return $representationReservation->seat;
+            });
+        foreach ($seats as $seat) {
+            $seat->status = 'available';
+            $seat->save();
         }
 
         $reservation->status = 'canceled';
