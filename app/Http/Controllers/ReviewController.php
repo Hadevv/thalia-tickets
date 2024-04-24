@@ -6,7 +6,7 @@ use App\Models\Review;
 use App\Http\Requests\StorereviewsRequest;
 use App\Http\Requests\UpdatereviewsRequest;
 
-class ReviewsController extends Controller
+class ReviewController extends Controller
 {
     /**
      * Display a listing of the resource.
