@@ -10,13 +10,17 @@
             <div class="flex">
                 <!-- Logo -->
                 <div class="shrink-0 flex items-center">
-                    <a href="{{ route('dashboard') }}">
+                    <a href="{{ route('home') }}">
                         <img src="{{ asset('images/theater.png') }}" class="block h-9 w-auto fill-current text-gray-800 dark:text-gray-200" />
                     </a>
                 </div>
 
                 <!-- Navigation Links -->
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                    {{-- ajout home dans la navigation --}}
+                    <x-nav-link :href="route('home')" :active="request()->routeIs('home')">
+                        {{ __('Home') }}
+                    </x-nav-link>
                     <x-nav-link :href="route('show.index')" :active="request()->routeIs('show.index')">
                         {{ __('Spectacle') }}
                     </x-nav-link>
@@ -24,6 +28,7 @@
                     {{-- Auth Links --}}
                     @auth
                         {{-- ajout d'artist dans la navigation --}}
+                        @if (Auth::user()->isAdmin())
                         <x-nav-link :href="route('artist.index')" :active="request()->routeIs('artist.index')">
                             {{ __('Artist') }}
                         </x-nav-link>
@@ -43,6 +48,7 @@
                         <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                             {{ __('Dashboard') }}
                         </x-nav-link>
+                        @endif
                     @endauth
                 </div>
             </div>
