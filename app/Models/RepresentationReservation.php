@@ -13,7 +13,8 @@ class RepresentationReservation extends Model
         'representation_id',
         'reservation_id',
         'quantity',
-        'price_id'
+        'price_id',
+        'seat_id'
     ];
 
     protected $table = 'representation_reservation';
@@ -33,5 +34,9 @@ class RepresentationReservation extends Model
     public function price()
     {
         return $this->belongsTo(Price::class);
+    }
+    public function seat()
+    {
+        return $this->belongsTo(Seat::class);
     }
 }
