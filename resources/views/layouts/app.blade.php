@@ -46,5 +46,43 @@
             console.log("Form submitted");
             document.getElementById('filterForm').submit();
         }
+        function updateTotal(form) {
+            let total = 0;
+            let totalPlaces = 0;
+
+            // Calculer le total des places
+            form.querySelectorAll('[name^=places]').forEach(input => {
+                const price = input.getAttribute('data-price');
+                const quantity = parseInt(input.value);
+
+                if (price && quantity > 0) {
+                    total += quantity * parseFloat(price);
+                    totalPlaces += quantity;
+                }
+            });
+
+            // Calculer le total des sièges
+            form.querySelectorAll('[name^=selected_seats]').forEach(input => {
+                const price = input.getAttribute('data-price');
+
+                if (price && input.checked) {
+                    total += parseFloat(price);
+                }
+            });
+
+            // Mettre à jour le total
+            const totalElement = form.querySelector('#total');
+            if (totalElement) {
+                totalElement.innerText = '€ ' + parseFloat(total).toFixed(2);
+            }
+
+            // Valider le nombre de sièges sélectionnés
+            const seatsInputs = form.querySelectorAll('[name^=selected_seats]');
+            const selectedSeatsCount = Array.from(seatsInputs).filter(input => input.checked && !input.disabled).length;
+
+            seatsInputs.forEach(input => {
+                input.disabled = (selectedSeatsCount >= totalPlaces && !input.checked);
+            });
+        }
     </script>
 </html>

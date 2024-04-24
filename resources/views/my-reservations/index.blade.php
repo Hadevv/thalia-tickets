@@ -30,6 +30,20 @@
                                         @endif
                                     </p>
                                     <p>Status : {{ $reservation->status }}</p>
+                                    <p>
+                                        Sièges :
+                                        @if ($reservation->representation_reservations)
+                                            {{
+                                                $reservation->representation_reservations->filter(function ($representationReservation) {
+                                                    return $representationReservation->seat !== null;
+                                                })->map(function ($representationReservation) {
+                                                    return $representationReservation->seat->seat_number;
+                                                })->flatten()->implode(', ')
+                                            }}
+                                        @else
+                                            Aucun siège réservé
+                                        @endif
+                                    </p>
                                 </div>
                                 <div class="flex space-x-4">
                                     <form action="{{ route('my-reservations.download-invoice', $reservation->id) }}" method="GET">
