@@ -13,13 +13,16 @@ class AdminController extends Controller
     public function __invoke()
     {
         $shows = Show::query()
+            ->with('types', 'artistTypes.type')
             ->orderBy('created_in', 'desc')
             ->get();
+
         foreach ($shows as $show) {
             if (is_string($show->created_in)) {
                 $show->created_in = Carbon::parse($show->created_in);
             }
         }
+
         return view('admin.index', [
             'shows' => $shows,
         ]);

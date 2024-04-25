@@ -83,7 +83,6 @@ class ShowController extends Controller
                 $query->where('locality', $location);
             });
         }
-
         return $query->paginate(3);
     }
 
@@ -92,7 +91,9 @@ class ShowController extends Controller
      */
     public function create()
     {
-        return view('show.create');
+        return view('show.create', [
+            'artists' => Artist::all(),
+        ]);
     }
 
     /**
@@ -139,7 +140,7 @@ class ShowController extends Controller
     public function show(string $id, string $slug)
     {
         try {
-            $show = Show::where('id', $id)->where('slug', $slug)->firstOrFail();
+            $show = Show::with('artists')->where('id', $id)->where('slug', $slug)->firstOrFail();
 
             $show->load('representations');
 
@@ -149,18 +150,17 @@ class ShowController extends Controller
                 }
             }
 
-            return view('show.show', [
-                'show' => $show,
-            ]);
+            $created_in = \Carbon\Carbon::parse($show->created_in);
+
+            return view('show.show', compact('show', 'created_in'));
 
         } catch (\Exception $e) {
-            // Log de l'exception
             Log::error("Error fetching show with ID {$id} and slug {$slug}: {$e->getMessage()}");
-
-            // Redirection avec un message d'erreur
             return redirect()->route('show.index')->with('error', 'Erreur lors de la récupération du spectacle.');
         }
     }
+
+
 
     /**
      * Show the form for editing the specified resource.
@@ -170,7 +170,14 @@ class ShowController extends Controller
     {
         $show = Show::findOrFail($id);
 
-        return view('show.edit', compact('show'));
+        $shows = Show::all();
+
+        $artists = Artist::all();
+        return view('show.edit', [
+            'show' => $show,
+            'artists' => $artists,
+            'shows' => $shows,
+        ]);
     }
 
     public function update(Request $request, $id)
@@ -190,18 +197,25 @@ class ShowController extends Controller
                 }),
             ],
             'duration' => ['required', 'numeric'],
+            'artists' => ['nullable', 'array'],
+            'artists.*' => ['exists:artists,id'],
         ]);
 
-        // Génération auto du slug APD title
-        $show = Show::find($id);
+        $show = Show::findOrFail($id);
 
+        // Mise à jour des données du spectacle
         $show->slug = Str::slug($validated['title']);
-
         $show->update($validated);
 
-        return view('show.show', [
-            'show' => $show
-        ]);
+        // Mise à jour des artistes associés
+        if (isset($validated['artists'])) {
+            $show->artists()->sync($validated['artists']); // Cette méthode synchronise les artistes associés
+        } else {
+            $show->artists()->detach(); // Détache tous les artistes du spectacle
+        }
+        $show->refresh();
+
+        return redirect()->route('show.show', ['id' => $show->id, 'slug' => $show->slug])->with('notification', 'Le spectacle a bien été mis à jour !');
     }
 
     /**

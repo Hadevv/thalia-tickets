@@ -47,7 +47,8 @@ class Show extends Model
             })
             ->with('artist')
             ->get()
-            ->pluck('artist');
+            ->pluck('artist')
+            ->unique('id');
     }
     public function actors()
     {
@@ -57,7 +58,8 @@ class Show extends Model
             })
             ->with('artist')
             ->get()
-            ->pluck('artist');
+            ->pluck('artist')
+            ->unique('id');
     }
     // API
     public function artists()

@@ -15,9 +15,13 @@
                             <textarea name="description" rows="4" class="w-[35ch] max-w-[40ch] border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"></textarea>
                             <x-input-error :messages="$errors->get('description')" class="mt-2" />
 
-                            <x-input-label for="artist" value="Artiste" />
-                            <x-select name="artist" :options="$artists ?? []" class="w-[35ch] max-w-[35ch]" />
-                            <x-input-error :messages="$errors->get('artist')" class="mt-2" />
+                            <x-input-label for="artists" value="Artistes" />
+                            <select name="artists[]" multiple class="block mt-1 w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm w-[35ch] max-w-[35ch]">
+                                @foreach($artists as $artist)
+                                    <option value="{{ $artist->id }}">{{ $artist->firstname }} {{ $artist->lastname }}</option>
+                                @endforeach
+                            </select>
+                            <x-input-error :messages="$errors->get('artists')" class="mt-2" />
 
                             <x-input-label for="poster_url" value="Poster URL" />
                             <input type="url" name="poster_url" class="w-[35ch] max-w-[40ch] border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm">

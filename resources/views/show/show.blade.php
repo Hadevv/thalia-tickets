@@ -45,24 +45,32 @@
                                 </ul>
                             </div>
                             <div class="flex flex-row">
-                                <h3 class="text-gray-600 dark:text-gray-400 text-sm font-semibold mt-2">Comédiens :</h3>
+                                <h3 class="text-gray-600 dark:text-gray-400 text-sm font-semibold mt-2">Artistes :</h3>
                                 <ul class="flex flex-row">
-                                    @foreach ($show->actors() as $key => $actor)
+                                    @foreach ($show->artists as $key => $artist)
                                         <a href="#" class="text-indigo-600 dark:text-gray-400 text-sm font-semibold mt-2">
-                                            {{ $actor->firstname }} {{ $actor->lastname }}
+                                            {{ $artist->firstname }} {{ $artist->lastname }}
                                         </a>
-                                        @if ($key < count($show->actors()) - 1)
+                                        @if ($key < count($show->artists) - 1)
                                             <span class="text-gray-600 dark:text-gray-400 text-sm font-semibold mt-2"> - </span>
                                         @endif
                                     @endforeach
                                 </ul>
                             </div>
+                            <div class="flex flex-row">
+                                <h3 class="text-gray-600 dark:text-gray-400 text-sm font-semibold mt-2">Durée :</h3>
+                                <p class="text-gray-600 dark:text-gray-400 text-sm font-semibold mt-2">{{ $show->duration }} minutes</p>
+                            </div>
+
                             <div class="pt-2 dark:border-gray-700 mt-2">
                                 <div class="flex justify-between">
-                                    en travaux
+                                    <p class="text-gray-600 dark:text-gray-400 text-sm font-semibold mt-2">
+                                        Saison : {{ $show->created_in}}
+                                    </p>
                                 </div>
                             </div>
                         </div>
+
                     </div>
                     <div class="
                         w-full
