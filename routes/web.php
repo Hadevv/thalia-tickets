@@ -1,18 +1,19 @@
 <?php
 
-use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\ArtistController;
-use App\Http\Controllers\TypeController;
-use App\Http\Controllers\LocalityController;
-use App\Http\Controllers\RoleController;
-use App\Http\Controllers\RepresentationController;
-use App\Http\Controllers\ShowController;
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\ReservationController;
-use App\Http\Controllers\LocaleController;
-use App\Http\Middleware\SetLocaleFromUser;
-use App\Http\Controllers\MyReservationController;
 use App\Http\Controllers\Admin\AdminController;
+use App\Http\Controllers\Admin\ArtistController;
+use App\Http\Controllers\LocaleController;
+use App\Http\Controllers\LocalityController;
+use App\Http\Controllers\MyReservationController;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\RepresentationController;
+use App\Http\Controllers\ReservationController;
+use App\Http\Controllers\RoleController;
+use App\Http\Controllers\ShowController;
+use App\Http\Controllers\TypeController;
+use App\Http\Middleware\SetLocaleFromUser;
+use Illuminate\Support\Facades\Route;
+
 /*
 |--------------------------------------------------------------------------
 | Routes home
@@ -175,12 +176,14 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/admin/show', [ShowController::class, 'store'])->name('show.store');
 
         Route::get('/admin/artist', [ArtistController::class, 'index'])->name('admin.artist.index');
-        Route::get('/admin/artist/create', [ArtistController::class, 'create'])->name('artist.create');
+        Route::get('/admin/artist/create', [ArtistController::class, 'create'])->name('admin.artist.create');
         Route::post('/admin/artist', [ArtistController::class, 'store'])->name('artist.store');
         Route::get('/admin/artist/{id}', [ArtistController::class, 'show'])->where('id', '[0-9]+')->name('artist.show');
-        Route::get('/admin/artist/edit/{id}', [ArtistController::class, 'edit'])->where('id', '[0-9]+')->name('artist.edit');
-        Route::put('/admin/artist/{id}', [ArtistController::class, 'update'])->where('id', '[0-9]+')->name('artist.update');
-        Route::delete('/admin/artist/{id}', [ArtistController::class, 'destroy'])->where('id', '[0-9]+')->name('artist.destroy');
+        Route::get('/admin/artist/edit/{id}', [ArtistController::class, 'edit'])->where('id', '[0-9]+')->name('admin.artist.edit');
+        Route::put('/admin/artist/{id}', [ArtistController::class, 'update'])->where('id', '[0-9]+')->name('admin.artist.update');
+        Route::delete('/admin/artist/{id}', [ArtistController::class, 'destroy'])->where('id', '[0-9]+')->name('admin.artist.destroy');
+
+        Route::get('/admin/user', [AdminController::class, 'index'])->name('admin.user.index');
         /*
         |--------------------------------------------------------------------------
         | Export & Import Routes

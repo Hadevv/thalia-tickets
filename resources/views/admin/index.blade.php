@@ -9,7 +9,7 @@
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900 dark:text-gray-100">
                     <div class="flex justify-between items-center mb-12 z-100">
-                        <dropdown></dropdown>
+                        <x-import-export-dropdown />
                         <x-admin-nav />
                         <a href="{{ route('show.create') }}" class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-1 px-2 rounded focus:outline-none focus:shadow-outline">Ajouter un spectacle</a>
                     </div>
@@ -39,11 +39,14 @@
                                     </td>
                                     <td class="whitespace-nowrap px-3 py-5 text-sm text-gray-500">
                                         <span>
-                                            @foreach($show->authors() as $author)
-                                            <a href="#" class="text-sm">{{ $author->firstname }} {{ $author->lastname }}</a>
-                                            @if(!$loop->last)
-                                            <span class="text-gray-500"> - </span>
-                                            @endif
+                                            @foreach($show->artists as $artist)
+                                                <p class="text-sm">{{ $artist->firstname }} {{ $artist->lastname }}
+                                                    @if($show->types->isNotEmpty())
+                                                        ({{ $show->types->first()->type }})
+                                                    @else
+                                                        (Type non défini)
+                                                    @endif
+                                                </p>
                                             @endforeach
                                         </span>
                                     </td>
