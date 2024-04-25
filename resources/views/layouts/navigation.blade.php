@@ -29,9 +29,6 @@
                     @auth
                         {{-- ajout d'artist dans la navigation --}}
                         @if (Auth::user()->isAdmin())
-                        <x-nav-link :href="route('artist.index')" :active="request()->routeIs('artist.index')">
-                            {{ __('Artist') }}
-                        </x-nav-link>
                         {{-- ajout de type dans la navigation --}}
                         <x-nav-link :href="route('type.index')" :active="request()->routeIs('type.index')">
                             {{ __('Type') }}
