@@ -11,7 +11,7 @@ class StoreRepresentationRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +22,9 @@ class StoreRepresentationRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'schedule' => 'required|date',
+            'location_id' => 'required|exists:locations,id',
+            'show_id' => 'required|exists:shows,id',
         ];
     }
 }

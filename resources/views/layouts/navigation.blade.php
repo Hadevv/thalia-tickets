@@ -36,9 +36,6 @@
                         <x-nav-link :href="route('locality.index')" :active="request()->routeIs('locality.index')">
                             {{ __('Locality') }}
                         </x-nav-link>
-                        <x-nav-link :href="route('representation.index')" :active="request()->routeIs('representation.index')">
-                            {{ __('Representation') }}
-                        </x-nav-link>
                         <x-nav-link :href="route('show.index')" :active="request()->routeIs('show.index')">
                             {{ __('Spectacle') }}
                         </x-nav-link>
@@ -183,16 +180,12 @@ href="route('login')" :active="request()->routeIs('login')">
                 <x-responsive-nav-link :href="route('locality.index')" :active="request()->routeIs('locality.index')">
                     {{ __('Locality') }}
                 </x-responsive-nav-link>
-                <x-responsive-nav-link :href="route('representation.index')" :active="request()->routeIs('representation.index')">
-                    {{ __('Representation') }}
-                </x-responsive-nav-link>
                 <x-responsive-nav-link :href="route('show.index')" :active="request()->routeIs('show.index')">
                     {{ __('Spectacle') }}
                 </x-responsive-nav-link>
                 <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                     {{ __('Dashboard') }}
                 </x-responsive-nav-link>
-
             @endauth
         </div>
     </div>

@@ -13,6 +13,7 @@ use App\Http\Controllers\ShowController;
 use App\Http\Controllers\TypeController;
 use App\Http\Middleware\SetLocaleFromUser;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Admin\AdminRepresentationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -107,9 +108,7 @@ Route::get('/role/{id}', [RoleController::class, 'show'])
 | Representation Routes
 |--------------------------------------------------------------------------
 */
-Route::get('/representation', [RepresentationController::class, 'index'])->name('representation.index');
-Route::get('/representation/{id}', [RepresentationController::class, 'show'])
-    ->where('id', '[0-9]+')->name('representation.show');
+Route::get('/representation/{id}', [RepresentationController::class, 'show'])->where('id', '[0-9]+')->name('representation.show');
     /*
     |--------------------------------------------------------------------------
     | Show Routes
@@ -184,6 +183,18 @@ Route::middleware(['auth'])->group(function () {
         Route::delete('/admin/artist/{id}', [ArtistController::class, 'destroy'])->where('id', '[0-9]+')->name('admin.artist.destroy');
 
         Route::get('/admin/user', [AdminController::class, 'index'])->name('admin.user.index');
+
+        Route::get('/admin/representation', [AdminRepresentationController::class, 'index'])->name('admin.representation.index');
+        Route::get('admin/representation/{id}', [AdminRepresentationController::class, 'show'])
+            ->where('id', '[0-9]+')->name('admin/representation.show');
+        Route::get('/admin/representation/create', [AdminRepresentationController::class, 'create'])->name('admin.representation.create');
+        Route::post('/admin/representation', [AdminRepresentationController::class, 'store'])->name('admin.representation.store');
+        Route::get('/admin/representation/edit/{id}', [AdminRepresentationController::class, 'edit'])
+            ->where('id', '[0-9]+')->name('admin.representation.edit');
+        Route::put('/admin/representation/{id}', [AdminRepresentationController::class, 'update'])
+            ->where('id', '[0-9]+')->name('admin.representation.update');
+        Route::delete('/admin/representation/{id}', [AdminRepresentationController::class, 'destroy'])
+            ->where('id', '[0-9]+')->name('admin.representation.destroy');
         /*
         |--------------------------------------------------------------------------
         | Export & Import Routes
