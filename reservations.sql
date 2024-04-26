@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : localhost:3306
--- Généré le : jeu. 18 avr. 2024 à 09:13
+-- Généré le : jeu. 25 avr. 2024 à 21:01
 -- Version du serveur : 5.7.33
 -- Version de PHP : 8.3.3
 
@@ -50,7 +50,8 @@ INSERT INTO `artists` (`id`, `firstname`, `lastname`) VALUES
 (10, 'Claude', 'Semal'),
 (11, 'Laurence', 'Warin'),
 (12, 'Pierre', 'Wayburn'),
-(13, 'Gwendoline', 'Gauthier');
+(13, 'Gwendoline', 'Gauthier'),
+(14, 'Jean-Claude', 'Van Damme');
 
 -- --------------------------------------------------------
 
@@ -88,7 +89,8 @@ INSERT INTO `artist_type` (`id`, `artist_id`, `type_id`) VALUES
 (17, 13, 3),
 (18, 2, 4),
 (19, 12, 1),
-(20, 13, 1);
+(20, 13, 1),
+(21, 14, 1);
 
 -- --------------------------------------------------------
 
@@ -111,7 +113,9 @@ INSERT INTO `artist_type_show` (`id`, `artist_type_id`, `show_id`) VALUES
 (2, 2, 1),
 (3, 3, 1),
 (4, 4, 1),
-(5, 5, 1);
+(5, 5, 1),
+(7, 5, 3),
+(10, 14, 6);
 
 -- --------------------------------------------------------
 
@@ -291,7 +295,10 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (18, '2024_03_30_211633_create_reviews_table', 1),
 (19, '2024_03_31_115219_create_artist_type_show_table', 1),
 (20, '2024_03_31_123057_create_user_role_table', 1),
-(21, '2024_04_02_091857_update_users_table', 1);
+(21, '2024_04_02_091857_update_users_table', 1),
+(23, '2024_04_23_113556_add_stripe_invoice_id_to_reservations_table', 2),
+(24, '2024_04_24_104002_create_seats_table', 2),
+(25, '2024_04_24_104937_add_seat_id_to_representation_reservation_table', 2);
 
 -- --------------------------------------------------------
 
@@ -349,7 +356,9 @@ CREATE TABLE `representations` (
 INSERT INTO `representations` (`id`, `show_id`, `location_id`, `schedule`) VALUES
 (1, 1, 1, '2012-10-12 13:30:00'),
 (2, 1, 2, '2012-10-12 20:30:00'),
-(4, 3, NULL, '2012-10-16 20:30:00');
+(4, 3, NULL, '2012-10-16 20:30:00'),
+(5, 6, 5, '2024-04-26 21:41:00'),
+(6, 6, 5, '2024-04-26 21:41:00');
 
 -- --------------------------------------------------------
 
@@ -362,47 +371,139 @@ CREATE TABLE `representation_reservation` (
   `representation_id` bigint(20) UNSIGNED NOT NULL,
   `reservation_id` bigint(20) UNSIGNED NOT NULL,
   `price_id` bigint(20) UNSIGNED NOT NULL,
-  `quantity` tinyint(4) NOT NULL
+  `quantity` tinyint(4) NOT NULL,
+  `seat_id` bigint(20) UNSIGNED DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Déchargement des données de la table `representation_reservation`
 --
 
-INSERT INTO `representation_reservation` (`id`, `representation_id`, `reservation_id`, `price_id`, `quantity`) VALUES
-(1, 2, 1, 1, 2),
-(2, 1, 2, 2, 1),
-(4, 2, 23, 3, 1),
-(5, 2, 24, 3, 1),
-(6, 2, 25, 3, 1),
-(7, 2, 26, 3, 1),
-(8, 2, 27, 2, 1),
-(9, 2, 28, 2, 1),
-(10, 1, 29, 3, 1),
-(11, 2, 32, 2, 1),
-(12, 1, 35, 2, 1),
-(13, 1, 39, 4, 1),
-(14, 1, 41, 4, 1),
-(15, 1, 44, 4, 1),
-(16, 1, 45, 2, 1),
-(17, 1, 45, 3, 1),
-(18, 1, 45, 4, 1),
-(19, 1, 46, 2, 1),
-(20, 1, 47, 4, 1),
-(21, 1, 48, 4, 2),
-(22, 1, 49, 4, 2),
-(23, 1, 50, 2, 1),
-(24, 1, 58, 2, 1),
-(25, 1, 59, 2, 1),
-(26, 2, 60, 2, 1),
-(27, 2, 61, 2, 1),
-(28, 1, 62, 2, 1),
-(29, 1, 63, 2, 1),
-(30, 1, 64, 2, 1),
-(31, 1, 65, 2, 4),
-(32, 1, 66, 4, 1),
-(33, 1, 67, 4, 1),
-(34, 1, 68, 4, 1);
+INSERT INTO `representation_reservation` (`id`, `representation_id`, `reservation_id`, `price_id`, `quantity`, `seat_id`) VALUES
+(1, 2, 1, 1, 2, NULL),
+(2, 1, 2, 2, 1, NULL),
+(7, 2, 26, 3, 1, NULL),
+(9, 2, 28, 2, 1, NULL),
+(10, 1, 29, 3, 1, NULL),
+(15, 1, 44, 4, 1, NULL),
+(16, 1, 45, 2, 1, NULL),
+(17, 1, 45, 3, 1, NULL),
+(18, 1, 45, 4, 1, NULL),
+(19, 1, 46, 2, 1, NULL),
+(20, 1, 47, 4, 1, NULL),
+(21, 1, 48, 4, 2, NULL),
+(22, 1, 49, 4, 2, NULL),
+(23, 1, 50, 2, 1, NULL),
+(24, 1, 58, 2, 1, NULL),
+(25, 1, 59, 2, 1, NULL),
+(27, 2, 61, 2, 1, NULL),
+(28, 1, 62, 2, 1, NULL),
+(29, 1, 63, 2, 1, NULL),
+(30, 1, 64, 2, 1, NULL),
+(31, 1, 65, 2, 4, NULL),
+(32, 1, 66, 4, 1, NULL),
+(33, 1, 67, 4, 1, NULL),
+(34, 1, 68, 4, 1, NULL),
+(35, 1, 69, 2, 1, NULL),
+(36, 1, 70, 4, 1, NULL),
+(37, 1, 71, 2, 1, NULL),
+(38, 1, 72, 3, 1, NULL),
+(39, 1, 73, 2, 1, NULL),
+(40, 2, 74, 3, 1, NULL),
+(41, 1, 75, 3, 1, NULL),
+(42, 1, 75, 4, 1, NULL),
+(43, 1, 76, 2, 2, NULL),
+(44, 1, 78, 2, 1, NULL),
+(45, 1, 78, 3, 1, NULL),
+(46, 1, 78, 4, 1, NULL),
+(47, 1, 79, 2, 1, NULL),
+(48, 1, 79, 3, 1, NULL),
+(49, 1, 79, 4, 1, NULL),
+(50, 1, 81, 2, 1, NULL),
+(51, 1, 81, 3, 1, NULL),
+(52, 1, 82, 4, 1, NULL),
+(53, 1, 85, 3, 1, NULL),
+(54, 1, 85, 4, 1, NULL),
+(55, 1, 87, 4, 1, NULL),
+(56, 1, 89, 2, 1, NULL),
+(57, 1, 89, 3, 1, NULL),
+(58, 1, 89, 4, 1, NULL),
+(59, 1, 90, 2, 1, NULL),
+(60, 1, 90, 3, 1, NULL),
+(61, 1, 91, 2, 1, NULL),
+(62, 1, 92, 2, 1, NULL),
+(63, 1, 93, 2, 1, NULL),
+(64, 4, 94, 2, 1, NULL),
+(65, 1, 95, 2, 1, NULL),
+(66, 2, 96, 3, 1, NULL),
+(67, 2, 96, 4, 1, NULL),
+(68, 1, 97, 4, 1, NULL),
+(69, 4, 98, 2, 1, NULL),
+(70, 4, 99, 2, 1, NULL),
+(71, 4, 100, 2, 1, NULL),
+(72, 4, 101, 2, 1, NULL),
+(73, 2, 102, 2, 1, NULL),
+(74, 2, 103, 2, 3, NULL),
+(75, 2, 103, 4, 2, NULL),
+(76, 2, 104, 2, 1, NULL),
+(77, 2, 104, 3, 1, NULL),
+(78, 2, 104, 4, 1, NULL),
+(79, 2, 105, 2, 1, NULL),
+(80, 2, 106, 3, 1, NULL),
+(81, 2, 107, 2, 1, NULL),
+(82, 2, 107, 3, 1, NULL),
+(83, 2, 107, 4, 1, NULL),
+(84, 2, 108, 2, 1, NULL),
+(85, 2, 108, 3, 1, NULL),
+(86, 2, 109, 3, 1, NULL),
+(87, 1, 110, 4, 1, NULL),
+(88, 1, 111, 2, 1, NULL),
+(89, 1, 112, 4, 1, NULL),
+(90, 1, 113, 2, 1, NULL),
+(91, 1, 114, 4, 1, NULL),
+(92, 1, 115, 2, 1, NULL),
+(93, 1, 116, 4, 1, NULL),
+(94, 1, 117, 2, 1, NULL),
+(95, 1, 118, 2, 1, NULL),
+(96, 1, 119, 2, 1, NULL),
+(97, 1, 120, 2, 1, NULL),
+(98, 1, 121, 3, 1, NULL),
+(99, 1, 122, 4, 1, NULL),
+(100, 1, 123, 4, 1, NULL),
+(101, 1, 124, 3, 1, NULL),
+(102, 1, 125, 2, 1, NULL),
+(103, 1, 126, 2, 1, NULL),
+(104, 2, 127, 2, 1, NULL),
+(105, 1, 128, 2, 1, NULL),
+(106, 1, 129, 4, 1, NULL),
+(107, 1, 130, 2, 1, NULL),
+(108, 1, 131, 4, 1, NULL),
+(109, 1, 132, 4, 1, NULL),
+(110, 1, 133, 2, 1, NULL),
+(111, 1, 134, 4, 1, NULL),
+(112, 1, 135, 3, 1, NULL),
+(113, 1, 136, 2, 1, NULL),
+(114, 1, 137, 2, 1, NULL),
+(115, 1, 138, 2, 1, NULL),
+(116, 1, 139, 2, 1, NULL),
+(117, 1, 140, 2, 1, NULL),
+(118, 1, 141, 3, 1, NULL),
+(119, 1, 142, 3, 1, NULL),
+(120, 1, 143, 3, 1, NULL),
+(121, 1, 144, 4, 1, NULL),
+(122, 1, 145, 4, 1, NULL),
+(123, 1, 146, 4, 1, NULL),
+(124, 1, 147, 2, 1, NULL),
+(125, 1, 148, 2, 1, NULL),
+(126, 1, 149, 2, 1, NULL),
+(127, 1, 174, 2, 1, 1),
+(128, 1, 175, 2, 1, 17),
+(129, 1, 177, 2, 1, 19),
+(130, 1, 178, 2, 1, 7),
+(131, 2, 179, 3, 1, 18),
+(132, 1, 183, 3, 1, 13),
+(133, 2, 187, 2, 1, 8),
+(134, 1, 189, 2, 2, 2);
 
 -- --------------------------------------------------------
 
@@ -414,82 +515,161 @@ CREATE TABLE `reservations` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `user_id` bigint(20) UNSIGNED NOT NULL,
   `booking_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `status` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL
+  `status` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `stripe_invoice_id` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Déchargement des données de la table `reservations`
 --
 
-INSERT INTO `reservations` (`id`, `user_id`, `booking_date`, `status`) VALUES
-(1, 1, '2012-10-10 08:00:00', NULL),
-(2, 4, '2012-10-08 08:00:00', NULL),
-(3, 2, '2012-10-15 08:00:00', NULL),
-(4, 4, '2024-04-11 17:14:33', 'pending'),
-(5, 4, '2024-04-11 17:17:07', 'pending'),
-(6, 4, '2024-04-11 17:17:17', 'pending'),
-(7, 4, '2024-04-11 17:17:22', 'pending'),
-(8, 4, '2024-04-11 17:18:11', 'pending'),
-(9, 4, '2024-04-11 17:18:41', 'pending'),
-(10, 4, '2024-04-11 17:18:58', 'pending'),
-(11, 4, '2024-04-11 17:19:24', 'pending'),
-(12, 4, '2024-04-11 17:19:32', 'pending'),
-(13, 4, '2024-04-11 17:22:21', 'pending'),
-(14, 4, '2024-04-11 17:24:51', 'pending'),
-(15, 4, '2024-04-11 17:25:23', 'pending'),
-(16, 4, '2024-04-11 17:28:26', 'pending'),
-(17, 4, '2024-04-11 17:29:07', 'pending'),
-(18, 4, '2024-04-11 17:31:59', 'pending'),
-(19, 4, '2024-04-11 17:32:20', 'pending'),
-(20, 4, '2024-04-11 17:35:21', 'pending'),
-(21, 4, '2024-04-11 17:38:10', 'pending'),
-(22, 4, '2024-04-11 17:39:53', 'pending'),
-(23, 4, '2024-04-11 17:44:25', 'pending'),
-(24, 4, '2024-04-11 17:45:26', 'pending'),
-(25, 4, '2024-04-11 17:45:58', 'pending'),
-(26, 4, '2024-04-11 17:50:03', 'canceled'),
-(27, 4, '2024-04-11 17:56:44', 'pending'),
-(28, 4, '2024-04-11 17:58:08', 'canceled'),
-(29, 4, '2024-04-11 18:15:50', 'canceled'),
-(30, 4, '2024-04-11 18:21:01', 'pending'),
-(31, 4, '2024-04-11 18:23:10', 'pending'),
-(32, 4, '2024-04-11 18:28:35', 'pending'),
-(33, 4, '2024-04-11 18:28:40', 'pending'),
-(34, 4, '2024-04-11 18:37:13', 'pending'),
-(35, 4, '2024-04-11 18:37:18', 'pending'),
-(36, 4, '2024-04-11 18:37:28', 'pending'),
-(37, 4, '2024-04-11 18:37:32', 'pending'),
-(38, 4, '2024-04-11 18:38:46', 'pending'),
-(39, 4, '2024-04-11 18:40:24', 'pending'),
-(40, 4, '2024-04-11 18:40:30', 'pending'),
-(41, 4, '2024-04-11 18:40:46', 'pending'),
-(42, 4, '2024-04-11 18:40:51', 'pending'),
-(43, 4, '2024-04-11 18:41:06', 'pending'),
-(44, 4, '2024-04-11 18:41:15', 'canceled'),
-(45, 4, '2024-04-11 18:41:52', 'canceled'),
-(46, 1, '2024-04-11 19:21:42', 'canceled'),
-(47, 1, '2024-04-12 05:32:36', 'pending'),
-(48, 1, '2024-04-12 05:32:47', 'pending'),
-(49, 1, '2024-04-12 05:33:14', 'canceled'),
-(50, 1, '2024-04-12 07:50:06', 'pending'),
-(51, 1, '2024-04-12 07:50:10', 'pending'),
-(52, 1, '2024-04-12 07:50:12', 'pending'),
-(53, 1, '2024-04-12 07:50:13', 'pending'),
-(54, 1, '2024-04-12 07:50:14', 'pending'),
-(55, 1, '2024-04-12 07:50:15', 'pending'),
-(56, 1, '2024-04-12 07:50:17', 'pending'),
-(57, 1, '2024-04-12 07:50:18', 'pending'),
-(58, 1, '2024-04-12 07:50:48', 'pending'),
-(59, 1, '2024-04-12 07:50:52', 'canceled'),
-(60, 1, '2024-04-12 07:57:22', 'pending'),
-(61, 1, '2024-04-12 07:57:26', 'canceled'),
-(62, 1, '2024-04-15 06:50:30', 'canceled'),
-(63, 1, '2024-04-15 10:05:35', 'canceled'),
-(64, 1, '2024-04-15 10:45:47', 'canceled'),
-(65, 1, '2024-04-15 12:49:46', 'canceled'),
-(66, 1, '2024-04-16 12:07:08', 'pending'),
-(67, 1, '2024-04-16 12:07:09', 'pending'),
-(68, 1, '2024-04-16 12:07:10', 'canceled');
+INSERT INTO `reservations` (`id`, `user_id`, `booking_date`, `status`, `stripe_invoice_id`) VALUES
+(1, 1, '2012-10-10 08:00:00', NULL, NULL),
+(2, 4, '2012-10-08 08:00:00', NULL, NULL),
+(3, 2, '2012-10-15 08:00:00', NULL, NULL),
+(26, 4, '2024-04-11 17:50:03', 'canceled', NULL),
+(28, 4, '2024-04-11 17:58:08', 'canceled', NULL),
+(29, 4, '2024-04-11 18:15:50', 'canceled', NULL),
+(44, 4, '2024-04-11 18:41:15', 'canceled', NULL),
+(45, 4, '2024-04-11 18:41:52', 'canceled', NULL),
+(46, 1, '2024-04-11 19:21:42', 'canceled', NULL),
+(47, 1, '2024-04-12 05:32:36', 'pending', NULL),
+(48, 1, '2024-04-12 05:32:47', 'pending', NULL),
+(49, 1, '2024-04-12 05:33:14', 'canceled', NULL),
+(50, 1, '2024-04-12 07:50:06', 'pending', NULL),
+(51, 1, '2024-04-12 07:50:10', 'pending', NULL),
+(52, 1, '2024-04-12 07:50:12', 'pending', NULL),
+(53, 1, '2024-04-12 07:50:13', 'pending', NULL),
+(54, 1, '2024-04-12 07:50:14', 'pending', NULL),
+(55, 1, '2024-04-12 07:50:15', 'pending', NULL),
+(56, 1, '2024-04-12 07:50:17', 'pending', NULL),
+(57, 1, '2024-04-12 07:50:18', 'pending', NULL),
+(58, 1, '2024-04-12 07:50:48', 'pending', NULL),
+(59, 1, '2024-04-12 07:50:52', 'canceled', NULL),
+(60, 1, '2024-04-12 07:57:22', 'pending', NULL),
+(61, 1, '2024-04-12 07:57:26', 'canceled', NULL),
+(62, 1, '2024-04-15 06:50:30', 'canceled', NULL),
+(63, 1, '2024-04-15 10:05:35', 'canceled', NULL),
+(64, 1, '2024-04-15 10:45:47', 'canceled', NULL),
+(65, 1, '2024-04-15 12:49:46', 'canceled', NULL),
+(66, 1, '2024-04-16 12:07:08', 'pending', NULL),
+(67, 1, '2024-04-16 12:07:09', 'pending', NULL),
+(68, 1, '2024-04-16 12:07:10', 'canceled', NULL),
+(69, 4, '2024-04-19 10:59:25', 'canceled', NULL),
+(70, 4, '2024-04-19 11:09:56', 'canceled', NULL),
+(71, 4, '2024-04-19 11:33:09', 'canceled', NULL),
+(72, 4, '2024-04-19 11:50:46', 'canceled', NULL),
+(73, 4, '2024-04-21 11:04:06', 'canceled', NULL),
+(74, 4, '2024-04-21 11:08:47', 'canceled', NULL),
+(75, 4, '2024-04-21 11:26:34', 'canceled', NULL),
+(76, 4, '2024-04-21 11:27:51', 'canceled', NULL),
+(78, 4, '2024-04-21 13:37:51', 'canceled', NULL),
+(79, 4, '2024-04-21 13:38:10', 'canceled', NULL),
+(81, 4, '2024-04-21 13:40:17', 'pending', NULL),
+(82, 4, '2024-04-21 13:40:43', 'canceled', NULL),
+(85, 4, '2024-04-21 14:24:55', 'pending', NULL),
+(87, 4, '2024-04-21 14:25:51', 'pending', NULL),
+(89, 4, '2024-04-21 14:26:08', 'pending', NULL),
+(90, 4, '2024-04-21 17:52:24', 'pending', NULL),
+(91, 4, '2024-04-22 07:33:21', 'canceled', NULL),
+(92, 4, '2024-04-22 07:40:02', 'canceled', NULL),
+(93, 4, '2024-04-22 09:28:41', 'pending', NULL),
+(94, 4, '2024-04-22 09:29:15', 'pending', NULL),
+(95, 4, '2024-04-23 09:40:20', 'canceled', NULL),
+(96, 4, '2024-04-23 09:46:32', 'canceled', NULL),
+(97, 4, '2024-04-23 09:54:11', 'canceled', NULL),
+(98, 4, '2024-04-23 10:06:34', 'pending', NULL),
+(99, 4, '2024-04-23 10:06:43', 'pending', NULL),
+(100, 4, '2024-04-23 10:06:47', 'pending', NULL),
+(101, 4, '2024-04-23 10:06:51', 'pending', NULL),
+(102, 4, '2024-04-23 10:07:23', 'canceled', NULL),
+(103, 4, '2024-04-23 10:15:23', 'pending', NULL),
+(104, 4, '2024-04-23 10:15:33', 'pending', NULL),
+(105, 4, '2024-04-23 10:15:39', 'pending', NULL),
+(106, 4, '2024-04-23 10:15:43', 'pending', NULL),
+(107, 4, '2024-04-23 10:15:53', 'pending', NULL),
+(108, 4, '2024-04-23 10:20:30', 'pending', NULL),
+(109, 4, '2024-04-23 11:05:03', 'pending', NULL),
+(110, 4, '2024-04-23 11:18:09', 'canceled', NULL),
+(111, 4, '2024-04-23 11:22:36', 'canceled', NULL),
+(112, 4, '2024-04-23 11:27:55', 'canceled', NULL),
+(113, 4, '2024-04-23 11:35:23', 'canceled', NULL),
+(114, 4, '2024-04-23 12:00:19', 'canceled', NULL),
+(115, 4, '2024-04-23 12:57:30', 'canceled', NULL),
+(116, 4, '2024-04-23 13:01:26', 'canceled', NULL),
+(117, 4, '2024-04-23 13:06:14', 'pending', NULL),
+(118, 4, '2024-04-23 13:06:15', 'pending', NULL),
+(119, 4, '2024-04-23 13:06:19', 'pending', NULL),
+(120, 4, '2024-04-23 13:06:22', 'pending', NULL),
+(121, 4, '2024-04-23 13:06:33', 'pending', NULL),
+(122, 4, '2024-04-23 13:06:37', 'pending', NULL),
+(123, 4, '2024-04-23 13:20:50', 'canceled', NULL),
+(124, 4, '2024-04-23 13:30:25', 'canceled', NULL),
+(125, 4, '2024-04-23 13:51:41', 'canceled', NULL),
+(126, 4, '2024-04-23 13:56:13', 'confirmed', NULL),
+(127, 4, '2024-04-23 14:03:55', 'pending', NULL),
+(128, 4, '2024-04-23 14:04:21', 'pending', NULL),
+(129, 4, '2024-04-23 14:08:40', 'pending', NULL),
+(130, 4, '2024-04-23 14:13:18', 'pending', NULL),
+(131, 4, '2024-04-23 14:27:53', 'pending', NULL),
+(132, 4, '2024-04-23 14:27:57', 'pending', NULL),
+(133, 4, '2024-04-23 14:34:09', 'pending', NULL),
+(134, 4, '2024-04-23 14:37:49', 'pending', NULL),
+(135, 4, '2024-04-23 14:38:15', 'pending', NULL),
+(136, 4, '2024-04-23 14:40:02', 'pending', NULL),
+(137, 4, '2024-04-23 14:42:23', 'pending', NULL),
+(138, 4, '2024-04-23 14:43:17', 'pending', NULL),
+(139, 4, '2024-04-23 16:04:45', 'pending', NULL),
+(140, 4, '2024-04-23 16:04:51', 'pending', NULL),
+(141, 4, '2024-04-23 16:05:45', 'pending', NULL),
+(142, 4, '2024-04-23 16:07:48', 'pending', NULL),
+(143, 4, '2024-04-23 16:08:39', 'pending', NULL),
+(144, 4, '2024-04-23 16:10:39', 'pending', NULL),
+(145, 4, '2024-04-23 16:14:17', 'pending', NULL),
+(146, 4, '2024-04-23 16:16:44', 'pending', NULL),
+(147, 4, '2024-04-23 16:21:44', 'confirmed', NULL),
+(148, 4, '2024-04-23 16:27:04', 'confirmed', NULL),
+(149, 4, '2024-04-23 16:35:13', 'confirmed', NULL),
+(150, 4, '2024-04-24 10:13:21', 'pending', NULL),
+(151, 4, '2024-04-24 10:13:32', 'pending', NULL),
+(152, 4, '2024-04-24 10:21:56', 'pending', NULL),
+(153, 4, '2024-04-24 10:22:13', 'pending', NULL),
+(154, 4, '2024-04-24 10:22:18', 'pending', NULL),
+(155, 4, '2024-04-24 10:23:51', 'pending', NULL),
+(156, 4, '2024-04-24 10:27:36', 'pending', NULL),
+(157, 4, '2024-04-24 10:35:30', 'pending', NULL),
+(158, 4, '2024-04-24 10:35:35', 'pending', NULL),
+(159, 4, '2024-04-24 10:37:21', 'pending', NULL),
+(160, 4, '2024-04-24 10:39:57', 'pending', NULL),
+(161, 4, '2024-04-24 10:42:26', 'pending', NULL),
+(162, 4, '2024-04-24 10:44:01', 'pending', NULL),
+(163, 4, '2024-04-24 10:57:51', 'pending', NULL),
+(164, 4, '2024-04-24 10:58:04', 'pending', NULL),
+(165, 4, '2024-04-24 10:58:16', 'pending', NULL),
+(166, 4, '2024-04-24 10:58:23', 'pending', NULL),
+(167, 4, '2024-04-24 11:01:03', 'pending', NULL),
+(168, 4, '2024-04-24 11:14:35', 'pending', NULL),
+(169, 4, '2024-04-24 11:16:12', 'pending', NULL),
+(170, 4, '2024-04-24 11:24:51', 'pending', NULL),
+(171, 4, '2024-04-24 11:25:06', 'pending', NULL),
+(172, 4, '2024-04-24 11:25:15', 'pending', NULL),
+(173, 4, '2024-04-24 11:29:43', 'pending', NULL),
+(174, 4, '2024-04-24 11:32:30', 'confirmed', 'cs_test_a1F0Q6oCgXRzlNJyQaofG37G13KL5pWM9mfYPfzb2mVxzMCAIiMPWW2iGG'),
+(175, 4, '2024-04-24 13:12:47', 'pending', 'cs_test_a1dTaBKiq4FL0LhXeFIGzUmpgw6ZrrVJAXS23CVzS1MJr3c2St7kXQQD9s'),
+(176, 4, '2024-04-24 13:14:50', 'pending', NULL),
+(177, 4, '2024-04-24 16:19:14', 'canceled', 'cs_test_a1zO788L26umAiNP6A2ISBit7nkpaAAFaNru1iiXOuouctMsJvXdlSFHEm'),
+(178, 4, '2024-04-24 16:35:47', 'canceled', 'cs_test_a1GfnmOC9zIkoGmnfqd56ZUkbd8nLL7E80Ci23HhhyRKEh1MaA9msMd5Qi'),
+(179, 4, '2024-04-24 16:37:01', 'canceled', 'cs_test_a1pezqQ8YmK73Mu4uy3e5eO1jffL8ueSsDsbr2EELKYknPaEY3jcafL4Mm'),
+(180, 4, '2024-04-24 16:37:36', 'pending', NULL),
+(181, 4, '2024-04-24 16:37:41', 'pending', NULL),
+(182, 4, '2024-04-24 16:38:27', 'pending', NULL),
+(183, 4, '2024-04-24 16:38:32', 'canceled', 'cs_test_a1NF15bcpLrkZxpZRCxbq2GTQGH8ejJlDFtVhj8xkKtuA4ORskVwweqeMx'),
+(184, 4, '2024-04-24 18:04:40', 'pending', NULL),
+(185, 4, '2024-04-24 18:06:55', 'pending', NULL),
+(186, 4, '2024-04-24 18:28:31', 'pending', NULL),
+(187, 4, '2024-04-24 18:28:37', 'confirmed', 'cs_test_a1XyJS1Bu9t9eg1CKfziOTdc9S9p5s0DBY9pYScHaHJFlMAkLrMHwH4Ok0'),
+(188, 1, '2024-04-24 19:13:14', 'pending', NULL),
+(189, 4, '2024-04-25 18:31:09', 'canceled', 'cs_test_a1flHNmbIPa1i9oygBt2qUn6ULDBE6zUOt2zWG52v2ke02I8ogr9EiJ1bE');
 
 -- --------------------------------------------------------
 
@@ -531,6 +711,46 @@ INSERT INTO `roles` (`id`, `role`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Structure de la table `seats`
+--
+
+CREATE TABLE `seats` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `seat_number` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `status` enum('available','reserved') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'available',
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Déchargement des données de la table `seats`
+--
+
+INSERT INTO `seats` (`id`, `seat_number`, `status`, `created_at`, `updated_at`) VALUES
+(1, 'S1', 'reserved', NULL, NULL),
+(2, 'S2', 'available', NULL, NULL),
+(3, 'S3', 'available', NULL, NULL),
+(4, 'S4', 'available', NULL, NULL),
+(5, 'S5', 'available', NULL, NULL),
+(6, 'S6', 'available', NULL, NULL),
+(7, 'S7', 'reserved', NULL, NULL),
+(8, 'S8', 'reserved', NULL, NULL),
+(9, 'S9', 'available', NULL, NULL),
+(10, 'S10', 'available', NULL, NULL),
+(11, 'S11', 'available', NULL, NULL),
+(12, 'S12', 'available', NULL, NULL),
+(13, 'S13', 'available', NULL, NULL),
+(14, 'S14', 'available', NULL, NULL),
+(15, 'S15', 'available', NULL, NULL),
+(16, 'S16', 'available', NULL, NULL),
+(17, 'S17', 'reserved', NULL, NULL),
+(18, 'S18', 'reserved', NULL, NULL),
+(19, 'S19', 'reserved', NULL, NULL),
+(20, 'S20', 'available', NULL, NULL);
+
+-- --------------------------------------------------------
+
+--
 -- Structure de la table `sessions`
 --
 
@@ -548,8 +768,7 @@ CREATE TABLE `sessions` (
 --
 
 INSERT INTO `sessions` (`id`, `user_id`, `ip_address`, `user_agent`, `payload`, `last_activity`) VALUES
-('QgEOCv8Wx60wgC7cVFx3u7YbYAhkbCE0InrSa2ep', 1, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36 Edg/123.0.0.0', 'YTo1OntzOjY6Il90b2tlbiI7czo0MDoiMEx1ckZHbGxzSUx2dVRxY3UwY3publF1WUNIRTBKc2l1NDl0NUU5SSI7czo2OiJsb2NhbGUiO3M6MjoiZnIiO3M6OToiX3ByZXZpb3VzIjthOjE6e3M6MzoidXJsIjtzOjIxOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAiO31zOjY6Il9mbGFzaCI7YToyOntzOjM6Im9sZCI7YTowOnt9czozOiJuZXciO2E6MDp7fX1zOjUwOiJsb2dpbl93ZWJfNTliYTM2YWRkYzJiMmY5NDAxNTgwZjAxNGM3ZjU4ZWE0ZTMwOTg5ZCI7aToxO30=', 1713429414),
-('VOTE25WtC5bxlmsFJAXEPfxjmzkNTektL0ATe8Xg', 1, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36 Edg/123.0.0.0', 'YTo1OntzOjY6Il90b2tlbiI7czo0MDoiamxHNGFzUm0yMUYxOVdwREFxWlB2N1h4ZllDeWVEYWpYZ2YwcGowdiI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czo2OiJsb2NhbGUiO3M6MjoiZnIiO3M6OToiX3ByZXZpb3VzIjthOjE6e3M6MzoidXJsIjtzOjM2OiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvcmVwcmVzZW50YXRpb24iO31zOjUwOiJsb2dpbl93ZWJfNTliYTM2YWRkYzJiMmY5NDAxNTgwZjAxNGM3ZjU4ZWE0ZTMwOTg5ZCI7aToxO30=', 1713384265);
+('bxBYZF0WIpO4ZxUyCPD37aqfyCMrs211qrcRcFoS', 1, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36 Edg/124.0.0.0', 'YTo1OntzOjY6Il90b2tlbiI7czo0MDoibTFwOVp6Y2U2VlR2SHhzYlRKNDNKVXVzNlNUU1ptOGFhUTN0VldrViI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czo2OiJsb2NhbGUiO3M6MjoiZnIiO3M6OToiX3ByZXZpb3VzIjthOjE6e3M6MzoidXJsIjtzOjMxOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvZGFzaGJvYXJkIjt9czo1MDoibG9naW5fd2ViXzU5YmEzNmFkZGMyYjJmOTQwMTU4MGYwMTRjN2Y1OGVhNGUzMDk4OWQiO2k6MTt9', 1714078755);
 
 -- --------------------------------------------------------
 
@@ -674,10 +893,10 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `login`, `firstname`, `lastname`, `email`, `langue`, `email_verified_at`, `password`, `remember_token`, `created_at`, `updated_at`, `stripe_id`, `pm_type`, `pm_last_four`, `trial_ends_at`) VALUES
-(1, 'bob', 'Bob', 'Sull', 'bob@sull.com', 'fr', NULL, '$2y$12$Da4cVP.dQbTunLNVEHO9Ce.TPFNjqq4KmL22X/ORVcd6ugoekooaC', NULL, '2024-04-04 13:33:06', '2024-04-17 18:02:56', NULL, NULL, NULL, NULL),
+(1, 'bob', 'Bob', 'Sull', 'bob@sull.com', 'fr', NULL, '$2y$12$Da4cVP.dQbTunLNVEHO9Ce.TPFNjqq4KmL22X/ORVcd6ugoekooaC', 'EPS6GGylDqCSlbAD2SWYC1uOGwfpg8mFfjGVAXjLrqO7BQFpvrO3QaU0yCgQ', '2024-04-04 13:33:06', '2024-04-19 10:30:40', NULL, NULL, NULL, NULL),
 (2, 'john', 'John', 'Doe', 'john@doe.com', 'en', NULL, '$2y$12$vPLvX1Q5hHQyzeDjKzGbuOybjWh5bYKulwRdXuZpsVlJfeKREvGOa', NULL, '2024-04-04 13:33:06', NULL, NULL, NULL, NULL, NULL),
 (3, 'jane', 'Jane', 'Doe', 'jane@doe.com', 'en', NULL, '$2y$12$IiRLKfrJyg1xO8rttvUxoOVYifWaPRFPLEA.N0liospFxY/Y3SOuW', NULL, '2024-04-04 13:33:06', NULL, NULL, NULL, NULL, NULL),
-(4, 'antoine', 'Antoine', 'Demeure', 'ademeure29@gmail.com', 'fr', NULL, '$2y$12$.qQNBACDZrQd5r1vWwdlLe8qEDPA2pxUYEm/CpxVlLDYBgyG1eTey', 'QsTd5CO8SfBratnRboeQQPBwIUHwjw6IUh0mpSItySAO3sF1IhRA5xqUQ7F9', '2024-04-04 13:33:06', NULL, NULL, NULL, NULL, NULL);
+(4, 'antoine', 'Antoine', 'Demeure', 'ademeure29@gmail.com', 'fr', NULL, '$2y$12$.qQNBACDZrQd5r1vWwdlLe8qEDPA2pxUYEm/CpxVlLDYBgyG1eTey', 'EMNkkQyMcvh2fUSKGYwEBitmPh8fKTwMZGmw1v68cbExk4J7jYm38kT4scRS', '2024-04-04 13:33:06', '2024-04-23 14:13:18', NULL, NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -806,7 +1025,8 @@ ALTER TABLE `representation_reservation`
   ADD PRIMARY KEY (`id`),
   ADD KEY `representation_reservation_representation_id_foreign` (`representation_id`),
   ADD KEY `representation_reservation_reservation_id_foreign` (`reservation_id`),
-  ADD KEY `representation_reservation_price_id_foreign` (`price_id`);
+  ADD KEY `representation_reservation_price_id_foreign` (`price_id`),
+  ADD KEY `representation_reservation_seat_id_foreign` (`seat_id`);
 
 --
 -- Index pour la table `reservations`
@@ -828,6 +1048,13 @@ ALTER TABLE `reviews`
 --
 ALTER TABLE `roles`
   ADD PRIMARY KEY (`id`);
+
+--
+-- Index pour la table `seats`
+--
+ALTER TABLE `seats`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `seats_seat_number_unique` (`seat_number`);
 
 --
 -- Index pour la table `sessions`
@@ -892,19 +1119,19 @@ ALTER TABLE `user_role`
 -- AUTO_INCREMENT pour la table `artists`
 --
 ALTER TABLE `artists`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- AUTO_INCREMENT pour la table `artist_type`
 --
 ALTER TABLE `artist_type`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
 
 --
 -- AUTO_INCREMENT pour la table `artist_type_show`
 --
 ALTER TABLE `artist_type_show`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT pour la table `failed_jobs`
@@ -934,7 +1161,7 @@ ALTER TABLE `locations`
 -- AUTO_INCREMENT pour la table `migrations`
 --
 ALTER TABLE `migrations`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
 
 --
 -- AUTO_INCREMENT pour la table `prices`
@@ -946,19 +1173,19 @@ ALTER TABLE `prices`
 -- AUTO_INCREMENT pour la table `representations`
 --
 ALTER TABLE `representations`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT pour la table `representation_reservation`
 --
 ALTER TABLE `representation_reservation`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=35;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=135;
 
 --
 -- AUTO_INCREMENT pour la table `reservations`
 --
 ALTER TABLE `reservations`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=69;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=190;
 
 --
 -- AUTO_INCREMENT pour la table `reviews`
@@ -971,6 +1198,12 @@ ALTER TABLE `reviews`
 --
 ALTER TABLE `roles`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- AUTO_INCREMENT pour la table `seats`
+--
+ALTER TABLE `seats`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 
 --
 -- AUTO_INCREMENT pour la table `shows`
@@ -1045,7 +1278,8 @@ ALTER TABLE `representations`
 ALTER TABLE `representation_reservation`
   ADD CONSTRAINT `representation_reservation_price_id_foreign` FOREIGN KEY (`price_id`) REFERENCES `prices` (`id`),
   ADD CONSTRAINT `representation_reservation_representation_id_foreign` FOREIGN KEY (`representation_id`) REFERENCES `representations` (`id`),
-  ADD CONSTRAINT `representation_reservation_reservation_id_foreign` FOREIGN KEY (`reservation_id`) REFERENCES `reservations` (`id`);
+  ADD CONSTRAINT `representation_reservation_reservation_id_foreign` FOREIGN KEY (`reservation_id`) REFERENCES `reservations` (`id`),
+  ADD CONSTRAINT `representation_reservation_seat_id_foreign` FOREIGN KEY (`seat_id`) REFERENCES `seats` (`id`) ON DELETE SET NULL;
 
 --
 -- Contraintes pour la table `reservations`
