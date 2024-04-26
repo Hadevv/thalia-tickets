@@ -20,10 +20,9 @@
                     </div>
                     <div class="w-full flex">
                         <div class="w-56 mr-10 flex-shrink-0">
-                        @if ($show->poster_url)
-                            <img src="{{ asset('images/' . $show->poster_url) }}" alt="{{ $show->title }}" class="object-cover w-full h-auto">
-                        @endif
-
+                            @if ($show->poster_url)
+                                <img src="{{ asset('images/' . $show->poster_url) }}" alt="{{ $show->title }}" class="object-cover w-full h-auto">
+                           @endif
                         </div>
                         <div class="flex flex-col w-full">
                             <h2 class="text-xl font-semibold text-gray-900 dark:text-gray-100">{{ $show->title }}</h2>

@@ -95,7 +95,6 @@ class ShowController extends Controller
             'artists' => Artist::all(),
         ]);
     }
-
     /**
      * Store a newly created resource in storage.
      */
@@ -106,6 +105,7 @@ class ShowController extends Controller
             'description' => ['required', 'string', 'max:2000'],
             'poster_url' => ['nullable', 'url:http,https', 'max:255'],
             'duration' => ['required', 'numeric'],
+            'poster' => ['nullable', 'image', 'max:2048'],
         ]);
 
         // Génération automatique du slug à partir du titre
@@ -113,7 +113,6 @@ class ShowController extends Controller
 
         $show = new Show();
 
-        // Affectation des valeurs validées aux propriétés du modèle Show
         $show->title = $validated['title'];
         $show->slug = $slug;
         $show->description = $validated['description'];
@@ -122,6 +121,21 @@ class ShowController extends Controller
         $show->created_in = now()->year;
 
         $show->bookable = true;
+
+        // upload de l'image
+        if ($request->hasFile('poster')) {
+            $image = $request->file('poster');
+            $imageName = $slug . '.' . $image->getClientOriginalExtension();
+
+            // stockage de l'image dans le répertoire public/posters
+            $image->move(public_path('posters'), $imageName);
+
+            // stockage de l'image dans le répertoire public/images
+            $image->move(public_path('images'), $imageName);
+
+            $show->poster_url = $imageName;
+        }
+
 
         $show->save();
 

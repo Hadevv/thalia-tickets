@@ -7,7 +7,7 @@ use App\Models\Show;
 use App\Http\Resources\ShowResource;
 use Illuminate\Http\Request;
 
-class ShowController extends Controller
+class ShowApiController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -23,7 +23,7 @@ class ShowController extends Controller
             'representations',
             'artists',
             'representations.representationReservations',
-        ])->orderBy('created_in', 'desc');
+        ])->orderBy('id', 'desc');
 
         if ($paginate) {
             $shows = $query->paginate($perPage);
@@ -58,4 +58,13 @@ class ShowController extends Controller
     {
         return ShowResource::collection(Show::search($request->input('q'))->get());
     }
+
+    public function destroy($id)
+    {
+        $show = Show::findOrFail($id);
+        $show->delete();
+
+        return response()->json(null, 204);
+    }
 }
+
