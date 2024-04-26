@@ -77,7 +77,7 @@ class MyReservationController extends ReservationController
             Log::info('Stripe Invoice PDF URL:', ['pdf_url' => $pdfUrl]);
 
             // Redirection vers l'URL du PDF
-            return redirect($pdfUrl);
+            return redirect()->away($pdfUrl);
 
         } catch (\Stripe\Exception\ApiErrorException $e) {
             Log::error($e->getMessage());
@@ -88,5 +88,4 @@ class MyReservationController extends ReservationController
             return redirect()->route('my-reservations.index')->with('error', 'Une erreur est survenue lors du téléchargement de la facture.');
         }
     }
-
 }
