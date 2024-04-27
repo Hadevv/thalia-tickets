@@ -11,12 +11,12 @@
                     text-gray
                     dark:text-gray-200
                 ">Filtrer les spectacles</h3>
-                <form action="{{ route('show.search') }}" method="get" id="filterForm">
+                <form action="{{ route('show.index') }}" method="get" id="filterForm">
                     <x-input-label for="date_from" value="De" />
-                    <input type="date" name="date_from" value="{{ $date_from ?? '' }}" onchange="submitForm()" class="w-full w-[35ch] max-w-[40ch] border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm">
+                    <input type="date" name="date_from" id="date_from" value="{{ $date_from ?? '' }}" onchange="submitForm()" class="w-full w-[35ch] max-w-[40ch] border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm">
 
                     <x-input-label for="date_to" value="à" />
-                    <input type="date" name="date_to" value="{{ $date_to ?? '' }}" onchange="submitForm()" class="w-full w-[35ch] max-w-[40ch] border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm">
+                    <input type="date" name="date_to" id="date_to" value="{{ $date_to ?? '' }}" onchange="submitForm()" class="w-full w-[35ch] max-w-[40ch] border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm">
 
                     <x-input-label for="location" value="Lieux" />
                     <x-select name="location" :options="$lieux ?? []" :selected="$location ?? null" onchange="submitForm()" class="w-[35ch] max-w-[40ch]" />

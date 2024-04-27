@@ -43,9 +43,40 @@
     @cookieconsentview
 </body>
     <script>
+        function clearSearch() {
+            document.getElementById('searchInput').value = '';
+            document.getElementById('dateFrom').value = '';
+            document.getElementById('dateTo').value = '';
+            document.getElementById('location').value = '';
+
+            document.getElementById('searchInput').addEventListener('input', function() {
+                document.getElementById('searchForm').submit();
+            });
+
+            document.getElementById('searchForm').addEventListener('submit', function(event) {
+                event.preventDefault(); // Empêche le formulaire de se soumettre normalement
+
+                // Réinitialisez l'URL en supprimant les paramètres de requête
+                const baseUrl = window.location.href.split('?')[0];
+                window.history.replaceState(null, null, baseUrl);
+
+                // Soumet le formulaire
+                document.getElementById('searchForm').submit();
+            });
+        }
         function submitForm() {
-            console.log("Form submitted");
-            document.getElementById('filterForm').submit();
+            const dateFrom = document.getElementById('date_from').value;
+            const dateTo = document.getElementById('date_to').value;
+
+            // Vérifier si les deux dates sont définies
+            if (dateFrom && dateTo) {
+                // Si les deux dates sont définies, soumettre le formulaire
+                console.log("Form submitted");
+                document.getElementById('filterForm').submit();
+            } else {
+                // Si seulement une des dates est définie, afficher un message d'erreur
+                alert("Veuillez sélectionner à la fois une date de début et une date de fin.");
+            }
         }
         function updateTotal(form) {
             let total = 0;

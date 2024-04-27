@@ -118,8 +118,8 @@ Route::get('/show', [ShowController::class, 'index'])->name('show.index');
 Route::get('/show/{id}-{slug}', [ShowController::class, 'show'])
     ->where(['id' => '[0-9]+', 'slug' => '[a-z0-9-]+'])
     ->name('show.show');
-
 Route::get('/show/clear-search', [ShowController::class, 'clear'])->name('show.clear');
+
     /*
     |--------------------------------------------------------------------------
     | Reservation payement Routes
