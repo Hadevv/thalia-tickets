@@ -10,7 +10,6 @@
                 </svg>
             </a>
         @endif
-
     </div>
 </form>
 

@@ -1,7 +1,7 @@
 <x-app-layout>
-    <div class="flex justify-center py-12 ml-40 mr-40">
-        <div class="flex justify-center w-1/3 bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg mx-2 ">
-            <div class="min-w-20 p-6 text-gray-900 dark:text-gray-100">
+    <div class="flex justify-center flex-col py-4 px-4 md:flex-row md:px-0 md:mr-24 md:ml-24 md:py-12">
+        <div class="w-full md:w-1/3 bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg mx-2 md:mx-1 mb-4">
+            <div class="sm:min-w-36 p-6 text-gray-900 dark:text-gray-100">
                 <!-- Contenu de la première zone blanche -->
                 <x-search-bar :shows="$shows" :search="$search ?? '' "/>
                 <h3 class="
@@ -23,13 +23,13 @@
                 </form>
             </div>
         </div>
-        <div class="w-2/3 bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg mx-2">
-            <div class="p-6 text-gray-900 dark:text-gray-100 overflow-y-auto max-h-[700px]">
+        <div class="w-full md:w-2/3 bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg mx-2 md:mx-1 md:sm">
+            <div class="p-6 text-gray-900 dark:text-gray-100 overflow-y-auto max-h-[700px] md:sm w-full">
                 <!-- Contenu de la deuxième zone blanche -->
                 <!-- les spectacles -->
-                    @foreach ($shows as $show)
-                        <x-show-card :show="$show" />
-                    @endforeach
+                @foreach ($shows as $show)
+                    <x-show-card :show="$show" />
+                @endforeach
             </div>
             <div class="p-6">
                 {{ $shows->links() }}
@@ -37,5 +37,7 @@
         </div>
     </div>
 </x-app-layout>
+
+
 
 
