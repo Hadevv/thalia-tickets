@@ -1,5 +1,56 @@
 ## Documentation de l'API - Spectacles
 
+### Installation
+
+1. Cloner le dépôt git
+2. Installer les dépendances
+```bash
+composer install
+```
+3. Créer un fichier `.env` à partir du fichier `.env.example`
+4. Générer une clé d'application
+```bash
+php artisan key:generate
+```
+5. Créer une base de données et configurer les informations de connexion dans le fichier `.env`
+6. Exécuter les migrations
+```bash
+php artisan migrate
+```
+7. Exécuter les seeders
+```bash
+php artisan db:seed
+```
+8. Démarrer le serveur
+```bash
+php artisan serve
+```
+
+### API Sanctum : step 0 
+
+### API Sanctum : step 1 CSRF token
+Avant de pouvoir effectuer une requête POST, PUT ou DELETE, il faut d'abord obtenir le xsrf-token
+http://127.0.0.1:8000/api/sanctum/csrf-cookie
+
+### API Sanctum : step 2 Login
+Ajouter un utilisateur dans Authorization -> Basic Auth
+Username :
+Password :
+http://127.0.0.1:8000/api/login
+
+### API Sanctum : step 3 Logout
+http://127.0.0.1:8000/api/logout
+
+### API Sanctum : step 4 POST, PUT, DELETE
+Ajouter le xsrf-token dans les headers de la requête
+```json
+{
+    "Accept": "application",
+    "Content-Type": "application/json",
+    "X-XSRF-TOKEN": "xsrf-token"
+}
+```
+
 ## Endpoints
 
 | Méthode | Endpoint             | Description                        |
@@ -53,3 +104,9 @@
 ### API theatre-contemporain.net et theatre-video.net 
 Le point d'entrée de l'API theatre-contemporain.net est https://www.theatre-contemporain.net/api/
 https://www.ressources-theatre.net/doc/api/ 
+
+
+
+
+
+

@@ -14,6 +14,9 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
+        //sanctum middleware
+        $middleware->statefulApi();
+
         $middleware->web([
             SetLocaleFromUser::class,
             AdminMiddleware::class,

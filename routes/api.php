@@ -14,9 +14,10 @@ use App\Http\Controllers\Api\HttpShowController;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+Route::get('/user', function (Request $request) {
     return $request->user();
-});
+})->middleware('auth:sanctum');
+
 Route::get('/show', [ShowApiController::class, 'index']);
 Route::get('/show/{id}', [ShowApiController::class, 'show'])->where('id', '[0-9]+');
 Route::get('/show/search', [ShowApiController::class, 'search'])->name('show.search');
