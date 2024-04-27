@@ -119,7 +119,7 @@ Route::get('/show/{id}-{slug}', [ShowController::class, 'show'])
     ->where(['id' => '[0-9]+', 'slug' => '[a-z0-9-]+'])
     ->name('show.show');
 
-Route::get('/show/search', [ShowController::class, 'search'])->name('show.search');
+Route::get('/show/clear-search', [ShowController::class, 'clear'])->name('show.clear');
     /*
     |--------------------------------------------------------------------------
     | Reservation payement Routes
@@ -160,50 +160,48 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/my-reservations/{id}/download-invoice', [MyReservationController::class, 'downloadStripeInvoice'])->name('my-reservations.download-invoice');
 });
 
+Route::middleware([\App\Http\Middleware\AdminMiddleware::class])->group(function () {
+    /*
+    |--------------------------------------------------------------------------
+    | Admin Routes
+    |--------------------------------------------------------------------------
+    */
+    Route::get('/admin', AdminController::class)->name('admin.index');
+    Route::delete('/admin/show/{id}', [ShowController::class, 'destroy'])->where('id', '[0-9]+')->name('show.destroy');
+    Route::get('/admin/show/edit/{id}', [ShowController::class, 'edit'])->where('id', '[0-9]+')->name('show.edit');
+    Route::put('/admin/show/{id}', [ShowController::class, 'update'])->where('id', '[0-9]+')->name('show.update');
+    Route::get('/admin/show/create', [ShowController::class, 'create'])->name('show.create');
+    Route::post('/admin/show', [ShowController::class, 'store'])->name('show.store');
 
-    Route::middleware([\App\Http\Middleware\AdminMiddleware::class])->group(function () {
-        /*
-        |--------------------------------------------------------------------------
-        | Admin Routes
-        |--------------------------------------------------------------------------
-        */
-        Route::get('/admin', AdminController::class)->name('admin.index');
-        Route::delete('/admin/show/{id}', [ShowController::class, 'destroy'])->where('id', '[0-9]+')->name('show.destroy');
-        Route::get('/admin/show/edit/{id}', [ShowController::class, 'edit'])->where('id', '[0-9]+')->name('show.edit');
-        Route::put('/admin/show/{id}', [ShowController::class, 'update'])->where('id', '[0-9]+')->name('show.update');
-        Route::get('/admin/show/create', [ShowController::class, 'create'])->name('show.create');
-        Route::post('/admin/show', [ShowController::class, 'store'])->name('show.store');
+    Route::get('/admin/artist', [ArtistController::class, 'index'])->name('admin.artist.index');
+    Route::get('/admin/artist/create', [ArtistController::class, 'create'])->name('admin.artist.create');
+    Route::post('/admin/artist', [ArtistController::class, 'store'])->name('artist.store');
+    Route::get('/admin/artist/{id}', [ArtistController::class, 'show'])->where('id', '[0-9]+')->name('artist.show');
+    Route::get('/admin/artist/edit/{id}', [ArtistController::class, 'edit'])->where('id', '[0-9]+')->name('admin.artist.edit');
+    Route::put('/admin/artist/{id}', [ArtistController::class, 'update'])->where('id', '[0-9]+')->name('admin.artist.update');
+    Route::delete('/admin/artist/{id}', [ArtistController::class, 'destroy'])->where('id', '[0-9]+')->name('admin.artist.destroy');
 
-        Route::get('/admin/artist', [ArtistController::class, 'index'])->name('admin.artist.index');
-        Route::get('/admin/artist/create', [ArtistController::class, 'create'])->name('admin.artist.create');
-        Route::post('/admin/artist', [ArtistController::class, 'store'])->name('artist.store');
-        Route::get('/admin/artist/{id}', [ArtistController::class, 'show'])->where('id', '[0-9]+')->name('artist.show');
-        Route::get('/admin/artist/edit/{id}', [ArtistController::class, 'edit'])->where('id', '[0-9]+')->name('admin.artist.edit');
-        Route::put('/admin/artist/{id}', [ArtistController::class, 'update'])->where('id', '[0-9]+')->name('admin.artist.update');
-        Route::delete('/admin/artist/{id}', [ArtistController::class, 'destroy'])->where('id', '[0-9]+')->name('admin.artist.destroy');
+    Route::get('/admin/user', [AdminController::class, 'index'])->name('admin.user.index');
 
-        Route::get('/admin/user', [AdminController::class, 'index'])->name('admin.user.index');
+    Route::get('/admin/representation', [AdminRepresentationController::class, 'index'])->name('admin.representation.index');
+    Route::get('admin/representation/{id}', [AdminRepresentationController::class, 'show'])
+        ->where('id', '[0-9]+')->name('admin/representation.show');
+    Route::get('/admin/representation/create', [AdminRepresentationController::class, 'create'])->name('admin.representation.create');
+    Route::post('/admin/representation', [AdminRepresentationController::class, 'store'])->name('admin.representation.store');
+    Route::get('/admin/representation/edit/{id}', [AdminRepresentationController::class, 'edit'])
+        ->where('id', '[0-9]+')->name('admin.representation.edit');
+    Route::put('/admin/representation/{id}', [AdminRepresentationController::class, 'update'])
+        ->where('id', '[0-9]+')->name('admin.representation.update');
+    Route::delete('/admin/representation/{id}', [AdminRepresentationController::class, 'destroy'])
+        ->where('id', '[0-9]+')->name('admin.representation.destroy');
+    /*
+    |--------------------------------------------------------------------------
+    | Export & Import Routes
+    |--------------------------------------------------------------------------
+    */
+    Route::post('/artists-import', [ArtistController::class, 'import'])->name('artists-import');
+    Route::get('/artists-export', [ArtistController::class, 'export'])->name('artists-export');
 
-        Route::get('/admin/representation', [AdminRepresentationController::class, 'index'])->name('admin.representation.index');
-        Route::get('admin/representation/{id}', [AdminRepresentationController::class, 'show'])
-            ->where('id', '[0-9]+')->name('admin/representation.show');
-        Route::get('/admin/representation/create', [AdminRepresentationController::class, 'create'])->name('admin.representation.create');
-        Route::post('/admin/representation', [AdminRepresentationController::class, 'store'])->name('admin.representation.store');
-        Route::get('/admin/representation/edit/{id}', [AdminRepresentationController::class, 'edit'])
-            ->where('id', '[0-9]+')->name('admin.representation.edit');
-        Route::put('/admin/representation/{id}', [AdminRepresentationController::class, 'update'])
-            ->where('id', '[0-9]+')->name('admin.representation.update');
-        Route::delete('/admin/representation/{id}', [AdminRepresentationController::class, 'destroy'])
-            ->where('id', '[0-9]+')->name('admin.representation.destroy');
-        /*
-        |--------------------------------------------------------------------------
-        | Export & Import Routes
-        |--------------------------------------------------------------------------
-        */
-        Route::post('/artists-import', [ArtistController::class, 'import'])->name('artists-import');
-        Route::get('/artists-export', [ArtistController::class, 'export'])->name('artists-export');
-
-    });
-
+});
 
 require __DIR__ . '/auth.php';

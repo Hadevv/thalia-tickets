@@ -17,21 +17,47 @@ use Illuminate\Validation\ValidationException;
 
 class ShowController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-
     public function index(Request $request)
     {
         try {
             $search = $request->input('search');
+            $dateFrom = $request->input('date_from');
+            $dateTo = $request->input('date_to');
+            $location = $request->input('location');
             $lieux = Locality::pluck('locality')->toArray();
 
+            $query = Show::query();
+
             if ($search) {
-                $shows = $this->search($request);
-            } else {
-                $shows = Show::paginate(3);
+                $query->where(function ($query) use ($search) {
+                    $query->where('title', 'like', '%' . $search . '%')
+                        ->orWhere('description', 'like', '%' . $search . '%');
+                })
+                    ->orWhereHas('artistTypes.artist', function ($query) use ($search) {
+                        $query->where('firstname', 'like', '%' . $search . '%')
+                            ->orWhere('lastname', 'like', '%' . $search . '%');
+                    })
+                    ->orWhereHas('location.locality', function ($query) use ($search) {
+                        $query->where('locality', 'like', '%' . $search . '%');
+                    })
+                    ->orWhereHas('artistTypes.type', function ($query) use ($search) {
+                        $query->where('type', 'like', '%' . $search . '%');
+                    });
             }
+
+            if ($dateFrom && $dateTo) {
+                $query->whereHas('representations', function ($query) use ($dateFrom, $dateTo) {
+                    $query->whereBetween('schedule', [$dateFrom, $dateTo]);
+                });
+            }
+
+            if ($location) {
+                $query->whereHas('location.locality', function ($query) use ($location) {
+                    $query->where('locality', $location);
+                });
+            }
+
+            $shows = $query->paginate(3);
 
             return view('show.index', [
                 'shows' => $shows,
@@ -44,6 +70,16 @@ class ShowController extends Controller
             Log::error("Error in ShowController@index: {$e->getMessage()}");
             return redirect()->route('show.index')->with('error', 'Une erreur est survenue lors de la récupération des spectacles.');
         }
+    }
+
+    public function clear(Request $request)
+    {
+        $request->session()->forget('search');
+        $request->session()->forget('date_from');
+        $request->session()->forget('date_to');
+        $request->session()->forget('location');
+
+        return redirect()->route('show.index');
     }
 
     public function search(Request $request)
@@ -173,8 +209,6 @@ class ShowController extends Controller
             return redirect()->route('show.index')->with('error', 'Erreur lors de la récupération du spectacle.');
         }
     }
-
-
 
     /**
      * Show the form for editing the specified resource.
