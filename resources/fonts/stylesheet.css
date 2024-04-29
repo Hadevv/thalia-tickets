@@ -1,0 +1,26 @@
+@font-face {
+    font-family: 'Macamoreoblique';
+    src: url('Macamoreoblique.eot');
+    src: local('Macamoreoblique'),
+        url('Macamoreoblique.eot?#iefix') format('embedded-opentype'),
+        url('Macamoreoblique.woff2') format('woff2'),
+        url('Macamoreoblique.woff') format('woff'),
+        url('Macamoreoblique.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Macamore';
+    src: url('Macamore.eot');
+    src: local('Macamore'),
+        url('Macamore.eot?#iefix') format('embedded-opentype'),
+        url('Macamore.woff2') format('woff2'),
+        url('Macamore.woff') format('woff'),
+        url('Macamore.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
