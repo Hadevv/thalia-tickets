@@ -26,6 +26,9 @@ export default {
             fontFamily: {
                 sans: ['Figtree', ...defaultTheme.fontFamily.sans],
             },
+            backgroundImage: {
+                'hero-repertoire': "url('public/images/repertoire.jpg')",
+            }
         },
     },
 
