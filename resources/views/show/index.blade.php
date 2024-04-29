@@ -1,5 +1,5 @@
 <x-app-layout>
-    <div class="flex justify-center flex-col py-4 px-4 md:flex-row md:px-0 md:mr-24 md:ml-24 md:py-12">
+    <div class="flex justify-center flex-col py-6 px-4 md:flex-row md:px-0 md:mr-24 md:ml-24 md:py-6">
         <div class="w-full md:w-1/3 bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg mx-2 md:mx-1 mb-4">
             <div class="sm:min-w-36 p-6 text-gray-900 dark:text-gray-100">
                 <!-- Contenu de la première zone blanche -->
