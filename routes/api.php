@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Api\ShowApiController;
 use App\Http\Controllers\Api\HttpShowController;
+use App\Http\Controllers\Api\AuthApiController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -14,14 +15,19 @@ use App\Http\Controllers\Api\HttpShowController;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
-Route::get('/user', function (Request $request) {
-    return $request->user();
-})->middleware('auth:sanctum');
 
-Route::get('/show', [ShowApiController::class, 'index']);
-Route::get('/show/{id}', [ShowApiController::class, 'show'])->where('id', '[0-9]+');
-Route::get('/show/search', [ShowApiController::class, 'search'])->name('show.search');
-
+Route::middleware('auth:sanctum')->group(function () {
+    // api user sanctum auth
+    Route::post('/login', [AuthApiController::class, 'login'])->name('login');
+    Route::post('/logout', [AuthApiController::class, 'logout'])->name('logout');
+    Route::get('/user', [AuthApiController::class, 'user'])->name('user');
+    Route::post('/register', [AuthApiController::class, 'register'])->name('register');
+    // api show une fois authentifié
+    Route::get('/show', [ShowApiController::class, 'index']);
+    Route::get('/show/{id}', [ShowApiController::class, 'show'])->where('id', '[0-9]+');
+    Route::get('/show/search', [ShowApiController::class, 'search'])->name('show.search');
+});
+// web scraping routes show
 Route::get('/http-get-shows/{objectId}', [HttpShowController::class, 'getShows'])->where('objectId', '[0-9]+');
 
 
