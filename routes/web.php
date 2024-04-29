@@ -12,6 +12,7 @@ use App\Http\Controllers\RoleController;
 use App\Http\Controllers\ShowController;
 use App\Http\Controllers\TypeController;
 use App\Http\Middleware\SetLocaleFromUser;
+use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\AdminRepresentationController;
 
@@ -20,9 +21,8 @@ use App\Http\Controllers\Admin\AdminRepresentationController;
 | Routes home
 |--------------------------------------------------------------------------
 */
-Route::get('/', function () {
-    return view('home');
-})->name('home');
+Route::get('/', HomeController::class)->name('home');
+
 /*
 |--------------------------------------------------------------------------
 | Routes dashboard
