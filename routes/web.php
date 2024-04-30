@@ -14,6 +14,7 @@ use App\Http\Controllers\TypeController;
 use App\Http\Middleware\SetLocaleFromUser;
 use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ScheduleController;
 use App\Http\Controllers\Admin\AdminRepresentationController;
 
 /*
@@ -28,6 +29,8 @@ Route::get('/', HomeController::class)->name('home');
 | Routes dashboard
 |--------------------------------------------------------------------------
 */
+Route::get('/schedule', ScheduleController::class)->name('schedule.index');
+
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');

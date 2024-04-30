@@ -71,7 +71,7 @@ class ShowController extends Controller
             return redirect()->route('show.index')->with('error', 'Une erreur est survenue lors de la récupération des spectacles.');
         }
     }
-
+    // Fonction pour reset les filtres et la recherche
     public function clear(Request $request)
     {
         $request->session()->forget('search');
@@ -81,59 +81,15 @@ class ShowController extends Controller
 
         return redirect()->route('show.index');
     }
-
-    public function search(Request $request)
-    {
-        $search = $request->input('search');
-        $dateFrom = $request->input('date_from');
-        $dateTo = $request->input('date_to');
-        $location = $request->input('location');
-
-        $query = Show::query();
-
-        if ($search) {
-            $query->where(function ($query) use ($search) {
-                $query->where('title', 'like', '%' . $search . '%')
-                    ->orWhere('description', 'like', '%' . $search . '%');
-            })
-                ->orWhereHas('artistTypes.artist', function ($query) use ($search) {
-                    $query->where('firstname', 'like', '%' . $search . '%')
-                        ->orWhere('lastname', 'like', '%' . $search . '%');
-                })
-                ->orWhereHas('location.locality', function ($query) use ($search) {
-                    $query->where('locality', 'like', '%' . $search . '%');
-                })
-                ->orWhereHas('artistTypes.type', function ($query) use ($search) {
-                    $query->where('type', 'like', '%' . $search . '%');
-                });
-        }
-
-        if ($dateFrom && $dateTo) {
-            $query->whereHas('representations', function ($query) use ($dateFrom, $dateTo) {
-                $query->whereBetween('schedule', [$dateFrom, $dateTo]);
-            });
-        }
-
-        if ($location) {
-            $query->whereHas('location.locality', function ($query) use ($location) {
-                $query->where('locality', $location);
-            });
-        }
-        return $query->paginate(3);
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
+    // Fonction pour créer un spectacle
     public function create()
     {
         return view('show.create', [
             'artists' => Artist::all(),
         ]);
     }
-    /**
-     * Store a newly created resource in storage.
-     */
+
+    // Fonction pour stocker un spectacle
     public function store(Request $request, Show $show)
     {
         $validated = $request->validate([
@@ -158,23 +114,20 @@ class ShowController extends Controller
 
         $show->bookable = true;
 
-        // upload de l'image
+        // Upload de l'image
         if ($request->hasFile('poster')) {
             $image = $request->file('poster');
             $imageName = $slug . '.' . $image->getClientOriginalExtension();
 
-            // stockage de l'image dans le répertoire public/posters
+            // Stockage de l'image dans le répertoire public/posters
             $image->move(public_path('posters'), $imageName);
 
-            // stockage de l'image dans le répertoire public/images
+            // Stockage de l'image dans le répertoire public/images
             $image->move(public_path('images'), $imageName);
 
             $show->poster_url = $imageName;
         }
-
-
         $show->save();
-
         return redirect()->route('show.index');
     }
 
@@ -210,10 +163,7 @@ class ShowController extends Controller
         }
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-
+    // Fonction pour éditer un spectacle
     public function edit($id)
     {
         $show = Show::findOrFail($id);
@@ -228,6 +178,7 @@ class ShowController extends Controller
         ]);
     }
 
+    // Fonction pour mettre à jour un spectacle
     public function update(Request $request, $id)
     {
         $validated = $request->validate([
