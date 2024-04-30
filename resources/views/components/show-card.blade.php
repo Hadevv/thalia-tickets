@@ -36,11 +36,21 @@
             <div class="pt-2 dark:border-gray-700 mt-2">
                 <div class="flex justify-between">
                     <a href="{{ route('show.show', ['id' => $show->id, 'slug' => $show->slug]) }}" class="text-indigo-600 font-semibold text-sm dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-200">En savoir plus</a>
-                    @if ($show->bookable && $show->representations->count() > 0)
-                        <span class="text-green-500 text-sm font-semibold">Réservable</span>
-                    @else
-                        <span class="text-red-500 text-sm font-semibold">Non réservable</span>
-                    @endif
+                    <div>
+                        @if ($show->bookable && $show->representations->count() > 0)
+
+                            <span class="text-green-500 text-sm font-semibold">Réservable</span>
+                            @foreach($show->representations->sortBy('schedule') as $representation)
+                                <div>
+                                    <a href="{{ route('representation.show', ['id' => $representation->id, 'slug' => $representation->slug]) }}" class="text-indigo-600 font-semibold text-sm dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-200">
+                                        {{ \App\Helpers\DateHelper::formatScheduleDate($representation->schedule) }} - {{ \Carbon\Carbon::parse($representation->schedule)->format('H:i') }}
+                                    </a>
+                                </div>
+                            @endforeach
+                        @else
+                            <span class="text-red-500 text-sm font-semibold">Non réservable</span>
+                        @endif
+                    </div>
                 </div>
             </div>
             <div class="flex w-full justify-center gap-4 items-center">
