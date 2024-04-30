@@ -105,6 +105,8 @@ Ajouter le xsrf-token dans les headers de la requête
 Le point d'entrée de l'API theatre-contemporain.net est https://www.theatre-contemporain.net/api/
 https://www.ressources-theatre.net/doc/api/ 
 
+TODO : faire la page de documentation de l'API
+TODO : faire une table db pour les archives des representations
 
 
 
