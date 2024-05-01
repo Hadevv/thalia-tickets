@@ -40,4 +40,3 @@ class AdminMiddleware
         return $next($request);
     }
 }
-
