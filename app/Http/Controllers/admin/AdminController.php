@@ -10,6 +10,7 @@ use Carbon\Carbon;
 
 class AdminController extends Controller
 {
+    // Affiche la page du dashboard des spectacles "Show" pour l'admin
     public function __invoke()
     {
         $shows = Show::query()

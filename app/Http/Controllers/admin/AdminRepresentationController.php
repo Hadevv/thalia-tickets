@@ -12,6 +12,7 @@ use App\Http\Requests\UpdateRepresentationRequest;
 
 class AdminRepresentationController extends Controller
 {
+    // Affiche la liste des représentations pour l'admin avec crud
     public function index()
     {
         $representations = Representation::with('location', 'show')->get();

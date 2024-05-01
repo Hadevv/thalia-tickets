@@ -9,20 +9,22 @@ use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
-use App\Models\Reservation;
 
-class ReservationConfirmed
+class RepresentationEnded
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
+    // Event pour déclencher la modale reviews
 
-    public Reservation $reservation;
-    // Event sans temps réel pour confirmer la réservation
-    public function __construct(Reservation $reservation)
-    {
-        $this->reservation = $reservation;
-    }
     /**
-     * Event en temps réel Broadcasting pour confirmer la réservation
+     * Create a new event instance.
+     */
+    public function __construct()
+    {
+        //
+    }
+
+    /**
+     * Get the channels the event should broadcast on.
      *
      * @return array<int, \Illuminate\Broadcasting\Channel>
      */

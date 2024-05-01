@@ -8,6 +8,14 @@ use Carbon\Carbon;
 
 class HomeController extends Controller
 {
+    /**
+     * Fonction pour afficher sur la page d'accueil
+     * les 5 prochaines représentations
+     * @return \Illuminate\Contracts\View\View
+     * @throws \Exception
+     * @throws \Throwable
+     * @todo faire la page schedule et changer les fakes infos
+     */
     public function __invoke()
     {
         $today = \Carbon\Carbon::now()->toDateString();

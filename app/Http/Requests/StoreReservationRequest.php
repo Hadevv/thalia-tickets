@@ -11,7 +11,7 @@ class StoreReservationRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +22,10 @@ class StoreReservationRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'representation_id' => 'required|exists:representations,id',
+            'places.adulte' => 'nullable|integer|min:0',
+            'places.enfant' => 'nullable|integer|min:0',
+            'places.senior' => 'nullable|integer|min:0',
         ];
     }
 }

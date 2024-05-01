@@ -20,8 +20,7 @@ class ReservationConfirmedNotification extends Notification
     }
 
     /**
-     * Get the notification's delivery channels.
-     *
+     * Rédaction du message de notification
      * @return array<int, string>
      */
     public function via(object $notifiable): array
@@ -30,7 +29,7 @@ class ReservationConfirmedNotification extends Notification
     }
 
     /**
-     * Get the mail representation of the notification.
+     * Rédaction du message de notification
      */
     public function toMail(object $notifiable): MailMessage
     {

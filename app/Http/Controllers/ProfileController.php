@@ -12,8 +12,14 @@ use Illuminate\View\View;
 class ProfileController extends Controller
 {
     /**
-     * Display the user's profile form.
+     * Larevel 11.x Breeze
+     * Fonction pour afficher le profil de l'utilisateur connecté pour la modification des informations
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\View\View
+     *
+     * @todo Ajouter la modification de l'avatar de l'utilisateur
      */
+
     public function edit(Request $request): View
     {
         return view('profile.edit', [

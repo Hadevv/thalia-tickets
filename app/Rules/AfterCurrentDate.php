@@ -8,8 +8,7 @@ use Illuminate\Contracts\Validation\ValidationRule;
 class AfterCurrentDate implements ValidationRule
 {
     /**
-     * Run the validation rule.
-     *
+     * Determiner si la règle de validation passe ou non.
      * @param  \Closure(string): \Illuminate\Translation\PotentiallyTranslatedString  $fail
      */
     public function validate(string $attribute, mixed $value, Closure $fail): void

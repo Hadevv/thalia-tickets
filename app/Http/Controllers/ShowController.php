@@ -17,6 +17,13 @@ use Illuminate\Validation\ValidationException;
 
 class ShowController extends Controller
 {
+    /**
+     * Fonction pour afficher la liste des spectacles et les filtres de recherche associés
+     * @param Request $request
+     * @return \Illuminate\Contracts\View\View
+     * @throws \Exception
+     * @throws \Throwable
+     */
     public function index(Request $request)
     {
         try {
@@ -56,7 +63,7 @@ class ShowController extends Controller
                     $query->where('locality', $location);
                 });
             }
-
+            // Pagination des spectacles
             $shows = $query->paginate(3);
 
             return view('show.index', [
@@ -65,9 +72,8 @@ class ShowController extends Controller
                 'lieux' => $lieux,
                 'search' => $search,
             ]);
-
         } catch (\Exception $e) {
-            Log::error("Error in ShowController@index: {$e->getMessage()}");
+            Log::error("Erreur dans la récupération des spectacles: {$e->getMessage()}");
             return redirect()->route('show.index')->with('error', 'Une erreur est survenue lors de la récupération des spectacles.');
         }
     }
@@ -90,15 +96,9 @@ class ShowController extends Controller
     }
 
     // Fonction pour stocker un spectacle
-    public function store(Request $request, Show $show)
+    public function store(StoreShowRequest $request, Show $show)
     {
-        $validated = $request->validate([
-            'title' => ['required', 'string', 'max:60'],
-            'description' => ['required', 'string', 'max:2000'],
-            'poster_url' => ['nullable', 'url:http,https', 'max:255'],
-            'duration' => ['required', 'numeric'],
-            'poster' => ['nullable', 'image', 'max:2048'],
-        ]);
+        $validated = $request->validated();
 
         // Génération automatique du slug à partir du titre
         $slug = Str::slug($validated['title']);
@@ -156,7 +156,6 @@ class ShowController extends Controller
             $created_in = \Carbon\Carbon::parse($show->created_in);
 
             return view('show.show', compact('show', 'created_in'));
-
         } catch (\Exception $e) {
             Log::error("Error fetching show with ID {$id} and slug {$slug}: {$e->getMessage()}");
             return redirect()->route('show.index')->with('error', 'Erreur lors de la récupération du spectacle.');
@@ -179,26 +178,9 @@ class ShowController extends Controller
     }
 
     // Fonction pour mettre à jour un spectacle
-    public function update(Request $request, $id)
+    public function update(UpdateShowRequest $request, $id)
     {
-        $validated = $request->validate([
-            'title' => ['required', 'string', 'max:60'],
-            'description' => ['required', 'string', 'max:2000'],
-            'poster_url' => [
-                'nullable',
-                'string',
-                'max:255',
-                Rule::requiredIf(function () use ($request) {
-                    return preg_match('/^https?:\/\//', $request->poster_url);
-                }),
-                Rule::requiredIf(function () use ($request) {
-                    return File::exists(public_path('images/' . basename($request->poster_url)));
-                }),
-            ],
-            'duration' => ['required', 'numeric'],
-            'artists' => ['nullable', 'array'],
-            'artists.*' => ['exists:artists,id'],
-        ]);
+        $validated = $request->validated();
 
         $show = Show::findOrFail($id);
 
@@ -216,7 +198,6 @@ class ShowController extends Controller
 
         return redirect()->route('show.show', ['id' => $show->id, 'slug' => $show->slug])->with('notification', 'Le spectacle a bien été mis à jour !');
     }
-
     /**
      * Supprimer le spectacle et ses représentations associées
      * -------------ADMIN-------------
@@ -242,10 +223,9 @@ class ShowController extends Controller
             session()->flash('notification', 'Le spectacle a bien été supprimé !');
 
             return redirect()->route('admin.index');
-
         } catch (\Exception $e) {
             // Log de l'exception
-            Log::error("Error deleting show with ID {$id}: {$e->getMessage()}");
+            Log::error("Erreur lors de la suppression du spectacle avec l'ID spécifié {$id}: {$e->getMessage()}");
 
             // Redirection avec un message d'erreur
             return redirect()->route('admin.index')->with('error', 'Erreur lors de la suppression du spectacle.');

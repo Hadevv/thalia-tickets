@@ -16,7 +16,7 @@ use App\Models\ArtistType;
 class ArtistController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Affiche la liste des artistes pour l'admin avec crud
      */
     public function index()
     {
@@ -27,9 +27,8 @@ class ArtistController extends Controller
             'resource' => 'artistes'
         ]);
     }
-
     /**
-     * Show the form for creating a new resource.
+     * Fonction pour créer un artiste
      */
     public function create()
     {
@@ -39,9 +38,8 @@ class ArtistController extends Controller
             'roles' => $roles,
         ]);
     }
-
     /**
-     * Store a newly created resource in storage.
+     * Fonction pour créer un artiste avec ses rôles associés
      */
     public function store(Request $request)
     {
@@ -62,7 +60,7 @@ class ArtistController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Affiche un artiste
      */
     public function show(string $id)
     {
@@ -74,7 +72,7 @@ class ArtistController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Function pour éditer un artiste
      */
     public function edit(string $id)
     {
@@ -88,7 +86,7 @@ class ArtistController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * Mettre à jour un artiste
      */
     public function update(Request $request, string $id)
     {
@@ -117,13 +115,12 @@ class ArtistController extends Controller
 
         } catch (\Exception $e) {
             // Log de l'erreur
-            Log::error("Error updating artist with ID {$id}: {$e->getMessage()}");
+            Log::error("Erreur lors de la mise à jour d\'un artiste avec l\'ID spécifié {$id}: {$e->getMessage()}");
 
             // Redirection avec un message d'erreur
             return redirect()->route('admin.artist.index')->with('error', 'Erreur lors de la mise à jour de l\'artiste.');
         }
     }
-
 
     /**
      * Remove the specified resource from storage.
@@ -157,6 +154,5 @@ class ArtistController extends Controller
             return response()->json(['data'=>'Some error has occur.',400]);
 
         }
-
     }
 }

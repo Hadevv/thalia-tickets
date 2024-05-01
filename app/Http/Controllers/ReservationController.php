@@ -4,12 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Reservation;
 use App\Http\Requests\StoreReservationRequest;
-use App\Http\Requests\UpdateReservationRequest;
-use Laravel\Cashier\Cashier;
 use App\Models\Price;
 use App\Models\Representation;
 use App\Models\RepresentationReservation;
-use App\Http\Controllers\PaymentController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Stripe\Stripe;
@@ -17,8 +14,9 @@ use App\Models\Seat;
 
 class ReservationController extends Controller
 {
+    // @todo déplacer la fonction la logique de payement dans le controller de paiement
     /**
-     * Display a listing of the resource.
+     * Fonction pour calculer le total du panier de réservation en cours
      */
     private function calculateCartTotal()
     {
@@ -32,8 +30,15 @@ class ReservationController extends Controller
 
         return $total;
     }
-
-    public function checkout(Request $request)
+    /**
+     * Fonction qui gère le processus de réservation et paiement via stripe checkout
+     * @param Request $request
+     * @param StoreReservationRequest $reservationRequest
+     * @return \Illuminate\Http\RedirectResponse
+     * @throws \Exception
+     * @throws \Throwable
+     */
+    public function checkout(Request $request, StoreReservationRequest $reservationRequest)
     {
         try {
             //dd($request->all());
@@ -41,13 +46,7 @@ class ReservationController extends Controller
             $selectedSeats = $request->input('selected_seats');
 
             //dd($request->input('selected_seats'), $selectedSeats);
-
-            $request->validate([
-                'representation_id' => 'required|exists:representations,id',
-                'places.adulte' => 'nullable|integer|min:0',
-                'places.enfant' => 'nullable|integer|min:0',
-                'places.senior' => 'nullable|integer|min:0',
-            ]);
+            $reservationRequest->validated();
 
             Stripe::setApiKey(env('STRIPE_SECRET'));
 
@@ -87,7 +86,6 @@ class ReservationController extends Controller
                                 ]);
 
                                 // Mettre à jour le statut du siège
-
                                 $description = 'Réservation pour ' . $representation->show->title . ' le ' . $scheduleDate->format('d/m/Y H:i') . ' à ' . $representation->location->designation;
                                 $line_items[] = [
                                     'price_data' => [
@@ -126,6 +124,7 @@ class ReservationController extends Controller
             $seat->status = 'reserved';
             $seat->save();
 
+            // Stocker l'ID de la facture Stripe et mettre à jour la réservation
             $reservation->stripe_invoice_id = $checkout_session->id;
             $reservation->save();
 
@@ -138,6 +137,16 @@ class ReservationController extends Controller
             return back()->with('error', 'Une erreur est survenue lors de la création de la réservation.');
         }
     }
+
+    /**
+     * Fonction qui gère la confirmation de la réservation
+     * @param string $id
+     * @return \Illuminate\Contracts\View\View|\Illuminate\Http\RedirectResponse
+     * @throws \Stripe\Exception\ApiErrorException
+     * @throws \Throwable
+     * @todo Gérer les erreurs de paiement
+     * @todo Gérer les erreurs de réservation
+     */
 
     public function confirmation(string $id)
     {
@@ -175,7 +184,12 @@ class ReservationController extends Controller
             return redirect()->route('my-reservations.index')->with('error', 'Une erreur est survenue lors de la mise à jour de la réservation.');
         }
     }
-
+    /**
+     * Fonction qui gère l'annulation de la réservation et la libération des sièges
+     * @param string $id
+     * @return \Illuminate\Contracts\View\View|\Illuminate\Http\RedirectResponse
+     * @throws \Throwable
+     */
 
     public function cancel(string $id)
     {
@@ -205,7 +219,11 @@ class ReservationController extends Controller
         return view('reservation.cancel', compact('reservation'))->with('success', 'Réservation annulée avec succès.');
     }
 
-    // Panier de réservation
+    /**
+     * Fonction qui gère l'affichage du panier de réservation en cours avec le total à payer
+     * @return \Illuminate\Contracts\View\View
+     * @throws \Throwable
+     */
 
     public function cart()
     {
@@ -216,7 +234,12 @@ class ReservationController extends Controller
 
         return view('reservation.cart.index', compact('reservations', 'total'))->with('success', 'Réservation ajoutée au panier');
     }
-
+    /**
+     * Fonction qui permet de supprimer une réservation du panier de réservation
+     * @param string $id
+     * @return \Illuminate\Http\RedirectResponse
+     * @throws \Throwable
+     */
     public function remove(string $id)
     {
         try {
@@ -239,7 +262,9 @@ class ReservationController extends Controller
             return back()->with('error', 'Une erreur est survenue lors de la suppression de la réservation.');
         }
     }
-
+    /**
+     * Fonction qui permet de supprimer TOUS les réservations du panier de réservation
+     */
     public function removeall()
     {
         try {
@@ -259,7 +284,11 @@ class ReservationController extends Controller
             return back()->with('error', 'Une erreur est survenue lors de la suppression des réservations.');
         }
     }
-
+    /**
+     * Fonction qui permet de payer le panier de réservation en cours
+     * @return \Illuminate\Http\RedirectResponse
+     * @throws \Throwable
+     */
     public function payCart()
     {
         try {
@@ -288,8 +317,12 @@ class ReservationController extends Controller
                 'mode' => 'payment',
                 'success_url' => route('reservation.confirmation', ['id' => 'reservation_id_placeholder']),
                 'cancel_url' => route('reservation.cancel', ['id' => 'reservation_id_placeholder']),
+                // Attentions /!\ : Activer la création de facture pour les paiements Checkout
+                'invoice_creation' => [
+                    'enabled' => true,
+                ],
             ]);
-
+            // Mettre à jour l'ID de la facture Stripe et le statut de la réservation
             $success_url = str_replace('reservation_id_placeholder', $checkout_session->id, route('reservation.confirmation', ['id' => $checkout_session->id]));
             $cancel_url = str_replace('reservation_id_placeholder', $checkout_session->id, route('reservation.cancel', ['id' => $checkout_session->id]));
 

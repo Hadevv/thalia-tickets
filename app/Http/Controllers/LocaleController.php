@@ -7,6 +7,12 @@ use Illuminate\Support\Facades\App;
 
 class LocaleController extends Controller
 {
+    /**
+     * Fonction pour changer la langue du site et la sauvegarder en session et en base de données après connexion
+     * @param $lang
+     * @return \Illuminate\Http\RedirectResponse
+     * @todo mettre dans url les langues fr/en/nl
+     */
     public function setLocale($lang)
     {
         if (in_array($lang, ['fr', 'en', 'nl'])) {
@@ -19,6 +25,7 @@ class LocaleController extends Controller
                 $user->save();
             }
         }
+        // Redirige vers la page précédente
         return redirect()->back();
     }
 }

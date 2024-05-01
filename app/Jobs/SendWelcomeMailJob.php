@@ -24,7 +24,7 @@ class SendWelcomeMailJob implements ShouldQueue
     }
 
     /**
-     * Execute the job.
+     * Fonction pour envoyer un email de bienvenue à un utilisateur après son inscription
      */
     public function handle(): void
     {

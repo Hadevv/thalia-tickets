@@ -11,7 +11,7 @@ class UpdateShowRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +22,22 @@ class UpdateShowRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'title' => ['required', 'string', 'max:60'],
+            'description' => ['required', 'string', 'max:2000'],
+            'poster_url' => [
+                'nullable',
+                'string',
+                'max:255',
+                Rule::requiredIf(function () {
+                    return preg_match('/^https?:\/\//', $this->poster_url);
+                }),
+                Rule::requiredIf(function () {
+                    return file_exists(public_path('images/' . basename($this->poster_url)));
+                }),
+            ],
+            'duration' => ['required', 'numeric'],
+            'artists' => ['nullable', 'array'],
+            'artists.*' => ['exists:artists,id'],
         ];
     }
 }

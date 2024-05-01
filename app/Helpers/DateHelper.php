@@ -6,6 +6,7 @@ use Carbon\Carbon;
 
 class DateHelper
 {
+    // Helper pour formater la date de la représentation en fonction de la date actuelle (aujourd'hui, hier, demain, date)
     public static function formatScheduleDate($schedule)
     {
         $scheduleDate = Carbon::parse($schedule);

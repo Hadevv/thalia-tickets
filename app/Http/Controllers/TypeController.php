@@ -3,9 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Type;
-use App\Http\Requests\StoreTypeRequest;
-use App\Http\Requests\UpdateTypeRequest;
-
+use Illuminate\Http\Request;
 class TypeController extends Controller
 {
     /**
@@ -32,7 +30,7 @@ class TypeController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreTypeRequest $request)
+    public function store(Request $request)
     {
         //
     }
@@ -60,7 +58,7 @@ class TypeController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateTypeRequest $request, Type $type)
+    public function update(Request $request, Type $type)
     {
         //
     }

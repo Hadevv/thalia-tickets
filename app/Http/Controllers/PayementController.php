@@ -10,14 +10,8 @@ class PayementController extends Controller
 {
     public function checkout(Request $request, Reservation $reservation)
     {
-        $user = $request->user();
-
-        $user->invoiceFor('Réservation', $reservation->total(), [], [
-            'metadata' => ['reservation_id' => $reservation->id],
-        ]);
-
-        return redirect()->route('reservation.confirmation', ['id' => $reservation->id])
-            ->with('success', 'Votre réservation a été confirmée avec succès.');
+        /**
+         * @todo déplacer le code de la methode checkout du controller ReservationController ici
+         */
     }
-
 }

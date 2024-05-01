@@ -17,7 +17,7 @@ class SendReservationConfirmationNotification
     }
 
     /**
-     * Handle the event.
+     * Fonction pour envoyer une notification de confirmation de réservation à l'utilisateur
      */
     public function handle(ReservationConfirmed $event): void
     {

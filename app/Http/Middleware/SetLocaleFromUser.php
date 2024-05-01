@@ -29,4 +29,3 @@ class SetLocaleFromUser
         return $next($request);
     }
 }
-

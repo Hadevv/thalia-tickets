@@ -11,7 +11,7 @@ class StoreShowRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +22,11 @@ class StoreShowRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'title' => ['required', 'string', 'max:60'],
+            'description' => ['required', 'string', 'max:2000'],
+            'poster_url' => ['nullable', 'url:http,https', 'max:255'],
+            'duration' => ['required', 'numeric'],
+            'poster' => ['nullable', 'image', 'max:2048'],
         ];
     }
 }
