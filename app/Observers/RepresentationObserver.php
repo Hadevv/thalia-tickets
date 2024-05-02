@@ -3,6 +3,7 @@
 namespace App\Observers;
 
 use App\Models\Representation;
+use App\Models\RepresentationArchive;
 
 class RepresentationObserver
 {
@@ -11,7 +12,8 @@ class RepresentationObserver
      */
     public function created(Representation $representation): void
     {
-        //
+
+
     }
 
     /**
@@ -27,7 +29,8 @@ class RepresentationObserver
      */
     public function deleted(Representation $representation): void
     {
-        //
+        RepresentationArchive::create($representation->toArray());
+
     }
 
     /**
