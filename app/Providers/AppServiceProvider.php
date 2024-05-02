@@ -3,6 +3,8 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use App\Models\Representation;
+use App\Observers\RepresentationObserver;
 use App\Models\User;
 use Laravel\Cashier\Cashier;
 
@@ -22,5 +24,7 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Cashier::useCustomerModel(User::class);
+
+        Representation::observe(RepresentationObserver::class);
     }
 }

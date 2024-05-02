@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
+use App\Models\Representation;
 
 class CleanupExpiredRepresentations extends Command
 {
@@ -18,13 +19,22 @@ class CleanupExpiredRepresentations extends Command
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = 'Delete representations older than 7 days';
 
     /**
      * Execute the console command.
      */
     public function handle()
     {
-        //
+        $this->info('Cleaning up old representations...');
+
+        $representations = Representation::where('schedule', '<', now()->subDays(7))->get();
+
+
+        foreach ($representations as $representation) {
+            $representation->delete();
+        }
+
+        $this->info('Done!');
     }
 }
