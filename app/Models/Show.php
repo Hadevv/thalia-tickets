@@ -58,8 +58,7 @@ class Show extends Model
             })
             ->with('artist')
             ->get()
-            ->pluck('artist')
-            ->unique('id');
+            ->pluck('artist');
     }
     // API
     public function artists()
