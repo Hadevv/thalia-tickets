@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Representation;
 use Carbon\Carbon;
+use Illuminate\View\View;
 
 class HomeController extends Controller
 {
@@ -15,12 +16,16 @@ class HomeController extends Controller
      * @throws \Exception
      * @throws \Throwable
      * @todo faire la page schedule et changer les fakes infos
+     * @todo faire un tache cron pour supprimer les représentations passées et ne plus est affichées
      */
-    public function __invoke()
+    public function __invoke() : View
     {
         $today = \Carbon\Carbon::now()->toDateString();
 
-        $representations = \App\Models\Representation::where('schedule', '>=', $today)
+        // Récupération des 5 prochaines représentations
+        // /!\ Attention, on récupère les représentations avec les SHOWS associés -> ::with('show')
+        $representations = Representation::with('show')
+            ->where('schedule', '>=', $today)
             ->orderBy('schedule')
             ->take(5)
             ->get();

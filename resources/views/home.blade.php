@@ -28,6 +28,7 @@
                                     dark:text-white-100
                                     bg-[url('/public/images/hero-repertoire.jpeg')]
                                     h-full
+                                    w-full
                                     bg-center
                                     bg-cover
                                     bg-no-repeat
@@ -43,62 +44,28 @@
                                 <div class=" bg-red-700
                                     bg-opacity-80 p-6">
                                     <h2 class="text-2xl font-semibold text-white dark:text-gray-100">Repertoire</h2>
-                                    <div class="m-2">
-                                        <div class="flex justify-center">
-                                            <p class ="text-white dark:text-gray-300">30.07.21</p>
-                                            <p class="text-white dark:text-gray-300 m-2">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-                                        </div>
-                                        <p class="text-white dark:text-gray-300">comedia Theater</p>
-                                    </div>
-                                    <div class="m-2">
-                                        <div class="border border-white-600 mt-3 mb-3"></div>
-                                        <div class="flex justify-center">
-                                            <p class ="text-white dark:text-white-300">30.07.21</p>
-                                            <p class="text-white dark:text-white-300 m-2">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-                                        </div>
-                                        <p class="text-white dark:text-gray-300">comedia Theater</p>
-                                    </div>
-                                    <div class="m-2">
-                                        <div class="border border-white-600 mt-3 mb-3"></div>
-                                        <div class="flex justify-center">
-                                            <p class ="text-white dark:text-gray-300">30.07.21</p>
-                                            <p class="text-white dark:text-gray-300 m-2">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-                                        </div>
-                                        <p class="text-white dark:text-gray-300">comedia Theater</p>
-                                    </div>
-                                    <div class="m-2">
-                                        <div class="border border-white-600 mt-3 mb-3"></div>
-                                        <div class="flex justify-center">
-                                            <p class ="text-white dark:text-gray-300">30.07.21</p>
-                                            <p class="text-white dark:text-gray-300 m-2">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-                                        </div>
-                                        <p class="text-white dark:text-gray-300">comedia Theater</p>
-                                    </div>
-                                    <div class="m-2">
-                                        <div class="border border-white-600 mt-3 mb-3"></div>
-                                        <div class="flex justify-center">
-                                            <p class ="text-white dark:text-gray-300">30.07.21</p>
-                                            <p class="text-white dark:text-gray-300 m-2">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-                                        </div>
-                                        <p class="text-white dark:text-gray-300">comedia Theater</p>
-                                    </div>
-                                    <!--@foreach ($representations as $representation)
-                                        <div class="m-2">
-                                            @if ($loop->first)
-                                                <div class="flex justify-center">
-                                                    <p class="text-white dark:text-gray-300">{{ $representation->schedule }}</p>
-                                                    <p class="text-white dark:text-gray-300 m-2">{{ Str::limit($representation->show->title, 30) }}</p>
-                                                </div>
-                                            @else
-                                                <div class="border border-white-600 mt-3 mb-3"></div>
-                                                <div class="flex justify-center">
-                                                    <p class="text-white dark:text-white-300">{{ $representation->schedule }}</p>
-                                                    <p class="text-white dark:text-white-300 m-2">{{ Str::limit($representation->show->title, 30) }}</p>
-                                                </div>
-                                            @endif
-                                            <p class="text-white dark:text-gray-300">comedia Theater</p>
-                                        </div>
-                                    @endforeach-->
+                                    @foreach ($representations as $representation)
+                                        <a href="{{ route('show.show', ['id' => $representation->show->id, 'slug' => $representation->show->slug]) }}">
+                                            <div class="m-3">
+                                                <!-- $loop->first permet d'appliquer sur le premier une classe particulière, par exemple "en-tête d'affiche" -->
+                                                @if ($loop->first)
+                                                    <div class="flex justify-center">
+                                                        <p class="text-white dark:text-gray-300">{{ \App\Helpers\DateHelper::formatScheduleDate($representation->schedule) }}</p>
+                                                        <p class="text-white dark:text-gray-300 m-2">{{ Str::limit($representation->show->title, 20) }}</p>
+                                                        <p class="text-white dark:text-gray-300 m-2">{{ Str::limit($representation->show->description, 20) }}</p>
+                                                    </div>
+                                                @else
+                                                    <div class="border border-white-600 mt-3 mb-3"></div>
+                                                    <div class="flex justify-center">
+                                                        <p class="text-white dark:text-white-300">{{ \App\Helpers\DateHelper::formatScheduleDate($representation->schedule, 'd/m H:i') }}</p>
+                                                        <p class="text-white dark:text-white-300 m-2">{{ Str::limit($representation->show->title, 20) }}</p>
+                                                        <p class="text-white dark:text-gray-300 m-2">{{ Str::limit($representation->show->description, 20) }}</p>
+                                                    </div>
+                                                @endif
+                                                <p class="text-white dark:text-gray-300">{{ $representation->show->artists->first()->firstname }} {{ $representation->show->artists->first()->lastname }}</p>
+                                            </div>
+                                        </a>
+                                    @endforeach
                                 </div>
                                 <div class="m-2 mt:4 md:mt-8 flex justify-between items-center z-100 h-auto">
                                     <div class="
@@ -133,7 +100,7 @@
                                         <a href="{{ route('show.index') }}" class="bg-withe-200 hover:bg-withe text-white font-semibold py-2 px-2 rounded focus:outline-none focus:shadow-outline">Acheter un ticket</a>
                                             <!-- repertoire -->
                                         <div >
-                                            <a class="flex justify-center items-center font-semibold text-base text-white" href="#">Voir plus
+                                            <a class="flex justify-center items-center font-semibold text-base text-white" href="{{route('show.index')}}">Voir plus
                                                 <svg
                                                         class="m-1 size-6"
                                                         fill="none"
@@ -159,9 +126,13 @@
                                     bg-cover
                                     bg-no-repeat
                                     bg-opacity-30
-                                    bg-top">
+                                    bg-top
+                                    ">
                                 <div class="flex justify-center items-center">
-                                    <h2 class="text-9xl ml-20 font-semibold font-macamore text-withe dark:text-withe-100">Credit Alejandro</h2>
+                                    <h2 class="text-7xl ml-20 font-semibold font-macamore text-withe dark:text-withe-100 md:text-9xl">Credit Alejandro</h2>
+                                </div>
+                                <div class="flex justify-end items-center h-full">
+                                    <x-award-winner title="Award Winner" />
                                 </div>
                             </div>
                         </div>
