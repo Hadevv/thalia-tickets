@@ -2,6 +2,7 @@
 
 namespace App\Events;
 
+use App\Models\Representation;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PresenceChannel;
@@ -13,18 +14,16 @@ use Illuminate\Queue\SerializesModels;
 class RepresentationEnded
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
-    // Event pour déclencher la modale reviews
 
-    /**
-     * Create a new event instance.
-     */
-    public function __construct()
+    // Event pour déclencher la modale reviews
+    public $representation;
+    public function __construct(Representation $representation)
     {
-        //
+        $this->representation = $representation;
     }
 
     /**
-     * Get the channels the event should broadcast on.
+     * Channel pour les events en temps réel pas utilisé ici
      *
      * @return array<int, \Illuminate\Broadcasting\Channel>
      */
