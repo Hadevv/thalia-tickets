@@ -13,10 +13,13 @@ class EventServiceProvider extends ServiceProvider
         'App\Events\ReservationConfirmed' => [
             'App\Listeners\SendReservationConfirmationNotification',
         ],
+        'App\Events\RepresentationEnded' => [
+            'App\Listeners\HandleRepresentationEnded',
+        ],
     ];
 
     /**
-     * Bootstrap services.
+     * Fonction de démarrage des services de l'application
      */
     public function boot(): void
     {

@@ -50,4 +50,23 @@ class Representation extends Model implements Feedable
     {
     return Representation::all();
     }
+
+    public function hasAttended(): bool
+    {
+        // Vérifie s'il existe une réservation pour cette représentation associée à l'utilisateur
+        return $this->representationReservations()
+            ->whereHas('reservation', function ($query) {
+                $query->where('user_id', auth()->id());
+            })
+            ->exists();
+    }
+
+    public function isPaymentConfirmed(): bool
+    {
+        // Vérifie si toutes les réservations associées à cette représentation ont un statut confirmé
+        return $this->representationReservations()->whereHas('reservation', function ($query) {
+            $query->where('status', 'confirmed');
+        })->exists();
+    }
+
 }

@@ -29,7 +29,10 @@ Route::get('/', HomeController::class)->name('home');
 | Routes dashboard
 |--------------------------------------------------------------------------
 */
+Route::post('/reviews', 'App\Http\Controllers\ReviewController@store')->name('reviews.store');
+
 Route::get('/schedule', ScheduleController::class)->name('schedule.index');
+
 
 Route::get('/dashboard', function () {
     return view('dashboard');
