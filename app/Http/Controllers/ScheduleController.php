@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Representation;
 use Illuminate\Http\Request;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 
 class ScheduleController extends Controller
 {
@@ -15,12 +17,54 @@ class ScheduleController extends Controller
      * @todo Ajouter la pagination pour la liste des représentations horaires
      * @todo utiliser une lib de planning par jour avec swiper pour la navigation entre les jours de la semaine
      */
-    public function __invoke(Request $request): \Illuminate\View\View
-    {
-        $upcomingRepresentations = Representation::where('schedule', '>=', now())
-            ->orderBy('schedule')
-            ->get();
 
-        return view('schedule.index', compact('upcomingRepresentations'));
+    public function __invoke(Request $request)
+    {
+        // Paginer les représentations à venir par jour avec un maximum de représentations par page
+        $paginatedRepresentationsByDay = $this->paginateRepresentationsByDay(5);
+
+        return view('schedule.index', compact('paginatedRepresentationsByDay'));
+    }
+
+    /**
+     * Paginer les représentations à venir par jour avec un maximum de représentations par page
+     *
+     * @param int $perPage
+     * @return array
+     */
+    private function paginateRepresentationsByDay($perPage)
+    {
+        $paginatedRepresentationsByDay = [];
+
+        // Récupérer les représentations à venir paginées par jour avec un maximum de représentations par page
+        /**
+        $representationsByDay = DB::table('representations')
+            ->join('shows', 'representations.show_id', '=', 'shows.id')
+            ->selectRaw('DATE(schedule) as day, representations.*, shows.title as show_title, shows.location_id as show_location_id')
+            ->where('schedule', '>=', now()->toDateTimeString())
+            ->orderBy('schedule')
+            ->paginate($perPage);
+         * */
+
+        $representationsByDay = Representation::with('show')
+            ->selectRaw('DATE(schedule) as day')
+            ->where('schedule', '>=', now()->toDateTimeString())
+            ->orderBy('schedule')
+            ->paginate($perPage);
+
+
+        // Organiser les représentations paginées par jour
+        foreach ($representationsByDay as $representation) {
+            $day = $representation->day;
+
+            if (!isset($paginatedRepresentationsByDay[$day])) {
+                $paginatedRepresentationsByDay[$day] = [];
+            }
+
+            $paginatedRepresentationsByDay[$day][] = $representation;
+        }
+
+        return $paginatedRepresentationsByDay;
     }
 }
+
