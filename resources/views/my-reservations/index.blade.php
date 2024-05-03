@@ -29,7 +29,7 @@
                                             Aucune date et heure disponible
                                         @endif
                                     </p>
-                                    <p>Status : {{ $reservation->status }}</p>
+                                    <p>Réservation : @if ($reservation->status === 'confirmed') Payée @else Non payée @endif</p>
                                     <p>
                                         Sièges :
                                         @if ($reservation->representation_reservations)
@@ -48,12 +48,12 @@
                                 <div class="flex space-x-4">
                                     <form action="{{ route('my-reservations.download-invoice', $reservation->id) }}" method="GET">
                                         @csrf
-                                        <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Télécharger la facture</button>
+                                        <button type="submit" class="inline-flex items-center px-6 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700 focus:outline-none focus:bg-indigo-700">Télécharger la facture</button>
                                     </form>
                                     <form action="{{ route('my-reservations.cancel', $reservation->id) }}" method="POST">
                                         @csrf
                                         @method('POST')
-                                        <button type="submit" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">Annuler la réservation</button>
+                                        <button type="submit" class="inline-flex items-center px-6 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700 focus:outline-none focus:bg-indigo-700">Annuler la réservation</button>
                                     </form>
                                 </div>
                             </div>
