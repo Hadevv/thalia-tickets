@@ -20,6 +20,7 @@ class HomeController extends Controller
      */
     public function __invoke() : View
     {
+        // Récupération de la date du jour
         $today = \Carbon\Carbon::now()->toDateString();
 
         // Récupération des 5 prochaines représentations

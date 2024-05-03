@@ -1,4 +1,38 @@
 <x-app-layout>
+    @if (session('representation_ended') && Auth::check() && !$representations->isEmpty())
+        @foreach($representations as $representation)
+            @if ($representation->hasAttended() && $representation->isPaymentConfirmed())
+            <!-- Modal pour la revue -->
+            <x-modal name="reviewModal_{{ $representation->id }}" :show="true" maxWidth="2xl">
+
+                <form action="{{ route('reviews.store') }}" method="POST">
+                    @csrf
+                    <!-- Inputs pour la revue et la note -->
+                    <h3>Laisser un commentaire pour le spectacle {{ $representation->show->title }}</h3>
+                    <label for="review">Votre revue :</label>
+                    <textarea name="review" id="review" rows="4" cols="50" required></textarea>
+                    <label for="stars">Votre note :</label>
+                    <select name="stars" id="stars" required>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                    </select>
+                    <!-- Input caché pour l'ID du spectacle -->
+                    <input type="hidden" name="show_id" value="{{ $representation->show->id }}">
+                    <!-- Vérification de l'authentification de l'utilisateur avant d'inclure l'input pour l'ID de l'utilisateur -->
+                    <input type="hidden" name="user_id" value="{{ Auth::id() }}">
+                    <!-- Input caché pour l'ID de la représentation -->
+                    <input type="hidden" name="representation_id" value="{{ $representation->id }}">
+                    <!-- Bouton de soumission -->
+                    <button type="submit">Envoyer</button>
+                </form>
+            </x-modal>
+            @endif
+        @endforeach
+    @endif
+    <!-- Banner -->
     <div class="py-6">
         <div class=" mx-auto sm:px-6 lg:px-6">
             <div class="bg-white dark:bg-gray-800 md:mr-20 md:ml-20 overflow-hidden shadow-sm sm:rounded-lg">
