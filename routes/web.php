@@ -30,8 +30,9 @@ Route::get('/', HomeController::class)->name('home');
 |--------------------------------------------------------------------------
 */
 Route::post('/reviews', 'App\Http\Controllers\ReviewController@store')->name('reviews.store');
+Route::get('/schedule/{date?}', ScheduleController::class)
+    ->name('schedule.index');
 
-Route::get('/schedule', ScheduleController::class)->name('schedule.index');
 
 
 Route::get('/dashboard', function () {

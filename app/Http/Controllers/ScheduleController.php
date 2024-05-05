@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\PaginationHelper;
 use App\Models\Representation;
 use Illuminate\Http\Request;
-use Carbon\Carbon;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Log;
+use App\Helpers\DateHelper;
 
 class ScheduleController extends Controller
 {
@@ -18,53 +20,58 @@ class ScheduleController extends Controller
      * @todo utiliser une lib de planning par jour avec swiper pour la navigation entre les jours de la semaine
      */
 
-    public function __invoke(Request $request)
+    public function __invoke(Request $request, $date = null)
     {
-        // Paginer les représentations à venir par jour avec un maximum de représentations par page
-        $paginatedRepresentationsByDay = $this->paginateRepresentationsByDay(5);
+        try {
+            // La date actuelle au format 'YYYY-MM-DD'
+            //$currentDay = $request->input('date', now()->toDateString());
+            $currentDay = $date ?? now()->toDateString();
+            // Jour précédent
+            $previousDay = Carbon::parse($currentDay)->subDay()->toDateString();
+            // Jour suivant
+            $nextDay = Carbon::parse($currentDay)->addDay()->toDateString();
+            // Paginer les représentations à venir par jour avec un maximum de représentations par page
+            $paginatedRepresentationsByDay = $this->paginateRepresentationsByDay($currentDay, 5);
+            // Formater la date actuelle
+            $currentDayFormatted = DateHelper::formatScheduleDate($currentDay, 'fr', 'l d F Y');
 
-        return view('schedule.index', compact('paginatedRepresentationsByDay'));
+            return view('schedule.index', compact('paginatedRepresentationsByDay', 'currentDay', 'previousDay', 'nextDay','currentDayFormatted'));
+        } catch (\Exception $e) {
+            Log::error('Error occurred in ScheduleController: ' . $e->getMessage());
+            abort(500, 'Internal Server Error');
+        }
     }
 
-    /**
-     * Paginer les représentations à venir par jour avec un maximum de représentations par page
-     *
-     * @param int $perPage
-     * @return array
-     */
-    private function paginateRepresentationsByDay($perPage)
+    private function paginateRepresentationsByDay($currentDay, $perPage)
     {
-        $paginatedRepresentationsByDay = [];
+        try {
+            /**
+             * Paginer les représentations à venir par jour avec un maximum de représentations par page.
+             * @param string $currentDay
+             * @param int $perPage
+             * @return array
+             */
+            $paginatedRepresentations = Representation::with('show', 'location')
+                ->whereDate('schedule', $currentDay)
+                ->orderBy('schedule')
+                ->paginate($perPage);
 
-        // Récupérer les représentations à venir paginées par jour avec un maximum de représentations par page
-        /**
-        $representationsByDay = DB::table('representations')
-            ->join('shows', 'representations.show_id', '=', 'shows.id')
-            ->selectRaw('DATE(schedule) as day, representations.*, shows.title as show_title, shows.location_id as show_location_id')
-            ->where('schedule', '>=', now()->toDateTimeString())
-            ->orderBy('schedule')
-            ->paginate($perPage);
-         * */
+            // Grouper les représentations par jour en utilisant Carbon pour formater la date
+            $groupedRepresentationsByDay = collect($paginatedRepresentations->items())->groupBy(function ($representation) {
+                return Carbon::parse($representation->schedule)->format('Y-m-d');
+            })->toArray();
 
-        $representationsByDay = Representation::with('show')
-            ->selectRaw('DATE(schedule) as day')
-            ->where('schedule', '>=', now()->toDateTimeString())
-            ->orderBy('schedule')
-            ->paginate($perPage);
-
-
-        // Organiser les représentations paginées par jour
-        foreach ($representationsByDay as $representation) {
-            $day = $representation->day;
-
-            if (!isset($paginatedRepresentationsByDay[$day])) {
-                $paginatedRepresentationsByDay[$day] = [];
+            // Paginer chaque groupe de représentations
+            foreach ($groupedRepresentationsByDay as $day => $representations) {
+                $groupedRepresentationsByDay[$day] = PaginationHelper::paginate(collect($representations), $perPage);
             }
 
-            $paginatedRepresentationsByDay[$day][] = $representation;
+            return $groupedRepresentationsByDay;
+        } catch (\Exception $e) {
+            Log::error('Error occurred in paginateRepresentationsByDay: ' . $e->getMessage());
+            abort(500, 'Internal Server Error');
         }
-
-        return $paginatedRepresentationsByDay;
     }
 }
+
 
