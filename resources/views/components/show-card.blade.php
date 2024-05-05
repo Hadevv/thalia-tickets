@@ -3,7 +3,6 @@
 <div class="flex flex-col max-h-m bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg p-2 mb-2">
     <div class="flex w-full">
 
-
         <div class="w-32 mr-10 flex-shrink-0">
             @if ($show->poster_url)
             @if (Str::startsWith($show->poster_url, ['http://', 'https://']))
@@ -42,7 +41,7 @@
                             <span class="text-green-500 text-sm font-semibold">Réservable</span>
                             @foreach($show->representations->sortBy('schedule') as $representation)
                                 <div>
-                                    <a href="{{ route('representation.show', ['id' => $representation->id, 'slug' => $representation->slug]) }}" class="text-indigo-600 font-semibold text-sm dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-200">
+                                    <a href="{{ route('show.show', ['id' => $show->id, 'slug' => $show->slug]) }}" class="text-indigo-600 font-semibold text-sm dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-200">
                                         {{ \App\Helpers\DateHelper::formatScheduleDate($representation->schedule) }} - {{ \Carbon\Carbon::parse($representation->schedule)->format('H:i') }}
                                     </a>
                                 </div>
