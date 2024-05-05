@@ -84,14 +84,14 @@
                                                 <!-- $loop->first permet d'appliquer sur le premier une classe particulière, par exemple "en-tête d'affiche" -->
                                                 @if ($loop->first)
                                                     <div class="flex justify-center">
-                                                        <p class="text-white dark:text-gray-300">{{ \App\Helpers\DateHelper::formatScheduleDate($representation->schedule) }}</p>
+                                                        <p class="text-white dark:text-gray-300">{{ \App\Helpers\DateHelper::formatScheduleDate($representation->schedule)['formattedDate'] }}</p>
                                                         <p class="text-white dark:text-gray-300 m-2">{{ Str::limit($representation->show->title, 20) }}</p>
                                                         <p class="text-white dark:text-gray-300 m-2">{{ Str::limit($representation->show->description, 20) }}</p>
                                                     </div>
                                                 @else
                                                     <div class="border border-white-600 mt-3 mb-3"></div>
                                                     <div class="flex justify-center">
-                                                        <p class="text-white dark:text-white-300">{{ \App\Helpers\DateHelper::formatScheduleDate($representation->schedule, 'd/m H:i') }}</p>
+                                                        <p class="text-white dark:text-white-300">{{ \App\Helpers\DateHelper::formatScheduleDate($representation->schedule, 'd/m H:i')['formattedDate'] }}</p>
                                                         <p class="text-white dark:text-white-300 m-2">{{ Str::limit($representation->show->title, 20) }}</p>
                                                         <p class="text-white dark:text-gray-300 m-2">{{ Str::limit($representation->show->description, 20) }}</p>
                                                     </div>

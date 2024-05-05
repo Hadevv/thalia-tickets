@@ -42,7 +42,7 @@
                             @foreach($show->representations->sortBy('schedule') as $representation)
                                 <div>
                                     <a href="{{ route('show.show', ['id' => $show->id, 'slug' => $show->slug]) }}" class="text-indigo-600 font-semibold text-sm dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-200">
-                                        {{ \App\Helpers\DateHelper::formatScheduleDate($representation->schedule) }} - {{ \Carbon\Carbon::parse($representation->schedule)->format('H:i') }}
+                                        {{ \App\Helpers\DateHelper::formatScheduleDate($representation->schedule)['formattedDate'] }} - {{ \Carbon\Carbon::parse($representation->schedule)->format('H:i') }}
                                     </a>
                                 </div>
                             @endforeach
