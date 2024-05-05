@@ -36,6 +36,24 @@
             </div>
         </div>
     </div>
+
+    @push('scripts')
+        <script>
+            function submitForm() {
+                const dateFrom = document.getElementById('date_from').value;
+                const dateTo = document.getElementById('date_to').value;
+
+                // Vérifier si les deux dates sont définies
+                if (dateFrom && dateTo) {
+                    // Si les deux dates sont définies, soumettre le formulaire
+                    console.log("Form submitted");
+                    document.getElementById('filterForm').submit();
+                } else {
+                    alert("Veuillez sélectionner à la fois une date de début et une date de fin.");
+                }
+            }
+        </script>
+    @endpush
 </x-app-layout>
 
 

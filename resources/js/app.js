@@ -18,7 +18,7 @@ const app = createApp({
 window.Alpine = Alpine;
 Alpine.start();
 
-app.mount('#app');
+//app.mount('#app');
 
 
 

@@ -44,80 +44,9 @@
         @include('layouts.footer')
     </div>
     @cookieconsentview
-</body>
-    <script>
-        function clearSearch() {
-            document.getElementById('searchInput').value = '';
-            document.getElementById('dateFrom').value = '';
-            document.getElementById('dateTo').value = '';
-            document.getElementById('location').value = '';
 
-            document.getElementById('searchInput').addEventListener('input', function() {
-                document.getElementById('searchForm').submit();
-            });
+    <!-- Scripts -->
+    @stack('scripts')
 
-            document.getElementById('searchForm').addEventListener('submit', function(event) {
-                event.preventDefault(); // Empêche le formulaire de se soumettre normalement
-
-                // Réinitialisez l'URL en supprimant les paramètres de requête
-                const baseUrl = window.location.href.split('?')[0];
-                window.history.replaceState(null, null, baseUrl);
-
-                // Soumet le formulaire
-                document.getElementById('searchForm').submit();
-            });
-        }
-        function submitForm() {
-            const dateFrom = document.getElementById('date_from').value;
-            const dateTo = document.getElementById('date_to').value;
-
-            // Vérifier si les deux dates sont définies
-            if (dateFrom && dateTo) {
-                // Si les deux dates sont définies, soumettre le formulaire
-                console.log("Form submitted");
-                document.getElementById('filterForm').submit();
-            } else {
-                // Si seulement une des dates est définie, afficher un message d'erreur
-                alert("Veuillez sélectionner à la fois une date de début et une date de fin.");
-            }
-        }
-        function updateTotal(form) {
-            let total = 0;
-            let totalPlaces = 0;
-
-            // Calculer le total des places
-            form.querySelectorAll('[name^=places]').forEach(input => {
-                const price = input.getAttribute('data-price');
-                const quantity = parseInt(input.value);
-
-                if (price && quantity > 0) {
-                    total += quantity * parseFloat(price);
-                    totalPlaces += quantity;
-                }
-            });
-
-            // Calculer le total des sièges
-            form.querySelectorAll('[name^=selected_seats]').forEach(input => {
-                const price = input.getAttribute('data-price');
-
-                if (price && input.checked) {
-                    total += parseFloat(price);
-                }
-            });
-
-            // Mettre à jour le total
-            const totalElement = form.querySelector('#total');
-            if (totalElement) {
-                totalElement.innerText = '€ ' + parseFloat(total).toFixed(2);
-            }
-
-            // Valider le nombre de sièges sélectionnés
-            const seatsInputs = form.querySelectorAll('[name^=selected_seats]');
-            const selectedSeatsCount = Array.from(seatsInputs).filter(input => input.checked && !input.disabled).length;
-
-            seatsInputs.forEach(input => {
-                input.disabled = (selectedSeatsCount >= totalPlaces && !input.checked);
-            });
-        }
-    </script>
+    </body>
 </html>
