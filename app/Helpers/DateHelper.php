@@ -7,16 +7,21 @@ use Carbon\Carbon;
 class DateHelper
 {
     // Helper pour formater la date de la représentation en fonction de la date actuelle (aujourd'hui, hier, demain, date)
-    public static function formatScheduleDate($schedule, $format = 'd/m H:i')
+    public static function formatScheduleDate($schedule, $language = 'fr', $format = 'd/m H:i')
     {
         $scheduleDate = Carbon::parse($schedule);
+        $dayNameEnglish = $scheduleDate->format('l');
+        $dayName = ($language == 'fr') ? self::translateDayName($dayNameEnglish) : $dayNameEnglish;
 
-        return match(true) {
-            $scheduleDate->isToday() => 'Aujourd\'hui ' . $scheduleDate->format('H:i'),
-            $scheduleDate->isYesterday() => 'Hier ' . $scheduleDate->format('H:i'),
-            $scheduleDate->isTomorrow() => 'Demain ' . $scheduleDate->format('H:i'),
-            default => $scheduleDate->format($format),
-        };
+        return [
+            'dayName' => $dayName,
+            'formattedDate' => match(true) {
+                $scheduleDate->isToday() => 'Aujourd\'hui',
+                $scheduleDate->isYesterday() => 'Hier',
+                $scheduleDate->isTomorrow() => 'Demain',
+                default => $dayName . ' ' . $scheduleDate->format($format),
+            }
+        ];
     }
 
     public static function formatScheduleTime($schedule)
@@ -67,5 +72,19 @@ class DateHelper
 
         return $scheduleShort->format('d/m H:i');
     }
+    public static function translateDayName($dayName)
+    {
+        // Traduire les noms du jour de la semaine en fr
+        $translations = [
+            'Monday' => 'Lundi',
+            'Tuesday' => 'Mardi',
+            'Wednesday' => 'Mercredi',
+            'Thursday' => 'Jeudi',
+            'Friday' => 'Vendredi',
+            'Saturday' => 'Samedi',
+            'Sunday' => 'Dimanche',
+        ];
 
+        return $translations[$dayName] ?? $dayName;
+    }
 }
