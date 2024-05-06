@@ -6,11 +6,14 @@ use App\Http\Controllers\Controller;
 use App\Models\Show;
 use App\Http\Resources\ShowResource;
 use Illuminate\Http\Request;
+use App\Traits\ApiResponseTrait;
 
 class ShowApiController extends Controller
 {
+    use ApiResponseTrait;
+
     /**
-     * Display a listing of the resource.
+     * Afficher une liste de ressources
      */
     public function index(Request $request)
     {
@@ -31,11 +34,11 @@ class ShowApiController extends Controller
             $shows = $query->get();
         }
 
-        return ShowResource::collection($shows);
+        return $this->successResponse(ShowResource::collection($shows));
     }
 
     /**
-     * Display the specified resource.
+     * Afficher la ressource spécifiée
      */
     public function show($id)
     {
@@ -47,24 +50,71 @@ class ShowApiController extends Controller
             'representations.representationReservations',
         ]);
 
-        return new ShowResource($show);
-    }
-    /**
-     * Search for a specified resource.
-     */
+        if (!$show) {
+            return $this->errorResponse('Spectacle introuvable', 404);
+        }
 
-    //  http://127.0.0.1:8000/api/show/search?q=Ayiti
+        return $this->successResponse(new ShowResource($show));
+    }
+
+    /**
+     * Rechercher une ressource spécifiée
+     *
+     * http://127.0.0.1:8000/api/show/search?q=Ayiti
+     */
     public function search(Request $request)
     {
-        return ShowResource::collection(Show::search($request->input('q'))->get());
+        $query = $request->input('q');
+
+        if (!$query) {
+            return $this->errorResponse('Le paramètre de requête est requis', 400);
+        }
+
+        $shows = Show::search($query)->get();
+
+        return $this->successResponse(ShowResource::collection($shows));
     }
 
     public function destroy($id)
     {
         $show = Show::findOrFail($id);
-        $show->delete();
 
-        return response()->json(null, 204);
+        if (!$show->delete()) {
+            return $this->errorResponse('Impossible de supprimer le spectacle', 500);
+        }
+
+        return $this->successResponse(null, 'Spectacle supprimé avec succès', 204);
     }
+
+    // @todo terminer les méthodes suivantes
+
+    /**
+     * Mettre à jour la ressource spécifiée dans le stockage.
+     */
+    public function update(Request $request, $id)
+    {
+        $show = Show::findOrFail($id);
+
+        if (!$show->update($request->all())) {
+            return $this->errorResponse('Impossible de mettre à jour le spectacle', 500);
+        }
+
+        return $this->successResponse(new ShowResource($show), 'Spectacle mis à jour avec succès');
+    }
+
+    /**
+     * Stocker une nouvelle ressource dans le stockage.
+     */
+    public function store(Request $request)
+    {
+        $show = Show::create($request->all());
+
+        if (!$show) {
+            return $this->errorResponse('Impossible de créer le spectacle', 500);
+        }
+
+        return $this->successResponse(new ShowResource($show), 'Spectacle créé avec succès', 201);
+    }
+
 }
 
