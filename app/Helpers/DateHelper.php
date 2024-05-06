@@ -16,9 +16,9 @@ class DateHelper
         return [
             'dayName' => $dayName,
             'formattedDate' => match(true) {
-                $scheduleDate->isToday() => 'Aujourd\'hui',
-                $scheduleDate->isYesterday() => 'Hier',
-                $scheduleDate->isTomorrow() => 'Demain',
+                $scheduleDate->isToday() => 'Aujourd\'hui' . ' ' . $scheduleDate->format($format),
+                $scheduleDate->isYesterday() => 'Hier' . ' ' . $scheduleDate->format($format),
+                $scheduleDate->isTomorrow() => 'Demain' . ' ' . $scheduleDate->format($format),
                 default => $dayName . ' ' . $scheduleDate->format($format),
             }
         ];
