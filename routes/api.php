@@ -18,10 +18,10 @@ use App\Http\Controllers\Api\AuthApiController;
 
 Route::middleware('auth:sanctum')->group(function () {
     // api user sanctum auth
-    Route::post('/login', [AuthApiController::class, 'login'])->name('login');
-    Route::post('/logout', [AuthApiController::class, 'logout'])->name('logout');
-    Route::get('/user', [AuthApiController::class, 'user'])->name('user');
-    Route::post('/register', [AuthApiController::class, 'register'])->name('register');
+    Route::post('/login', [AuthApiController::class, 'login']);
+    Route::post('/logout', [AuthApiController::class, 'logout']);
+    Route::get('/user', [AuthApiController::class, 'user']);
+    Route::post('/register', [AuthApiController::class, 'register']);
     // api show une fois authentifié
     Route::get('/show', [ShowApiController::class, 'index']);
     Route::get('/show/{id}', [ShowApiController::class, 'show'])->where('id', '[0-9]+');
