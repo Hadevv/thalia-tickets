@@ -19,7 +19,7 @@ class RefreshRepresentations extends Command
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = 'Refresh representations in the home page';
 
     /**
      * Execute the console command.

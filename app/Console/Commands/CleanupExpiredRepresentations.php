@@ -22,7 +22,7 @@ class CleanupExpiredRepresentations extends Command
     protected $description = 'Delete representations older than 7 days';
 
     /**
-     * Execute the console command.
+     * Execute la tache de la console
      */
     public function handle()
     {
@@ -30,11 +30,16 @@ class CleanupExpiredRepresentations extends Command
 
         $representations = Representation::where('schedule', '<', now()->subDays(7))->get();
 
-
         foreach ($representations as $representation) {
+            // vérifier si la représentation a des réservations associées
+            if ($representation->representationReservations->isNotEmpty()) {
+                // supprimer les enregistrements associés dans representation_reservation
+                $representation->representationReservations()->delete();
+            }
+            // Supprimer la représentation
             $representation->delete();
         }
-
         $this->info('Done!');
     }
 }
+
