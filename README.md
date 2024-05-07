@@ -111,5 +111,7 @@ TODO : faire une table db pour les archives des representations
 TODO : http://127.0.0.1:8000/representation/6
 TODO : fix bug representation/id url incorrect
 
+./vendor/bin/sail up
+
 
 
