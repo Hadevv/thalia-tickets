@@ -12,6 +12,7 @@ use App\Http\Controllers\RoleController;
 use App\Http\Controllers\ShowController;
 use App\Http\Controllers\TypeController;
 use App\Http\Middleware\SetLocaleFromUser;
+use App\Http\Controllers\TheatreController;
 use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ScheduleController;
@@ -33,7 +34,9 @@ Route::post('/reviews', 'App\Http\Controllers\ReviewController@store')->name('re
 Route::get('/schedule/{date?}', ScheduleController::class)
     ->name('schedule.index');
 
-
+Route::get('/theatre', [TheatreController::class, 'index'])->name('theatre.index');
+Route::get('/theatre/{id}', [TheatreController::class, 'show'])
+    ->where('id', '[0-9]+')->name('theatre.show');
 
 Route::get('/dashboard', function () {
     return view('dashboard');

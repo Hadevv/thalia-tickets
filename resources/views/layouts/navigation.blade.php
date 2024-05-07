@@ -27,6 +27,9 @@
                     <x-nav-link :href="route('schedule.index')" :active="request()->routeIs('schedule.index')">
                         {{ __('Horaire') }}
                     </x-nav-link>
+                    <x-nav-link :href="route('theatre.index')" :active="request()->routeIs('theatre.index')">
+                        {{ __('Théâtre') }}
+                    </x-nav-link>
                     {{-- Guest Links --}}
                     {{-- Auth Links --}}
                     @auth
