@@ -3,6 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use App\Enums\SeatStatusEnum;
 
 return new class extends Migration
 {
@@ -14,13 +15,14 @@ return new class extends Migration
         Schema::create('seats', function (Blueprint $table) {
             $table->id();
             $table->string('seat_number')->unique();
-            $table->enum('status', ['available', 'reserved'])->default('available');
+            $table->string('status')->default(SeatStatusEnum::AVAILABLE);
             $table->timestamps();
         });
+
         for ($i = 1; $i <= 20; $i++) {
             \App\Models\Seat::create([
                 'seat_number' => 'S' . $i,
-                'status' => 'available',
+                'status' => SeatStatusEnum::AVAILABLE,
             ]);
         }
     }
@@ -33,3 +35,4 @@ return new class extends Migration
         Schema::dropIfExists('seats');
     }
 };
+

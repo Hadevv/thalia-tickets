@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Enums\StatusEnum;
 
 class Reservation extends Model
 {
@@ -37,5 +38,10 @@ class Reservation extends Model
         }
 
         return $total;
+    }
+
+    public function status()
+    {
+        return StatusEnum::from($this->status)->label();
     }
 }

@@ -8,6 +8,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Cashier\Billable;
 use Laravel\Sanctum\HasApiTokens;
+use App\Enums\RoleEnum;
 
 class User extends Authenticatable
 {
@@ -52,7 +53,12 @@ class User extends Authenticatable
 
     public function isAdmin()
     {
-        return $this->roles()->where('role', 'admin')->exists();
+        return $this->roles()->where('role', RoleEnum::ADMIN)->exists();
+    }
+
+    public function isMember()
+    {
+        return $this->roles()->where('role', RoleEnum::MEMBER)->exists();
     }
 
     public function roles()
