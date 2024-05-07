@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Stripe\Stripe;
 use App\Models\Seat;
+use App\Enums\StatusEnum;
 
 class ReservationController extends Controller
 {
@@ -20,8 +21,9 @@ class ReservationController extends Controller
      */
     private function calculateCartTotal()
     {
+
         $reservations = Reservation::where('user_id', auth()->id())
-            ->where('status', 'pending')
+            ->where('status', StatusEnum::PENDING)
             ->get();
 
         $total = $reservations->map(function ($reservation) {
@@ -169,7 +171,7 @@ class ReservationController extends Controller
 
             // Mettre à jour l'ID de la facture Stripe et le statut de la réservation
             $reservation->stripe_invoice_id = $checkout_session_id;
-            $reservation->status = 'confirmed';
+            $reservation->status = StatusEnum::CONFIRMED;
             $reservation->save();
 
             // Event : Envoyer un email de confirmation
@@ -211,7 +213,7 @@ class ReservationController extends Controller
             $seat->save();
         }
 
-        $reservation->status = 'canceled';
+        $reservation->status = StatusEnum::CANCELED;
         $reservation->save();
 
         Log::info('Reservation status updated', ['reservation_id' => $reservation->id, 'status' => $reservation->status]);
@@ -229,7 +231,7 @@ class ReservationController extends Controller
     {
         $total = $this->calculateCartTotal();
         $reservations = Reservation::where('user_id', auth()->id())
-            ->where('status', 'pending')
+            ->where('status', StatusEnum::PENDING)
             ->get();
 
         return view('reservation.cart.index', compact('reservations', 'total'))->with('success', 'Réservation ajoutée au panier');
@@ -269,7 +271,7 @@ class ReservationController extends Controller
     {
         try {
             $reservations = Reservation::where('user_id', auth()->id())
-                ->where('status', 'pending')
+                ->where('status', StatusEnum::PENDING)
                 ->get();
 
             foreach ($reservations as $reservation) {
