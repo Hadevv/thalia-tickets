@@ -106,10 +106,14 @@ Le point d'entrée de l'API theatre-contemporain.net est https://www.theatre-con
 https://www.ressources-theatre.net/doc/api/ 
 
 TODO : faire la page de documentation de l'API
-TODO : faire une table db pour les archives des representations
+fait le 3/05 TODO : faire une table db pour les archives des representations
 
 TODO : http://127.0.0.1:8000/representation/6
-TODO : fix bug representation/id url incorrect
+fix le 05/05 TODO : fix bug representation/id url incorrect dans le fichier web.php
 
 
 
+TODO : faire la page de documentation de l'API
+TODO : faire la page contact et theatre salle de spectacle
+fait le 3/05 page contat
+TODO : ternimer le panel admin pour les spectacles très simples
