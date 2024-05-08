@@ -30,22 +30,16 @@
                     <x-nav-link :href="route('theatre.index')" :active="request()->routeIs('theatre.index')">
                         {{ __('Théâtre') }}
                     </x-nav-link>
+                    <x-nav-link :href="route('contact')" :active="request()->routeIs('contact')">
+                        {{ __('Contact') }}
+                    </x-nav-link>
                     {{-- Guest Links --}}
                     {{-- Auth Links --}}
                     @auth
                         {{-- ajout d'artist dans la navigation --}}
                         @if (Auth::user()->isAdmin())
                         {{-- ajout de type dans la navigation --}}
-                        <x-nav-link :href="route('type.index')" :active="request()->routeIs('type.index')">
-                            {{ __('Type') }}
-                        </x-nav-link>
-                        <x-nav-link :href="route('locality.index')" :active="request()->routeIs('locality.index')">
-                            {{ __('Locality') }}
-                        </x-nav-link>
-                        <x-nav-link :href="route('show.index')" :active="request()->routeIs('show.index')">
-                            {{ __('Spectacle') }}
-                        </x-nav-link>
-                        <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
+                        <x-nav-link :href="route('admin.index')" :active="request()->routeIs('admin.index')">
                             {{ __('Dashboard') }}
                         </x-nav-link>
                         @endif

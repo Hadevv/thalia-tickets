@@ -17,7 +17,7 @@ use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ScheduleController;
 use App\Http\Controllers\Admin\AdminRepresentationController;
-
+use App\Http\Controllers\ContactFormController;
 /*
 |--------------------------------------------------------------------------
 | Routes home
@@ -25,6 +25,11 @@ use App\Http\Controllers\Admin\AdminRepresentationController;
 */
 Route::get('/', HomeController::class)->name('home');
 
+Route::get('/contact', function () {
+    return view('contact');
+})->name('contact');
+
+Route::post('/contact', [ContactFormController::class, 'submit'])->name('contact.submit');
 /*
 |--------------------------------------------------------------------------
 | Routes dashboard
