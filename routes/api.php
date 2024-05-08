@@ -15,6 +15,9 @@ use App\Http\Controllers\Api\AuthApiController;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
+Route::get('/show', [ShowApiController::class, 'index']);
+Route::get('/show/{id}', [ShowApiController::class, 'show'])->where('id', '[0-9]+');
+Route::get('/show/search', [ShowApiController::class, 'search'])->name('show.search');
 
 Route::middleware('auth:sanctum')->group(function () {
     // api user sanctum auth
@@ -23,9 +26,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/user', [AuthApiController::class, 'user']);
     Route::post('/register', [AuthApiController::class, 'register']);
     // api show une fois authentifié
-    Route::get('/show', [ShowApiController::class, 'index']);
-    Route::get('/show/{id}', [ShowApiController::class, 'show'])->where('id', '[0-9]+');
-    Route::get('/show/search', [ShowApiController::class, 'search'])->name('show.search');
 });
 // web scraping routes show
 Route::get('/http-get-shows/{objectId}', [HttpShowController::class, 'getShows'])->where('objectId', '[0-9]+');
