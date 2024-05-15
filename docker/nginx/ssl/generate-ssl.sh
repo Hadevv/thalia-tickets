@@ -13,7 +13,7 @@ chmod 644 "$KEY_FILE"
 # Créer une demande de signature de certificat (CSR)
 # Le paramètre -subj spécifie les détails du certificat : CN (Common Name), O (Organization), C (Country)
 # Note : Utilisation de double slashes (//) et de backslashes (\) pour contourner le comportement spécifique de MinGW/MSYS
-openssl req -new -key "$KEY_FILE" -out "$CSR_FILE" -subj "//CN=default\O=default\C=FR"
+openssl req -new -key "$KEY_FILE" -out "$CSR_FILE" -subj "//CN=default\O=default\C=BE"
 
 # Générer un certificat auto-signé valable 365 jours à partir de la CSR et de la clé privée
 openssl x509 -req -days 365 -in "$CSR_FILE" -signkey "$KEY_FILE" -out "$CRT_FILE"

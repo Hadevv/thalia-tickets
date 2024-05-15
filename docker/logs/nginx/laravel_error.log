@@ -1,0 +1,7 @@
+2024/05/15 10:27:43 [crit] 16#16: *201 SSL_read() failed (SSL: error:1C80006C:Provider routines::invalid aad error:0A0C0103:SSL routines::internal error) while waiting for request, client: 172.18.0.1, server: 0.0.0.0:443
+2024/05/15 10:57:42 [crit] 16#16: *1231 SSL_read() failed (SSL: error:1C80006C:Provider routines::invalid aad error:0A0C0103:SSL routines::internal error) while waiting for request, client: 172.18.0.1, server: 0.0.0.0:443
+2024/05/15 11:27:41 [crit] 16#16: *2256 SSL_read() failed (SSL: error:1C80006C:Provider routines::invalid aad error:0A0C0103:SSL routines::internal error) while waiting for request, client: 172.18.0.1, server: 0.0.0.0:443
+2024/05/15 11:27:41 [crit] 16#16: *2257 SSL_read() failed (SSL: error:1C80006C:Provider routines::invalid aad error:0A0C0103:SSL routines::internal error) while waiting for request, client: 172.18.0.1, server: 0.0.0.0:443
+2024/05/15 11:57:40 [crit] 16#16: *3335 SSL_read() failed (SSL: error:1C80006C:Provider routines::invalid aad error:0A0C0103:SSL routines::internal error) while waiting for request, client: 172.18.0.1, server: 0.0.0.0:443
+2024/05/15 12:27:40 [crit] 14#14: *957 SSL_read() failed (SSL: error:1C80006C:Provider routines::invalid aad error:0A0C0103:SSL routines::internal error) while waiting for request, client: 172.18.0.1, server: 0.0.0.0:443
+2024/05/15 12:27:40 [crit] 14#14: *956 SSL_read() failed (SSL: error:1C80006C:Provider routines::invalid aad error:0A0C0103:SSL routines::internal error) while waiting for request, client: 172.18.0.1, server: 0.0.0.0:443
