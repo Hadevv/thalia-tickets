@@ -1,5 +1,6 @@
 import './bootstrap';
 
+import 'preline';
 import Alpine from 'alpinejs';
 import { createApp } from 'vue';
 import Pagination from './components/Pagination.vue';
