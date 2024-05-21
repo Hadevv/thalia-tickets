@@ -7,53 +7,112 @@
                         @foreach ($reservations as $reservation)
                             <div class="flex flex-col space-y-4">
                                 <div class="flex items-center justify-between">
-                                    <h2 class="text-2xl font-semibold">{{ $reservation->representation_reservations->first()->representation->show->title }}</h2>
+                                    <h2 class="text-2xl font-semibold">
+                                        @if (
+                                            $reservation->representation_reservations->isNotEmpty() &&
+                                                $reservation->representation_reservations->first()->representation)
+                                            {{ $reservation->representation_reservations->first()->representation->show->title }}
+                                        @else
+                                            Information non disponible
+                                        @endif
+                                    </h2>
                                     <span class="text-lg font-semibold">{{ $reservation->total() }}€</span>
                                 </div>
                                 <div class="flex items-center justify-between">
                                     <p>Quantité : {{ $reservation->representation_reservations->sum('quantity') }}</p>
-                                    <p>{{ $reservation->representation_reservations->first()->representation->schedule instanceof \Carbon\Carbon ? $reservation->representation_reservations->first()->representation->schedule->format('d/m/Y H:i') : '' }}</p>
+                                    <p>
+                                        @if (
+                                            $reservation->representation_reservations->isNotEmpty() &&
+                                                $reservation->representation_reservations->first()->representation &&
+                                                $reservation->representation_reservations->first()->representation->schedule instanceof \Carbon\Carbon)
+                                            {{ $reservation->representation_reservations->first()->representation->schedule->format('d/m/Y H:i') }}
+                                        @else
+                                            Date et heure non disponible
+                                        @endif
+                                    </p>
                                 </div>
                                 <div>
-                                    <p>Lieu : {{ $reservation->representation_reservations->first()->representation->location->designation }}</p>
-                                    <p>Adresse : {{ $reservation->representation_reservations->first()->representation->location->address }}</p>
-                                    <p>Ville : {{ $reservation->representation_reservations->first()->representation->location->locality->locality }}, {{ $reservation->representation_reservations->first()->representation->location->locality->postal_code }}</p>
+                                    <p>
+                                        Lieu :
+                                        @if (
+                                            $reservation->representation_reservations->isNotEmpty() &&
+                                                $reservation->representation_reservations->first()->representation &&
+                                                $reservation->representation_reservations->first()->representation->location)
+                                            {{ $reservation->representation_reservations->first()->representation->location->designation }}
+                                        @else
+                                            Information non disponible
+                                        @endif
+                                    </p>
+                                    <p>
+                                        Adresse :
+                                        @if (
+                                            $reservation->representation_reservations->isNotEmpty() &&
+                                                $reservation->representation_reservations->first()->representation &&
+                                                $reservation->representation_reservations->first()->representation->location)
+                                            {{ $reservation->representation_reservations->first()->representation->location->address }}
+                                        @else
+                                            Information non disponible
+                                        @endif
+                                    </p>
+                                    <p>
+                                        Ville :
+                                        @if (
+                                            $reservation->representation_reservations->isNotEmpty() &&
+                                                $reservation->representation_reservations->first()->representation &&
+                                                $reservation->representation_reservations->first()->representation->location &&
+                                                $reservation->representation_reservations->first()->representation->location->locality)
+                                            {{ $reservation->representation_reservations->first()->representation->location->locality->locality }},
+                                            {{ $reservation->representation_reservations->first()->representation->location->locality->postal_code }}
+                                        @else
+                                            Information non disponible
+                                        @endif
+                                    </p>
                                 </div>
                                 <div class="flex items-center justify-between">
                                     <p>Date et heure :
-                                        @if ($reservation->representation_reservations->isNotEmpty() &&
-                                             $reservation->representation_reservations->first()->representation &&
-                                             $reservation->representation_reservations->first()->representation->schedule)
+                                        @if (
+                                            $reservation->representation_reservations->isNotEmpty() &&
+                                                $reservation->representation_reservations->first()->representation &&
+                                                $reservation->representation_reservations->first()->representation->schedule)
                                             {{ \Carbon\Carbon::parse($reservation->representation_reservations->first()->representation->schedule)->format('d/m/Y H:i') }}
                                         @else
                                             Aucune date et heure disponible
                                         @endif
                                     </p>
-                                    <p>Réservation : @if ($reservation->status === 'confirmed') Payée @else Non payée @endif</p>
+                                    <p>Réservation : @if ($reservation->status === 'confirmed')
+                                            Payée
+                                        @else
+                                            Non payée
+                                        @endif
+                                    </p>
                                     <p>
                                         Sièges :
                                         @if ($reservation->representation_reservations)
-                                            {{
-                                                $reservation->representation_reservations->filter(function ($representationReservation) {
+                                            {{ $reservation->representation_reservations->filter(function ($representationReservation) {
                                                     return $representationReservation->seat !== null;
                                                 })->map(function ($representationReservation) {
                                                     return $representationReservation->seat->seat_number;
-                                                })->flatten()->implode(', ')
-                                            }}
+                                                })->flatten()->implode(', ') }}
                                         @else
                                             Aucun siège réservé
                                         @endif
                                     </p>
                                 </div>
                                 <div class="flex space-x-4">
-                                    <form action="{{ route('my-reservations.download-invoice', $reservation->id) }}" method="GET">
+                                    <form action="{{ route('my-reservations.download-invoice', $reservation->id) }}"
+                                        method="GET">
                                         @csrf
-                                        <button type="submit" class="inline-flex items-center px-6 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700 focus:outline-none focus:bg-indigo-700">Télécharger la facture</button>
+                                        <button type="submit"
+                                            class="inline-flex items-center px-6 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700 focus:outline-none focus:bg-indigo-700">Télécharger
+                                            la facture</button>
                                     </form>
-                                    <form action="{{ route('my-reservations.cancel', $reservation->id) }}" method="POST">
+                                    <form action="{{ route('my-reservations.cancel', $reservation->id) }}"
+                                        method="POST">
                                         @csrf
                                         @method('POST')
-                                        <button type="submit" class="inline-flex items-center px-6 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700 focus:outline-none focus:bg-indigo-700">Annuler la réservation</button>
+                                        <button type="submit"
+                                            class="inline-flex items-center px-6 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700 focus:outline-none focus:bg-indigo-700">Annuler
+                                            la réservation</button>
                                     </form>
                                 </div>
                             </div>
@@ -67,5 +126,3 @@
         </div>
     </div>
 </x-app-layout>
-
-

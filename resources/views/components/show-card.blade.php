@@ -37,18 +37,19 @@
                     <a href="{{ route('show.show', ['id' => $show->id, 'slug' => $show->slug]) }}" class="text-indigo-600 font-semibold text-sm dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-200">En savoir plus</a>
                     <div>
                         @if ($show->bookable && $show->representations->count() > 0)
-
-                            <span class="text-green-500 text-sm font-semibold">Réservable</span>
-                            @foreach($show->representations->sortBy('schedule') as $representation)
-                                <div>
-                                    <a href="{{ route('show.show', ['id' => $show->id, 'slug' => $show->slug]) }}" class="text-indigo-600 font-semibold text-sm dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-200">
-                                        {{ \App\Helpers\DateHelper::formatScheduleDate($representation->schedule)['formattedDate'] }} - {{ \Carbon\Carbon::parse($representation->schedule)->format('H:i') }}
-                                    </a>
-                                </div>
-                            @endforeach
-                        @else
-                            <span class="text-red-500 text-sm font-semibold">Non réservable</span>
-                        @endif
+                <span class="text-green-500 text-sm font-semibold">Réservable</span>
+                @foreach($show->representations->sortBy('schedule') as $representation)
+                    @if (\Carbon\Carbon::parse($representation->schedule)->isFuture())
+                        <div>
+                            <a href="{{ route('show.show', ['id' => $show->id, 'slug' => $show->slug]) }}" class="text-indigo-600 font-semibold text-sm dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-200">
+                                {{ \App\Helpers\DateHelper::formatScheduleDate($representation->schedule)['formattedDate'] }} - {{ \Carbon\Carbon::parse($representation->schedule)->format('H:i') }}
+                            </a>
+                        </div>
+                    @endif
+                @endforeach
+            @else
+                <span class="text-red-500 text-sm font-semibold">Non réservable</span>
+            @endif
                     </div>
                 </div>
             </div>
