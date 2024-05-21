@@ -69,4 +69,8 @@ class Representation extends Model implements Feedable
         })->exists();
     }
 
+    public function scopeFuture($query)
+    {
+        return $query->where('schedule', '>', Carbon::now());
+    }
 }
