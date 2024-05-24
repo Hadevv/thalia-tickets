@@ -36,6 +36,8 @@ class DatabaseSeeder extends Seeder
             ReservationSeeder::class,
             RepresentationReservationSeeder::class,
             ReviewSeeder::class,
+            TagSeeder::class,
+            ShowTagSeeder::class,
         ]);
     }
 }
