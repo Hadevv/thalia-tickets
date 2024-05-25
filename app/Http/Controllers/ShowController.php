@@ -9,11 +9,8 @@ use App\Http\Requests\StoreShowRequest;
 use App\Http\Requests\UpdateShowRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
-use Illuminate\Validation\Rule;
-use Illuminate\Support\Facades\File;
+use App\Models\Tag;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Illuminate\Validation\ValidationException;
 
 class ShowController extends Controller
 {
@@ -28,6 +25,7 @@ class ShowController extends Controller
     {
         try {
             $search = $request->input('search');
+            // Récupération des paramètres de recherche keyword
             $dateFrom = $request->input('date_from');
             $dateTo = $request->input('date_to');
             $location = $request->input('location');
@@ -49,6 +47,9 @@ class ShowController extends Controller
                     })
                     ->orWhereHas('artistTypes.type', function ($query) use ($search) {
                         $query->where('type', 'like', '%' . $search . '%');
+                    })
+                    ->orWhereHas('showTags.tag', function ($query) use ($search) {
+                        $query->where('tag', 'like', '%' . $search . '%');
                     });
             }
 
@@ -93,6 +94,28 @@ class ShowController extends Controller
         return view('show.create', [
             'artists' => Artist::all(),
         ]);
+    }
+
+    // Fonction pour ajouter un tag à un spectacle
+    public function addTag(Request $request, Show $show)
+    {
+        $request->validate([
+            'tag' => 'required|string|max:255',
+        ]);
+
+        $tag = new Tag();
+        $tag->tag = $request->tag;
+        $show->tags()->save($tag);
+
+        return response()->json(['success' => true, 'tag' => $tag]);
+    }
+    // Fonction pour supprimer un tag d'un spectacle
+    public function removeTag(Show $show, Tag $tag)
+    {
+        $show->tags()->detach($tag->id); // Détache le tag de la relation many-to-many
+        $tag->delete(); // Supprime le tag de la table tags
+
+        return response()->json(['success' => true]);
     }
 
     // Fonction pour stocker un spectacle
