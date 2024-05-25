@@ -23,6 +23,7 @@ use App\Http\Controllers\ContactFormController;
 | Routes home
 |--------------------------------------------------------------------------
 */
+
 Route::get('/', HomeController::class)->name('home');
 
 Route::get('/contact', function () {
@@ -124,7 +125,7 @@ Route::get('/role/{id}', [RoleController::class, 'show'])
 |--------------------------------------------------------------------------
 */
 Route::get('/representation/{id}', [RepresentationController::class, 'show'])->where('id', '[0-9]+')->name('representation.show');
-    /*
+/*
     |--------------------------------------------------------------------------
     | Show Routes
     |--------------------------------------------------------------------------
@@ -135,7 +136,7 @@ Route::get('/show/{id}-{slug}', [ShowController::class, 'show'])
     ->name('show.show');
 Route::get('/show/clear-search', [ShowController::class, 'clear'])->name('show.clear');
 
-    /*
+/*
     |--------------------------------------------------------------------------
     | Reservation payement Routes
     |--------------------------------------------------------------------------
@@ -174,6 +175,9 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/my-reservations/{id}/cancel', [MyReservationController::class, 'cancel'])->name('my-reservations.cancel');
     Route::get('/my-reservations/{id}/download-invoice', [MyReservationController::class, 'downloadStripeInvoice'])->name('my-reservations.download-invoice');
 });
+
+Route::post('/shows/{show}/add-tag', [ShowController::class, 'addTag'])->name('show.addTag');
+Route::delete('/shows/{show}/remove-tag/{tag}', [ShowController::class, 'removeTag'])->name('show.removeTag');
 
 Route::middleware([\App\Http\Middleware\AdminMiddleware::class])->group(function () {
     /*
@@ -216,7 +220,6 @@ Route::middleware([\App\Http\Middleware\AdminMiddleware::class])->group(function
     */
     Route::post('/artists-import', [ArtistController::class, 'import'])->name('artists-import');
     Route::get('/artists-export', [ArtistController::class, 'export'])->name('artists-export');
-
 });
 
 require __DIR__ . '/auth.php';
