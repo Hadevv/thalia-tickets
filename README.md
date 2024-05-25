@@ -111,12 +111,15 @@ fait le 3/05 TODO : faire une table db pour les archives des representations
 TODO : http://127.0.0.1:8000/representation/6
 fix le 05/05 TODO : fix bug representation/id url incorrect dans le fichier web.php
 
-
-
 TODO : faire la page de documentation de l'API
 TODO : faire la page contact et theatre salle de spectacle
 fait le 3/05 page contat
 TODO : ternimer le panel admin pour les spectacles très simples
 
 TODO : ne pas afficher dans show show un spectale deja passé !!!
-TODO : tag refaire bien 
+TODO : tag refaire bien
+fait le 25/05 tag parfait sauf remove
+
+TODO : la review en modal propre
+TODO : refaire la partie review sans modal apres time, le faire via un simple bouton et un espace commentaire
+
