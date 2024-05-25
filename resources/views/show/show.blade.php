@@ -18,12 +18,27 @@
                             hover:text-indigo-800
                             dark:hover:text-indigo-200">⟵ Retour</a>
                     </div>
+
                     <div class="w-full flex">
                         <div class="w-56 mr-10 flex-shrink-0">
                             @if ($show->poster_url)
                                 <img src="{{ asset('images/' . $show->poster_url) }}" alt="{{ $show->title }}" class="object-cover w-full h-auto">
                            @endif
                         </div>
+                        {{-- @if (Auth::user()->isAdmin())
+                            <div>
+                                <form action="{{ route('show.update', $show->id) }}" method="POST" class="flex flex-col">
+                                    @csrf
+                                    @method('PUT')
+                                    <div class="flex flex-col w-full">
+                                        <label for="keywords" class="text-gray-600 dark:text-gray-400 text-sm font-semibold mt-2">Mots clés</label>
+                                        <input type="text" name="keywords" id="keywords" value="{{ $show->keywords }}" class="w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm pr-8">
+                                    </div>
+                                    <button type="submit" class="bg-indigo-600 text-white font-semibold text-sm mt-2 py-2 px-4 rounded-md hover:bg-indigo-700">Enregistrer</button>
+                                </form>
+                            </div>
+                        @endif --}}
+
                         <div class="flex flex-col w-full">
                             <h2 class="text-xl font-semibold text-gray-900 dark:text-gray-100">{{ $show->title }}</h2>
                             <p class="text-gray-600 dark:text-gray-400">{{ $show->description }}</p>

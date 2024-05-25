@@ -7,7 +7,6 @@ import Pagination from './components/Pagination.vue';
 import Dropdown from './components/Dropdown.vue';
 import Navigation from './components/Navigation.vue';
 
-
 const app = createApp({
     components: {
         Pagination,
