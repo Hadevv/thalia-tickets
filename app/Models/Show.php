@@ -81,5 +81,8 @@ class Show extends Model
         return self::where('title', 'like', "%$query%");
     }
 
+    public function Tags()
+    {
+        return $this->belongsToMany(Tag::class, 'show_tag', 'show_id', 'tag_id');
+    }
 }
-
