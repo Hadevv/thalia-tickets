@@ -117,3 +117,6 @@ TODO : faire la page de documentation de l'API
 TODO : faire la page contact et theatre salle de spectacle
 fait le 3/05 page contat
 TODO : ternimer le panel admin pour les spectacles très simples
+
+TODO : ne pas afficher dans show show un spectale deja passé !!!
+TODO : tag refaire bien 
