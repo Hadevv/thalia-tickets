@@ -4,6 +4,14 @@
             <div class="sm:min-w-36 p-6 text-gray-900 dark:text-gray-100">
                 <!-- Contenu de la première zone blanche -->
                 <x-search-bar :shows="$shows" :search="$search ?? '' "/>
+                <x-input-label for="recherche" value="Recherche par mot clé" class="
+                text
+                font-semibold
+                text-lg
+                text-gray
+                dark:text-gray-200
+            "/>
+                <x-keyword-search :shows="$shows" :search="$search ?? '' "/>
                 <h3 class="
                     text
                     font-semibold
