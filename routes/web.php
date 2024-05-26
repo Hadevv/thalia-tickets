@@ -177,7 +177,7 @@ Route::middleware(['auth'])->group(function () {
 });
 
 Route::post('/shows/{show}/add-tag', [ShowController::class, 'addTag'])->name('show.addTag');
-Route::delete('/shows/{show}/remove-tag/{tag}', [ShowController::class, 'removeTag'])->name('show.removeTag');
+Route::delete('/shows/{show}/remove-tag', [ShowController::class, 'removeTag'])->name('show.removeTag');
 
 Route::middleware([\App\Http\Middleware\AdminMiddleware::class])->group(function () {
     /*
