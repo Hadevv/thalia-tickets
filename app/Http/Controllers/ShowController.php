@@ -99,23 +99,33 @@ class ShowController extends Controller
     // Fonction pour ajouter un tag à un spectacle
     public function addTag(Request $request, Show $show)
     {
+
         $request->validate([
             'tag' => 'required|string|max:255',
         ]);
 
-        $tag = new Tag();
-        $tag->tag = $request->tag;
-        $show->tags()->save($tag);
+        $tagName = $request->input('tag');
+        $tag = Tag::firstOrCreate(['tag' => $tagName]);
+        $show->tags()->attach($tag->id);
 
-        return response()->json(['success' => true, 'tag' => $tag]);
+        return response()->json(['success' => true, 'tag' => $tagName]);
     }
-    // Fonction pour supprimer un tag d'un spectacle
-    public function removeTag(Show $show, Tag $tag)
-    {
-        $show->tags()->detach($tag->id); // Détache le tag de la relation many-to-many
-        $tag->delete(); // Supprime le tag de la table tags
 
-        return response()->json(['success' => true]);
+    public function removeTag(Request $request, Show $show)
+    {
+
+        $request->validate([
+            'tag' => 'required|string|max:255',
+        ]);
+
+        $tagName = $request->input('tag');
+        $tag = Tag::where('tag', $tagName)->first();
+
+        if ($tag) {
+            $show->tags()->detach($tag->id);
+        }
+
+        return redirect()->route('show.show', ['id' => $show->id, 'slug' => $show->slug]);
     }
 
     // Fonction pour stocker un spectacle
