@@ -23,6 +23,15 @@ class TagPolicy
 
         Log::info('User is admin');
     }
+
+    public function removeTag(User $user)
+    {
+        return $user->isAdmin()
+            ? Response::allow()
+            : Response::deny('Vous devez être administrateur pour modifier un tag');
+
+        Log::info('User is admin');
+    }
     /**
      * Determine whether the user can view any models.
      */
