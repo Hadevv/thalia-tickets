@@ -3,41 +3,19 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900 dark:text-gray-100">
-                    <div class="
-                        w-full
-                        flex
-                        justify-between
-                        items-center
-                        mb-5
-                    ">
-                        <a href="{{ route('show.index') }}" class="
-                            text-indigo-600
-                            font-semibold
-                            text-sm
-                            dark:text-indigo-400
-                            hover:text-indigo-800
-                            dark:hover:text-indigo-200">⟵ Retour</a>
+                    <div class="w-full flex justify-between items-center mb-5">
+                        <a href="{{ route('show.index') }}"
+                            class="text-indigo-600 font-semibold text-sm dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-200">⟵
+                            Retour</a>
                     </div>
 
                     <div class="w-full flex">
                         <div class="w-56 mr-10 flex-shrink-0">
                             @if ($show->poster_url)
-                                <img src="{{ asset('images/' . $show->poster_url) }}" alt="{{ $show->title }}" class="object-cover w-full h-auto">
-                           @endif
+                                <img src="{{ asset('images/' . $show->poster_url) }}" alt="{{ $show->title }}"
+                                    class="object-cover w-full h-auto">
+                            @endif
                         </div>
-                        {{-- @if (Auth::user()->isAdmin())
-                            <div>
-                                <form action="{{ route('show.update', $show->id) }}" method="POST" class="flex flex-col">
-                                    @csrf
-                                    @method('PUT')
-                                    <div class="flex flex-col w-full">
-                                        <label for="keywords" class="text-gray-600 dark:text-gray-400 text-sm font-semibold mt-2">Mots clés</label>
-                                        <input type="text" name="keywords" id="keywords" value="{{ $show->keywords }}" class="w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm pr-8">
-                                    </div>
-                                    <button type="submit" class="bg-indigo-600 text-white font-semibold text-sm mt-2 py-2 px-4 rounded-md hover:bg-indigo-700">Enregistrer</button>
-                                </form>
-                            </div>
-                        @endif --}}
 
                         <div class="flex flex-col w-full">
                             <h2 class="text-xl font-semibold text-gray-900 dark:text-gray-100">{{ $show->title }}</h2>
@@ -51,9 +29,12 @@
                                 <h3 class="text-gray-600 dark:text-gray-400 text-sm font-semibold mt-2">Auteurs :</h3>
                                 <ul class="flex flex-row">
                                     @foreach ($show->authors() as $key => $author)
-                                        <a href="#" class="text-indigo-600 dark:text-gray-400 text-sm font-semibold mt-2">{{ $author->firstname }} {{ $author->lastname }}</a>
+                                        <a href="#"
+                                            class="text-indigo-600 dark:text-gray-400 text-sm font-semibold mt-2">{{ $author->firstname }}
+                                            {{ $author->lastname }}</a>
                                         @if ($key < count($show->authors()) - 1)
-                                            <span class="text-gray-600 dark:text-gray-400 text-sm font-semibold mt-2"> - </span>
+                                            <span class="text-gray-600 dark:text-gray-400 text-sm font-semibold mt-2"> -
+                                            </span>
                                         @endif
                                     @endforeach
                                 </ul>
@@ -62,36 +43,34 @@
                                 <h3 class="text-gray-600 dark:text-gray-400 text-sm font-semibold mt-2">Artistes :</h3>
                                 <ul class="flex flex-row">
                                     @foreach ($show->artists as $key => $artist)
-                                        <a href="#" class="text-indigo-600 dark:text-gray-400 text-sm font-semibold mt-2">
+                                        <a href="#"
+                                            class="text-indigo-600 dark:text-gray-400 text-sm font-semibold mt-2">
                                             {{ $artist->firstname }} {{ $artist->lastname }}
                                         </a>
                                         @if ($key < count($show->artists) - 1)
-                                            <span class="text-gray-600 dark:text-gray-400 text-sm font-semibold mt-2"> - </span>
+                                            <span class="text-gray-600 dark:text-gray-400 text-sm font-semibold mt-2"> -
+                                            </span>
                                         @endif
                                     @endforeach
                                 </ul>
                             </div>
                             <div class="flex flex-row">
                                 <h3 class="text-gray-600 dark:text-gray-400 text-sm font-semibold mt-2">Durée :</h3>
-                                <p class="text-gray-600 dark:text-gray-400 text-sm font-semibold mt-2">{{ $show->duration }} minutes</p>
+                                <p class="text-gray-600 dark:text-gray-400 text-sm font-semibold mt-2">
+                                    {{ $show->duration }} minutes</p>
                             </div>
 
                             <div class="pt-2 dark:border-gray-700 mt-2">
                                 <div class="flex justify-between">
                                     <p class="text-gray-600 dark:text-gray-400 text-sm font-semibold mt-2">
-                                        Saison : {{ $show->created_in}}
+                                        Saison : {{ $show->created_in }}
                                     </p>
                                 </div>
                             </div>
                         </div>
 
                     </div>
-                    <div class="
-                        w-full
-                        mt-5
-                        dark:border-gray-700
-                        border-t
-                        dark:border-gray-500">
+                    <div class="w-full mt-5 dark:border-gray-700 border-t dark:border-gray-500">
                         <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100 mt-4">Représentations</h3>
                         <table class="w-full mt-2">
                             <thead>
@@ -103,43 +82,50 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($show->representations as $representation)
-                                    <tr>
-                                        <td>
-                                            @if ($representation->schedule instanceof \Carbon\Carbon)
-                                                {{ $representation->schedule->format('l d F Y') }}
-                                            @else
-                                                {{ $representation->schedule }}
-                                            @endif
-                                        </td>
-                                        <td>
-                                            @if ($representation->schedule instanceof \Carbon\Carbon)
-                                                {{ $representation->schedule->format('H:i') }}
-                                            @else
-                                                {{ $representation->schedule }} <!-- Supposons que c'est une heure déjà formatée -->
-                                            @endif
-                                        </td>
-                                        <td>
-                                            @if ($representation->location)
-                                                {{ $representation->location->designation }}
-                                            @else
-                                                Non défini
-                                            @endif
-                                        </td>
-                                        <td>
-                                            @if ($show->bookable && $show->representations->count() > 0)
-                                                <a href="{{ route('representation.booking', $representation->id) }}" class="text-indigo-600 font-semibold text-sm dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-200">Réserver</a>
-                                            @else
-                                                <span class="text-red-500 text-sm font-semibold">Non réservable</span>
-                                            @endif
-                                        </td>
-                                    </tr>
-                                @endforeach
+                                @php
+                                    $futureRepresentations = $show->representations->filter(function ($representation) {
+                                        return \Carbon\Carbon::parse($representation->schedule)->isFuture();
+                                    });
+                                    $hasFutureRepresentations = $futureRepresentations->count() > 0;
+                                @endphp
+
+                                @if ($hasFutureRepresentations)
+                                    @foreach ($futureRepresentations as $representation)
+                                        <tr>
+                                            <td>
+                                                {{ \Carbon\Carbon::parse($representation->schedule)->format('l d F Y') }}
+                                            </td>
+                                            <td>
+                                                {{ \Carbon\Carbon::parse($representation->schedule)->format('H:i') }}
+                                            </td>
+                                            <td>
+                                                {{ $representation->location ? $representation->location->designation : 'Non défini' }}
+                                            </td>
+                                            <td>
+                                                @if ($show->bookable && \Carbon\Carbon::parse($representation->schedule)->isFuture())
+                                                    <a href="{{ route('representation.booking', $representation->id) }}"
+                                                        class="text-indigo-600 font-semibold text-sm dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-200">
+                                                        Réserver
+                                                    </a>
+                                                @else
+                                                    <span class="text-red-500 text-sm font-semibold">Non réservable</span>
+                                                @endif
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                @endif
                             </tbody>
                         </table>
+                        @if (!$hasFutureRepresentations)
+                            <div class="text-center text-red-500 text-sm font-semibold mt-4">
+                                Actuellement, aucune représentation n'est disponible pour réservation.
+                            </div>
+                        @endif
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </x-app-layout>
+
+

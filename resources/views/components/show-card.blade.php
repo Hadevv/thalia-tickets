@@ -130,7 +130,7 @@
                         En savoir plus
                     </a>
                     <div>
-                        @if ($show->bookable && $show->representations->count() > 0)
+                        @if ($show->bookable && $show->representations->count() > 0 && $show->representations->sortBy('schedule')->first()->schedule > now())
                             <span class="text-green-500 text-sm font-semibold">Réservable</span>
                             @foreach ($show->representations->sortBy('schedule') as $representation)
                                 @if (\Carbon\Carbon::parse($representation->schedule)->isFuture())
