@@ -27,57 +27,68 @@
         this.tags.splice(index, 1);
     }
 }">
-    <!-- Tag Input -->
-    @can('addTag', App\Models\Tag::class)
-        <div class="w-full mb-4">
-            <!-- Button to show the input field -->
-            <button @click="showInput = !showInput"
-                class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none">
-                Ajouter un tag
-            </button>
-
-            <!-- Input Field (hidden by default) -->
-            <div x-show="showInput" class="mt-4 flex items-center">
-                <input x-model="newTag" @keydown.enter.prevent="addTag(newTag)" type="text" placeholder="Ajouter un tag"
-                    class="flex-grow p-2 border border-gray-300 rounded-l-md focus:outline-none focus:ring-2 focus:ring-blue-500" />
-                <button @click="addTag(newTag)"
-                    class="px-4 py-2 bg-blue-500 text-white rounded-r-md hover:bg-blue-600 focus:outline-none">
+    <div class="flex justify-between items-center w-full">
+        <!-- Existing Tags from Database -->
+        <div
+            class="flex flex-col max-h-m w-full bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg p-2 mb-2">
+            @foreach ($show->tags as $tag)
+                <div class="flex items-center">
+                    <div
+                        class="w-22 m-2 ml-4 text-xs inline-flex items-center font-bold leading-sm uppercase px-3 py-1 bg-green-200 text-green-700 rounded-full">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+                            fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                            stroke-linejoin="round" class="feather feather-arrow-right mr-2">
+                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                            <polyline points="12 5 19 12 12 19"></polyline>
+                        </svg>
+                        {{ $tag->tag }}
+                        @can('addTag', App\Models\Tag::class)
+                            <form method="POST" action="{{ route('show.removeTag', $show->id) }}" class="inline ml-2">
+                                @csrf
+                                @method('DELETE')
+                                <input type="hidden" name="tag" value="{{ $tag->tag }}">
+                                <button type="submit" class="text-red-500 hover:text-red-700 focus:outline-none">
+                                    &times;
+                                </button>
+                            </form>
+                        @endcan
+                    </div>
+                </div>
+            @endforeach
+        </div>
+        <!-- Tag Input -->
+        @can('addTag', App\Models\Tag::class)
+            <div class="w-24 mb-4 flex flex-col justify-end">
+                <!-- Button to show the input field -->
+                <button @click="showInput = !showInput"
+                    class="px-2 py-2 bg-indigo-500 text-white rounded-md hover:bg-indigo-600 focus:outline-none">
                     Ajouter
                 </button>
-            </div>
-        </div>
-    @endcan
 
-    <!-- Existing Tags from Database -->
-    <div class="flex flex-col max-h-m bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg p-2 mb-2">
-        @foreach ($show->tags as $tag)
-            <div class="flex items-center">
-                <div
-                    class="w-22 m-2 ml-4 text-xs inline-flex items-center font-bold leading-sm uppercase px-3 py-1 bg-green-200 text-green-700 rounded-full">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
-                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                        stroke-linejoin="round" class="feather feather-arrow-right mr-2">
-                        <line x1="5" y1="12" x2="19" y2="12"></line>
-                        <polyline points="12 5 19 12 12 19"></polyline>
-                    </svg>
-                    {{ $tag->tag }}
+                <!-- Input Field (hidden by default) -->
+                <div x-show="showInput" class="mt-4 flex items-center -translate-x-40">
+                    <input x-model="newTag" @keydown.enter.prevent="addTag(newTag)" type="text"
+                        placeholder="Ajouter un tag"
+                        class="flex-grow p-2 border border-gray-300 rounded-l-md focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                    <button @click="addTag(newTag)"
+                        class="px-2 py-2 bg-indigo-500 text-white rounded-r-md hover:bg-indigo-600 focus:outline-none">
+                        Ajouter
+                    </button>
                 </div>
             </div>
-        @endforeach
-    </div>
-
-    <!-- Tags added via the form -->
-    <div class="mt-4 flex flex-wrap">
-        <template x-for="(tag, index) in tags" :key="index">
-            <div class="flex items-center bg-green-200 text-green-700 rounded-full px-3 py-1 m-1">
-                <span x-text="tag"></span>
-                <button @click="removeTag(index)" class="ml-2 text-red-500 hover:text-red-700 focus:outline-none">
-                    &times;
-                </button>
+            <!-- Tags added via the form -->
+            <div class="mt-4 flex flex-wrap">
+                <template x-for="(tag, index) in tags" :key="index">
+                    <div class="flex items-center bg-green-200 text-green-700 rounded-full px-3 py-1 m-1">
+                        <span x-text="tag"></span>
+                        <button @click="removeTag(index)" class="ml-2 text-red-500 hover:text-red-700 focus:outline-none">
+                            &times;
+                        </button>
+                    </div>
+                </template>
             </div>
-        </template>
+        @endcan
     </div>
-
     <div class="flex w-full mt-4">
         <div class="w-32 mr-10 flex-shrink-0">
             @if ($show->poster_url)
