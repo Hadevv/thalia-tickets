@@ -18,6 +18,17 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ScheduleController;
 use App\Http\Controllers\Admin\AdminRepresentationController;
 use App\Http\Controllers\ContactFormController;
+use App\Http\Controllers\VideoController;
+/*
+|--------------------------------------------------------------------------
+| Routes Video - Examen
+|--------------------------------------------------------------------------
+*/
+Route::get('show/{showId}/videos', [VideoController::class, 'showVideos'])->name('show.videos');
+Route::post('show/{showId}/videos', [VideoController::class, 'store'])->middleware('can:admin')->name('video.store');
+
+Route::get('artist/{name}/videos', [VideoController::class, 'showArtistVideos'])->name('artist.videos');
+
 /*
 |--------------------------------------------------------------------------
 | Routes home

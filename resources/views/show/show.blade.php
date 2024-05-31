@@ -9,6 +9,9 @@
                             Retour</a>
                     </div>
 
+                    <div>
+                        <h1 class="text-2xl font-semibold text-gray-900 dark:text-gray-100">{{ $show->title }}</h1>
+                    </div>
                     <div class="w-full flex">
                         <div class="w-56 mr-10 flex-shrink-0">
                             @if ($show->poster_url)
@@ -16,6 +19,27 @@
                                     class="object-cover w-full h-auto">
                             @endif
                         </div>
+                        <h1>{{ $show->title }} - Videos</h1>
+
+                        @if ($show->videos->isEmpty())
+                            <p>Aucune vidéo pour ce spectacle.</p>
+                        @else
+                            @foreach ($show->videos as $video)
+                                <div>
+                                    <h2>{{ $video->title }}</h2>
+                                    <video src="{{ $video->video_url }}" controls></video>
+                                </div>
+                            @endforeach
+                        @endif
+                        <!--j'ai utiliser lepolicy addTag -->
+                        @can('addTag', App\Models\Tag::class)
+                            <form action="{{ route('video.store', $show->id) }}" method="POST">
+                                @csrf
+                                <input type="text" name="title" placeholder="Title" required>
+                                <input type="url" name="video_url" placeholder="Video URL" required>
+                                <button type="submit">Add Video</button>
+                            </form>
+                        @endcan
 
                         <div class="flex flex-col w-full">
                             <h2 class="text-xl font-semibold text-gray-900 dark:text-gray-100">{{ $show->title }}</h2>
@@ -108,7 +132,8 @@
                                                         Réserver
                                                     </a>
                                                 @else
-                                                    <span class="text-red-500 text-sm font-semibold">Non réservable</span>
+                                                    <span class="text-red-500 text-sm font-semibold">Non
+                                                        réservable</span>
                                                 @endif
                                             </td>
                                         </tr>
@@ -127,5 +152,4 @@
         </div>
     </div>
 </x-app-layout>
-
 

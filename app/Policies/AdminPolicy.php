@@ -4,9 +4,20 @@ namespace App\Policies;
 
 use App\Models\User;
 use Illuminate\Auth\Access\Response;
-
+use Illuminate\Auth\Access\HandlesAuthorization;
+use Illuminate\Support\Facades\Log;
 class AdminPolicy
 {
+
+    public function admin(User $user)
+    {
+        return $user->isAdmin()
+            ? Response::allow()
+            : Response::deny('Vous devez être administrateur pour ajouter une video');
+
+        Log::info('User is admin');
+    }
+
     /**
      * Determine whether the user can view any models.
      */
