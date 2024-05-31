@@ -31,7 +31,11 @@ class Show extends Model
     {
         return $this->hasMany(Representation::class);
     }
-
+    // relation video examen
+    public function videos()
+    {
+        return $this->hasMany(Video::class);
+    }
     public function location()
     {
         return $this->belongsTo(Location::class);

@@ -38,6 +38,8 @@ class DatabaseSeeder extends Seeder
             ReviewSeeder::class,
             TagSeeder::class,
             ShowTagSeeder::class,
+            VideoSeeder::class,
+
         ]);
     }
 }
