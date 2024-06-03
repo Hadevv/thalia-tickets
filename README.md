@@ -123,3 +123,4 @@ fait le 25/05 tag parfait sauf remove
 TODO : la review en modal propre
 TODO : refaire la partie review sans modal apres time, le faire via un simple bouton et un espace commentaire
 
+TODO : reparer les seeders 
