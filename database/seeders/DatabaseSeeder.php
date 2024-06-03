@@ -34,10 +34,12 @@ class DatabaseSeeder extends Seeder
             UserRoleSeeder::class,
             PriceSeeder::class,
             ReservationSeeder::class,
-            RepresentationReservationSeeder::class,
+            // RepresentationReservationSeeder::class,
             ReviewSeeder::class,
             TagSeeder::class,
             ShowTagSeeder::class,
+            RepresentationSeatSeeder::class,
+            // SeatSeeder::class,
         ]);
     }
 }

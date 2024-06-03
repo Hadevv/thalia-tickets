@@ -2,13 +2,9 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
-use App\Models\Representation;
 use App\Models\User;
-use App\Models\Show;
-use App\Models\Location;
 
 class ReservationSeeder extends Seeder
 {
@@ -27,19 +23,16 @@ class ReservationSeeder extends Seeder
                 'booking_date' => '2012-10-10 10:00:00',
                 'status' => null,
             ],
-
             [
                 'user_login' => 'antoine',
                 'booking_date' => '2012-10-08 10:00:00',
                 'status' => null,
             ],
-
             [
                 'user_login' => 'john',
                 'booking_date' => '2012-10-15 10:00:00',
                 'status' => null,
             ],
-
         ];
 
         foreach ($reservations as &$data) {
@@ -52,3 +45,4 @@ class ReservationSeeder extends Seeder
         DB::table('reservations')->insert($reservations);
     }
 }
+
