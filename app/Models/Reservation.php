@@ -44,4 +44,11 @@ class Reservation extends Model
     {
         return StatusEnum::from($this->status)->label();
     }
+
+    public function representationSeats()
+    {
+        return $this->belongsToMany(RepresentationSeat::class, 'representation_reservation')
+            ->withPivot('price_id', 'quantity')
+            ->withTimestamps();
+    }
 }

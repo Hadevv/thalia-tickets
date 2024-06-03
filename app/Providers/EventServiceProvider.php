@@ -16,6 +16,9 @@ class EventServiceProvider extends ServiceProvider
         'App\Events\RepresentationEnded' => [
             'App\Listeners\HandleRepresentationEnded',
         ],
+        'App\Events\RepresentationCreated' => [
+            'App\Listeners\CreateSeatsForRepresentation',
+        ],
     ];
 
     /**

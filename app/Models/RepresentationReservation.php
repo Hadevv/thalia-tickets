@@ -10,11 +10,10 @@ class RepresentationReservation extends Model
     use HasFactory;
 
     protected $fillable = [
-        'representation_id',
+        'representation_seat_id',
         'reservation_id',
-        'quantity',
         'price_id',
-        'seat_id'
+        'quantity'
     ];
 
     protected $table = 'representation_reservation';
@@ -35,8 +34,14 @@ class RepresentationReservation extends Model
     {
         return $this->belongsTo(Price::class);
     }
+
     public function seat()
     {
         return $this->belongsTo(Seat::class);
+    }
+
+    public function representationSeat()
+    {
+        return $this->belongsTo(RepresentationSeat::class);
     }
 }

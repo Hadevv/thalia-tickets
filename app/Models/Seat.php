@@ -11,7 +11,6 @@ class Seat extends Model
 
     protected $fillable = [
         'seat_number',
-        'status',
     ];
 
     public $timestamps = false;
@@ -19,5 +18,17 @@ class Seat extends Model
     public function representation_reservations()
     {
         return $this->hasMany(RepresentationReservation::class);
+    }
+    // seats can be associated with many representations
+    public function representations()
+    {
+        return $this->belongsToMany(Representation::class, 'representation_seat')
+                    ->withPivot('status')
+                    ->withTimestamps();
+    }
+
+    public function reservations()
+    {
+        return $this->hasManyThrough(Reservation::class, RepresentationSeat::class, 'seat_id', 'id', 'id', 'representation_seat_id');
     }
 }

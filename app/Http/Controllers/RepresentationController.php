@@ -36,16 +36,21 @@ class RepresentationController extends Controller
      */
     public function booking(string $id)
     {
-
         $representation = Representation::find($id);
 
-        $seats = Seat::all();
+        // vérifier si la représentation existe
+        if (!$representation) {
+            abort(404, 'Représentation non trouvée');
+        }
 
-        // @todo delete Carbon\Carbon::parse dans le controller soit model ou dans la vue
+        // récupérer les sièges de la représentation
+        $seats = $representation->seats()->withPivot('status')->get();
+
         if (is_string($representation->schedule)) {
             $representation->schedule = \Carbon\Carbon::parse($representation->schedule);
         }
 
+        // récupérer les prix actuels
         $currentPrices = Price::where('end_date', '=', null)->get();
 
         return view('representation.booking', [

@@ -7,10 +7,16 @@ use Illuminate\Database\Eloquent\Model;
 use Spatie\Feed\Feedable;
 use Spatie\Feed\FeedItem;
 use Carbon\Carbon;
+use App\Events\RepresentationCreated;
 
 class Representation extends Model implements Feedable
 {
     use HasFactory;
+
+    // Dispatch l'event RepresentationCreated lors de la création d'une représentation
+    protected $dispatchesEvents = [
+        'created' => RepresentationCreated::class,
+    ];
 
     protected $fillable = [
         'schedule',
@@ -34,6 +40,20 @@ class Representation extends Model implements Feedable
         return $this->hasMany(RepresentationReservation::class);
     }
 
+    public function seats()
+    {
+        return $this->belongsToMany(Seat::class, 'representation_seat')
+            ->withPivot('status')
+            ->withTimestamps();
+    }
+
+    public function reservations()
+    {
+        return $this->hasManyThrough(Reservation::class, RepresentationSeat::class, 'representation_id', 'id', 'id', 'representation_seat_id');
+    }
+    
+    // ------------------------------------------------------------------
+
     public function toFeedItem(): FeedItem
     {
         return FeedItem::create()
@@ -48,12 +68,12 @@ class Representation extends Model implements Feedable
 
     public static function getFeedItems()
     {
-    return Representation::all();
+        return Representation::all();
     }
 
     public function hasAttended(): bool
     {
-        // Vérifie s'il existe une réservation pour cette représentation associée à l'utilisateur
+        // vérifie s'il existe une réservation pour cette représentation associée à l'utilisateur
         return $this->representationReservations()
             ->whereHas('reservation', function ($query) {
                 $query->where('user_id', auth()->id());
@@ -63,7 +83,7 @@ class Representation extends Model implements Feedable
 
     public function isPaymentConfirmed(): bool
     {
-        // Vérifie si toutes les réservations associées à cette représentation ont un statut confirmé
+        // vérifie si toutes les réservations associées à cette représentation ont un statut confirmé
         return $this->representationReservations()->whereHas('reservation', function ($query) {
             $query->where('status', 'confirmed');
         })->exists();

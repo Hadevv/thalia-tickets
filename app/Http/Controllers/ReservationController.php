@@ -8,10 +8,12 @@ use App\Models\Price;
 use App\Models\Representation;
 use App\Models\RepresentationReservation;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 use Stripe\Stripe;
 use App\Models\Seat;
 use App\Enums\StatusEnum;
+use App\Models\RepresentationSeat;
+use Stripe\Checkout\Session as CheckoutSession;
+use Illuminate\Support\Facades\Log;
 
 class ReservationController extends Controller
 {
@@ -43,11 +45,9 @@ class ReservationController extends Controller
     public function checkout(Request $request, StoreReservationRequest $reservationRequest)
     {
         try {
-            //dd($request->all());
             $action = $request->input('action');
             $selectedSeats = $request->input('selected_seats');
 
-            //dd($request->input('selected_seats'), $selectedSeats);
             $reservationRequest->validated();
 
             Stripe::setApiKey(env('STRIPE_SECRET'));
@@ -65,45 +65,89 @@ class ReservationController extends Controller
             $representation = Representation::findOrFail($representationId);
             $currentPrices = Price::where('end_date', '=', null)->get();
 
+            Log::info('Current prices:', $currentPrices->toArray());
+
             $line_items = [];
             foreach ($request->get('places') as $type => $quantity) {
+                Log::info("Processing place type: $type, quantity: $quantity");
+
                 if ($quantity > 0) {
                     $price = $currentPrices->firstWhere('type', $type);
                     if ($price) {
+                        Log::info("Found price for type $type:", $price->toArray());
+
                         $scheduleDate = \Carbon\Carbon::parse($representation->schedule);
 
-                        // Récupérer le siège par son numéro
-                        $seatNumber = $selectedSeats[0] ?? null;
+                        // verifier les names des sièges sélectionnés
+                        $seats = Seat::all();
+                        Log::info('All seats:', $seats->toArray());
+                        Log::info('Selected seats:', $selectedSeats);
 
-                        if ($seatNumber) {
-                            $seat = Seat::where('seat_number', $seatNumber)->first();
+                        // Récupérer les sièges sélectionnés par leurs numéros
+                        foreach ($selectedSeats as $seatNumber) {
+                            $seatNumberWithPrefix = 'S' . $seatNumber; // Ajouter le préfixe 'S' pour correspondre au format des sièges
+                            Log::info("Processing seat number: $seatNumber");
 
-                            if ($seat && $seat->status == 'available') {
-                                RepresentationReservation::create([
-                                    'representation_id' => $representationId,
-                                    'reservation_id' => $reservationId,
-                                    'price_id' => $price->id,
-                                    'quantity' => $quantity,
-                                    'seat_id' => $seat->id,
-                                ]);
+                            $seat = Seat::where('seat_number', $seatNumberWithPrefix)->first();
 
-                                // Mettre à jour le statut du siège
-                                $description = 'Réservation pour ' . $representation->show->title . ' le ' . $scheduleDate->format('d/m/Y H:i') . ' à ' . $representation->location->designation;
-                                $line_items[] = [
-                                    'price_data' => [
-                                        'currency' => 'eur',
-                                        'unit_amount' => $price->price * 100,
-                                        'product_data' => [
-                                            'name' => "{$quantity}x {$type} - {$representation->show->title}",
-                                            'description' => $description,
-                                        ],
-                                    ],
-                                    'quantity' => $quantity,
-                                ];
+                            if ($seat) {
+                                Log::info("Found seat:", $seat->toArray());
+
+                                $representationSeat = RepresentationSeat::where('representation_id', $representationId)
+                                    ->where('seat_id', $seat->id)
+                                    ->first();
+
+                                if ($representationSeat) {
+                                    Log::info("Found representation seat:", $representationSeat->toArray());
+
+                                    if ($representationSeat->status == 'available') {
+                                        RepresentationReservation::create([
+                                            'representation_seat_id' => $representationSeat->id,
+                                            'reservation_id' => $reservationId,
+                                            'price_id' => $price->id,
+                                            'quantity' => 1,
+                                        ]);
+
+                                        // Mettre à jour le statut du siège
+                                        $representationSeat->status = 'reserved';
+                                        $representationSeat->save();
+
+                                        $description = 'Réservation pour ' . $representation->show->title . ' le ' . $scheduleDate->format('d/m/Y H:i') . ' à ' . $representation->location->designation;
+                                        $line_items[] = [
+                                            'price_data' => [
+                                                'currency' => 'eur',
+                                                'unit_amount' => $price->price * 100,
+                                                'product_data' => [
+                                                    'name' => "{$quantity}x {$type} - {$representation->show->title}",
+                                                    'description' => $description,
+                                                ],
+                                            ],
+                                            'quantity' => 1,
+                                        ];
+
+                                        Log::info('Added line item:', end($line_items));
+                                    } else {
+                                        Log::info("Representation seat not available:", $representationSeat->toArray());
+                                    }
+                                } else {
+                                    Log::info("Representation seat not found for seat:", $seat->toArray());
+                                }
+                            } else {
+                                Log::info("Seat not found for seat number: $seatNumber");
                             }
                         }
+                    } else {
+                        Log::info("Price not found for type: $type");
                     }
+                } else {
+                    Log::info("Quantity is zero or less for type: $type");
                 }
+            }
+
+            Log::info('Final line items for Stripe Checkout:', $line_items);
+
+            if (empty($line_items)) {
+                return back()->with('error', 'Aucun article sélectionné pour le paiement.');
             }
 
             if ($action === 'addToCart') {
@@ -111,20 +155,16 @@ class ReservationController extends Controller
             }
 
             // Création de la session de paiement Stripe Checkout
-            $checkout_session = \Stripe\Checkout\Session::create([
+            $checkout_session = CheckoutSession::create([
                 'payment_method_types' => ['card'],
                 'line_items' => $line_items,
                 'mode' => 'payment',
                 'success_url' => route('reservation.confirmation', ['id' => $reservation->id]),
                 'cancel_url' => route('reservation.cancel', ['id' => $reservation->id]),
-                // Attentions /!\
                 'invoice_creation' => [
                     'enabled' => true,
                 ],
             ]);
-
-            $seat->status = 'reserved';
-            $seat->save();
 
             // Stocker l'ID de la facture Stripe et mettre à jour la réservation
             $reservation->stripe_invoice_id = $checkout_session->id;
@@ -133,12 +173,12 @@ class ReservationController extends Controller
             session(['checkout_session_id' => $checkout_session->id]);
 
             return redirect($checkout_session->url);
-
         } catch (\Exception $e) {
             Log::error($e->getMessage());
             return back()->with('error', 'Une erreur est survenue lors de la création de la réservation.');
         }
     }
+
 
     /**
      * Fonction qui gère la confirmation de la réservation
@@ -180,7 +220,6 @@ class ReservationController extends Controller
             Log::info('Reservation status updated', ['reservation_id' => $reservation->id, 'status' => $reservation->status]);
 
             return view('reservation.confirmation', compact('reservation'))->with('success', 'Réservation confirmée avec succès.');
-
         } catch (\Exception $e) {
             Log::error($e->getMessage());
             return redirect()->route('my-reservations.index')->with('error', 'Une erreur est survenue lors de la mise à jour de la réservation.');
