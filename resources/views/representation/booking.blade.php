@@ -51,10 +51,9 @@
                                             {{ $seat->seat_number }}
                                         </div>
                                         <div>
-                                            @if ($seat->status == 'available')
+                                            @if ($seat->pivot->status == 'available')
                                                 <input type="checkbox" name="selected_seats[]"
-                                                    value="{{ $seat->seat_number }}"
-                                                    oninput="updateTotal(this.form);"
+                                                    value="{{ $seat->id }}" oninput="updateTotal(this.form);"
                                                     data-price="{{ $seat->price }}"
                                                     class="border border-gray-300 dark:border-gray-600 p-2 rounded-md shadow-sm">
                                             @else
@@ -65,8 +64,13 @@
                                         </div>
                                     </div>
                                 @endforeach
+                                @if ($seats->isEmpty())
+                                    <div
+                                        class="col-span-7 flex items-center justify-center bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-400 font-semibold py-1 px-2 rounded focus:outline-none focus:shadow-outline">
+                                        Aucun siège disponible
+                                    </div>
+                                @endif
                             </div>
-
                             <div class="flex items-center justify-between mt-4">
                                 <button type="submit" :disabled="!hasSelectedPlaces"
                                     class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-1 px-2 rounded focus:outline-none focus:shadow-outline">Continuer
@@ -100,44 +104,44 @@
         </div>
     </div>
 
+    @push('scripts')
+        <script>
+            function updateTotal(form) {
+                let total = 0;
+                let totalPlaces = 0;
 
-@push('scripts')
-    <script>
-        function updateTotal(form) {
-            let total = 0;
-            let totalPlaces = 0;
+                // Calculer le total des places
+                form.querySelectorAll('[name^=places]').forEach(input => {
+                    const price = input.getAttribute('data-price');
+                    const quantity = parseInt(input.value);
+                    if (price && quantity > 0) {
+                        total += quantity * parseFloat(price);
+                        totalPlaces += quantity;
+                    }
+                });
 
-            // Calculer le total des places
-            form.querySelectorAll('[name^=places]').forEach(input => {
-                const price = input.getAttribute('data-price');
-                const quantity = parseInt(input.value);
-                if (price && quantity > 0) {
-                    total += quantity * parseFloat(price);
-                    totalPlaces += quantity;
+                // Calculer le total des sièges
+                form.querySelectorAll('[name^=selected_seats]').forEach(input => {
+                    const price = input.getAttribute('data-price');
+                    if (price && input.checked) {
+                        total += parseFloat(price);
+                    }
+                });
+
+                // Mettre à jour le total
+                const totalElement = form.querySelector('#total');
+                if (totalElement) {
+                    totalElement.innerText = '€ ' + parseFloat(total).toFixed(2);
                 }
-            });
 
-            // Calculer le total des sièges
-            form.querySelectorAll('[name^=selected_seats]').forEach(input => {
-                const price = input.getAttribute('data-price');
-                if (price && input.checked) {
-                    total += parseFloat(price);
-                }
-            });
-
-            // Mettre à jour le total
-            const totalElement = form.querySelector('#total');
-            if (totalElement) {
-                totalElement.innerText = '€ ' + parseFloat(total).toFixed(2);
+                // Valider le nombre de sièges sélectionnés
+                const seatsInputs = form.querySelectorAll('[name^=selected_seats]');
+                const selectedSeatsCount = Array.from(seatsInputs).filter(input => input.checked && !input.disabled).length;
+                seatsInputs.forEach(input => {
+                    input.disabled = (selectedSeatsCount >= totalPlaces && !input.checked);
+                });
             }
-
-            // Valider le nombre de sièges sélectionnés
-            const seatsInputs = form.querySelectorAll('[name^=selected_seats]');
-            const selectedSeatsCount = Array.from(seatsInputs).filter(input => input.checked && !input.disabled).length;
-            seatsInputs.forEach(input => {
-                input.disabled = (selectedSeatsCount >= totalPlaces && !input.checked);
-            });
-        }
-    </script>
-@endpush
+        </script>
+    @endpush
 </x-app-layout>
+
