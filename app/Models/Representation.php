@@ -8,10 +8,11 @@ use Spatie\Feed\Feedable;
 use Spatie\Feed\FeedItem;
 use Carbon\Carbon;
 use App\Events\RepresentationCreated;
+use App\Traits\HasAvailableSeats;
 
 class Representation extends Model implements Feedable
 {
-    use HasFactory;
+    use HasFactory, HasAvailableSeats;
 
     // Dispatch l'event RepresentationCreated lors de la création d'une représentation
     protected $dispatchesEvents = [
@@ -51,7 +52,7 @@ class Representation extends Model implements Feedable
     {
         return $this->hasManyThrough(Reservation::class, RepresentationSeat::class, 'representation_id', 'id', 'id', 'representation_seat_id');
     }
-    
+
     // ------------------------------------------------------------------
 
     public function toFeedItem(): FeedItem
