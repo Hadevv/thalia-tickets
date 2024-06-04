@@ -18,11 +18,13 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ScheduleController;
 use App\Http\Controllers\Admin\AdminRepresentationController;
 use App\Http\Controllers\ContactFormController;
+use App\Http\Controllers\ShortUrlController;
 /*
 |--------------------------------------------------------------------------
 | Routes home
 |--------------------------------------------------------------------------
 */
+Route::get('/generate-short-url/{show}', [ShortUrlController::class, 'generateShortUrl'])->name('generate-short-url');
 
 Route::get('/', HomeController::class)->name('home');
 
