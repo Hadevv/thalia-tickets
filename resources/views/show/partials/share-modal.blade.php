@@ -1,7 +1,8 @@
 @props(['show'])
-<div x-data="{ isOpen: false }">
+
+<div x-data="{ isOpen: false, shortUrl: '' }" @open-modal.window="isOpen = true; fetchShortUrl()">
     <div class="flex w-full justify-center gap-4 items-center mt-4">
-        <a href="#" @click.prevent="isOpen = true" class="focus:outline-none cursor-pointer m-2">
+        <a href="#" @click.prevent="$dispatch('open-modal')" class="focus:outline-none cursor-pointer m-2">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="gray-300" stroke-width="1.5"
                 stroke="currentColor"
                 class="size-3 text-gray-500 color-indigo-200 transition ease-in-out duration-150 hover:text-indigo focus:outline-none">
@@ -14,8 +15,7 @@
     <div x-show="isOpen" class="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center">
         <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg w-1/3">
             <h2 class="text-lg font-semibold mb-4">Share this link</h2>
-            <input id="shareLink" type="text" value="{{ url('/show/' . $show->id . '-' . $show->slug) }}"
-                class="w-full p-2 border border-gray-300 rounded-lg mb-4">
+            <input id="shareLink" x-model="shortUrl" type="text" class="w-full p-2 border border-gray-300 rounded-lg mb-4">
             <div class="flex justify-end">
                 <button @click="copyToClipboard()" class="bg-indigo-500 text-white px-4 py-2 rounded-lg mr-2">Copy
                     Link</button>
@@ -25,6 +25,23 @@
     </div>
 
     <script>
+        function fetchShortUrl() {
+            fetch('{{ route('generate-short-url', ['show' => $show->id]) }}')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.shortUrl) {
+                        this.shortUrl = data.shortUrl;
+                    } else {
+                        console.error('Error fetching short URL:', data.error);
+                        alert('Failed to generate short URL');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching short URL:', error);
+                    alert('Failed to generate short URL');
+                });
+        }
+
         function copyToClipboard() {
             var copyText = document.getElementById("shareLink");
             copyText.select();
