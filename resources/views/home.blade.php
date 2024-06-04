@@ -62,109 +62,72 @@
                                 bg-no-repeat">
                             </div>
                         </div>
-                        <div
-                            class="flex justify-between col-span-full sm:col-span-6 lg:col-span-3 overflow-hidden relative dark:bg-gray-900">
+                        <div class="flex justify-between col-span-full sm:col-span-6 lg:col-span-3 overflow-hidden relative dark:bg-gray-900 rounded-lg shadow-lg">
                             <!-- Card Repertoire -->
-                            <div
-                                class="
-                                    relative
-                                    text-white-900
-                                    dark:text-white-100
-                                    bg-[url('/public/images/hero-repertoire.jpeg')]
-                                    h-full
-                                    w-full
-                                    bg-center
-                                    bg-cover
-                                    bg-no-repeat
-                                    bg-opacity-30
-                                    filter-grayscale
-                                    hover:brightness-125
-                                    transition
-                                    duration-300
-                                    ease-in-out
-                                    transform
-                                    hover:scale-105
-                                    bg-top">
-                                <div class=" bg-red-700
-                                    bg-opacity-80 p-6 h-full">
-                                    <h2 class="text-2xl font-semibold text-white dark:text-gray-100">Repertoire</h2>
-                                    @foreach ($representations as $representation)
-                                        <a
-                                            href="{{ route('show.show', ['id' => $representation->show->id, 'slug' => $representation->show->slug]) }}">
-                                            <div class="m-3">
-                                                <!-- $loop->first permet d'appliquer sur le premier une classe particulière, par exemple "en-tête d'affiche" -->
-                                                @if ($loop->first)
-                                                    <div class="flex justify-center">
-                                                        <p class="text-white dark:text-gray-300">
-                                                            {{ \App\Helpers\DateHelper::formatScheduleDate($representation->schedule)['formattedDate'] }}
-                                                        </p>
-                                                        <p class="text-white dark:text-gray-300 m-2">
-                                                            {{ Str::limit($representation->show->title, 20) }}</p>
-                                                        <p class="text-white dark:text-gray-300 m-2">
-                                                            {{ Str::limit($representation->show->description, 20) }}</p>
-                                                    </div>
-                                                @else
-                                                    <div class="border border-white-600 mt-3 mb-3"></div>
-                                                    <div class="flex justify-center">
-                                                        <p class="text-white dark:text-white-300">
-                                                            {{ \App\Helpers\DateHelper::formatScheduleDate($representation->schedule, 'd/m H:i')['formattedDate'] }}
-                                                        </p>
-                                                        <p class="text-white dark:text-white-300 m-2">
-                                                            {{ Str::limit($representation->show->title, 20) }}</p>
-                                                        <p class="text-white dark:text-gray-300 m-2">
-                                                            {{ Str::limit($representation->show->description, 20) }}
-                                                        </p>
-                                                    </div>
-                                                @endif
-                                                <p class="text-white dark:text-gray-300">
-                                                    {{ $representation->show->artists->first()->firstname }}
-                                                    {{ $representation->show->artists->first()->lastname }}</p>
-                                            </div>
+                            <div class="
+                                relative
+                                text-white
+                                bg-[url('/public/images/hero-repertoire.jpeg')]
+                                h-full
+                                w-full
+                                bg-center
+                                bg-cover
+                                bg-no-repeat
+                                bg-opacity-30
+                                transition
+                                duration-300
+                                ease-in-out
+                                transform
+                                hover:scale-105
+                                rounded-lg
+                                ">
+                                <div class="bg-red-700 bg-opacity-80 p-6 h-full flex flex-col justify-between rounded-lg">
+                                    <div>
+                                        <h2 class="text-2xl font-semibold text-white dark:text-gray-100">Repertoire</h2>
+                                        @foreach ($representations as $representation)
+                                            <a href="{{ route('show.show', ['id' => $representation->show->id, 'slug' => $representation->show->slug]) }}">
+                                                <div class="m-3">
+                                                    @if ($loop->first)
+                                                        <div class="flex justify-center">
+                                                            <p class="text-white dark:text-gray-300">
+                                                                {{ \App\Helpers\DateHelper::formatScheduleDate($representation->schedule)['formattedDate'] }}
+                                                            </p>
+                                                            <p class="text-white dark:text-gray-300 m-2">
+                                                                {{ Str::limit($representation->show->title, 20) }}
+                                                            </p>
+                                                        </div>
+                                                    @else
+                                                        <div class="border-t border-white-600 mt-3 mb-3"></div>
+                                                        <div class="flex justify-center">
+                                                            <p class="text-white dark:text-white-300">
+                                                                {{ \App\Helpers\DateHelper::formatScheduleDate($representation->schedule, 'd/m H:i')['formattedDate'] }}
+                                                            </p>
+                                                            <p class="text-white dark:text-white-300 m-2">
+                                                                {{ Str::limit($representation->show->title, 20) }}
+                                                            </p>
+                                                        </div>
+                                                    @endif
+                                                    <p class="text-white dark:text-gray-300">
+                                                        {{ $representation->show->artists->first()->firstname }}
+                                                        {{ $representation->show->artists->first()->lastname }}
+                                                    </p>
+                                                </div>
+                                            </a>
+                                        @endforeach
+                                    </div>
+                                    <div class="mt-4 flex justify-between items-center z-10">
+                                        <a href="{{ route('show.index') }}" class="bg-red-600 hover:bg-white text-white hover:text-red-600 font-semibold py-2 px-4 rounded focus:outline-none focus:shadow-outline transition duration-300 ease-in-out">Acheter un ticket</a>
+                                        <a class="flex items-center font-semibold text-base text-white bg-red-600 hover:bg-white hover:text-red-600 py-2 px-4 rounded focus:outline-none focus:shadow-outline transition duration-300 ease-in-out" href="{{ route('show.index') }}">
+                                            Voir plus
+                                            <svg class="ml-2 w-4 h-4" fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" stroke="currentColor">
+                                                <path stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"></path>
+                                            </svg>
                                         </a>
-                                    @endforeach
-                                    <div class="m-2 mt:4 md:mt-8 flex justify-between items-center z-100">
-                                        <div
-                                            class="
-                                            flex
-                                            justify-between
-                                            items-center
-                                            opacity-70
-                                            w-full
-                                            font-semibold
-                                            text-base
-                                            text-white
-                                            dark:text-white-300
-                                            py-2
-                                            px-2
-                                            rounded
-                                            focus:outline-none
-                                            focus:shadow-outline
-                                            transition
-                                            duration-300
-                                            ease-in-out
-                                    ">
-                                            <a href="{{ route('show.index') }}"
-                                                class="bg-red-600 hover:bg-withe text-white font-semibold py-2 px-2 rounded focus:outline-none focus:shadow-outline">Acheter
-                                                un ticket</a>
-                                            <!-- repertoire -->
-                                            <div>
-                                                <a class="flex justify-center items-center font-semibold text-base text-white bg-red-600 py-1 px-2 rounded"
-                                                    href="{{ route('show.index') }}">Voir plus
-                                                    <svg class="m-1 size-6" fill="none" viewBox="0 0 24 24"
-                                                        xmlns="http://www.w3.org/2000/svg" stroke="#ffffff">
-                                                        <path stroke="#ffffff" stroke-width="1.2" fill-rule="evenodd"
-                                                            clip-rule="evenodd"
-                                                            d="M13.4697 5.46967C13.7626 5.17678 14.2374 5.17678 14.5303 5.46967L20.5303 11.4697C20.8232 11.7626 20.8232 12.2374 20.5303 12.5303L14.5303 18.5303C14.2374 18.8232 13.7626 18.8232 13.4697 18.5303C13.1768 18.2374 13.1768 17.7626 13.4697 17.4697L18.1893 12.75H4C3.58579 12.75 3.25 12.4142 3.25 12C3.25 11.5858 3.58579 11.25 4 11.25H18.1893L13.4697 6.53033C13.1768 6.23744 13.1768 5.76256 13.4697 5.46967Z"
-                                                            fill="#FFFFFF" />
-                                                    </svg>
-                                                </a>
-                                            </div>
-                                        </div>
                                     </div>
                                 </div>
-
                             </div>
                         </div>
+
                         <div
                             class="col-span-full text-withe sm:col-span-6 lg:col-span-6 overflow-hidden relative bg-white dark:bg-gray-900">
                             <!-- Card -->

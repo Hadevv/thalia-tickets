@@ -31,4 +31,9 @@ class RepresentationSeat extends Model
     {
         return $this->hasMany(RepresentationReservation::class);
     }
+
+    public function scopeAvailable($query)
+    {
+        return $query->where('status', 'available'); // verifier si le status est disponible
+    }
 }

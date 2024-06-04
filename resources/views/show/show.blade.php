@@ -5,9 +5,18 @@
                 <div class="p-6 text-gray-900 dark:text-gray-100">
                     <div class="w-full flex justify-between items-center mb-5">
                         <a href="{{ route('show.index') }}"
-                            class="text-indigo-600 font-semibold text-sm dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-200">⟵
-                            Retour</a>
+                           class="text-indigo-600 font-semibold text-sm dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-200 flex items-center">
+
+                            <svg class="-rotate-180 mr-2" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+                                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                 class="feather feather-arrow-right">
+                                <line x1="5" y1="12" x2="19" y2="12"></line>
+                                <polyline points="12 5 19 12 12 19"></polyline>
+                            </svg>
+                            Retour
+                        </a>
                     </div>
+
 
                     <div class="w-full flex">
                         <div class="w-56 mr-10 flex-shrink-0">
@@ -91,6 +100,14 @@
 
                                 @if ($hasFutureRepresentations)
                                     @foreach ($futureRepresentations as $representation)
+                                        @php
+                                            $availableSeats = \App\Models\RepresentationSeat::where(
+                                                'representation_id',
+                                                $representation->id,
+                                            )
+                                                ->where('status', 'available')
+                                                ->count();
+                                        @endphp
                                         <tr>
                                             <td>
                                                 {{ \Carbon\Carbon::parse($representation->schedule)->format('l d F Y') }}
@@ -107,8 +124,16 @@
                                                         class="text-indigo-600 font-semibold text-sm dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-200">
                                                         Réserver
                                                     </a>
+                                                    @if ($availableSeats == 0)
+                                                        <span
+                                                            class="text-red-500 text-sm font-semibold ml-2">Complet</span>
+                                                    @else
+                                                        <span class="text-green-500 text-sm font-semibold ml-2">Il reste
+                                                            {{ $availableSeats }} places</span>
+                                                    @endif
                                                 @else
-                                                    <span class="text-red-500 text-sm font-semibold">Non réservable</span>
+                                                    <span class="text-red-500 text-sm font-semibold">Non
+                                                        réservable</span>
                                                 @endif
                                             </td>
                                         </tr>
@@ -127,5 +152,4 @@
         </div>
     </div>
 </x-app-layout>
-
 
