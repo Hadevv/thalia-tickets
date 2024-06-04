@@ -123,6 +123,39 @@
                     @endforeach
                 </ul>
             </div>
+            <div>
+                @if ($show->representations->count() > 0)
+                    @php
+                        // récupérer la première représentation future triée par date
+                        $nextRepresentation = $show->representations
+                            ->filter(function ($representation) {
+                                return $representation->schedule >= now();
+                            })
+                            ->sortBy('schedule')
+                            ->first();
+
+                        $availableSeats = 0;
+
+                        if ($nextRepresentation) {
+                            $availableSeats = \App\Models\RepresentationSeat::where(
+                                'representation_id',
+                                $nextRepresentation->id,
+                            )
+                                ->where('status', 'available')
+                                ->count();
+                        }
+                    @endphp
+
+                    @if ($availableSeats == 0)
+                        <p class="text-red-500 text-sm font-semibold mt-2">Complet</p>
+                    @else
+                        <p class="text-green-500 text-sm font-semibold mt-2">Il reste
+                            {{ $availableSeats }} places</p>
+                    @endif
+                @else
+                    <p class="text-red-500 text-sm font-semibold mt-2">Non réservable</p>
+                @endif
+            </div>
             <div class="pt-2 dark:border-gray-700 mt-2">
                 <div class="flex justify-between">
                     <a href="{{ route('show.show', ['id' => $show->id, 'slug' => $show->slug]) }}"
@@ -130,7 +163,10 @@
                         En savoir plus
                     </a>
                     <div>
-                        @if ($show->bookable && $show->representations->count() > 0 && $show->representations->sortBy('schedule')->first()->schedule > now())
+                        @if (
+                            $show->bookable &&
+                                $show->representations->count() > 0 &&
+                                $show->representations->sortBy('schedule')->first()->schedule > now())
                             <span class="text-green-500 text-sm font-semibold">Réservable</span>
                             @foreach ($show->representations->sortBy('schedule') as $representation)
                                 @if (\Carbon\Carbon::parse($representation->schedule)->isFuture())
@@ -150,7 +186,7 @@
                 </div>
             </div>
             <div class="flex w-full justify-center gap-4 items-center mt-4">
-                @include('show.partials.share-modal' , ['show' => $show])
+                @include('show.partials.share-modal', ['show' => $show])
             </div>
         </div>
     </div>
