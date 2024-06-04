@@ -121,14 +121,14 @@
                                             <td>
                                                 @if ($show->bookable && \Carbon\Carbon::parse($representation->schedule)->isFuture())
                                                     <a href="{{ route('representation.booking', $representation->id) }}"
-                                                        class="text-indigo-600 font-semibold text-sm dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-200">
+                                                        class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold h-8 py-1 px-2 rounded">
                                                         Réserver
                                                     </a>
                                                     @if ($availableSeats == 0)
                                                         <span
-                                                            class="text-red-500 text-sm font-semibold ml-2">Complet</span>
+                                                            class="text-red-500 text-sm font-semibold ml-12">Complet</span>
                                                     @else
-                                                        <span class="text-green-500 text-sm font-semibold ml-2">Il reste
+                                                        <span class="text-green-500 text-sm font-semibold ml-12">Il reste
                                                             {{ $availableSeats }} places</span>
                                                     @endif
                                                 @else

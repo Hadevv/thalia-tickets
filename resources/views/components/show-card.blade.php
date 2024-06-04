@@ -159,26 +159,38 @@
             <div class="pt-2 dark:border-gray-700 mt-2">
                 <div class="flex justify-between">
                     <a href="{{ route('show.show', ['id' => $show->id, 'slug' => $show->slug]) }}"
-                        class="text-indigo-600 font-semibold text-sm dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-200">
+                        class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold h-8 py-1 px-2 rounded">
                         En savoir plus
                     </a>
                     <div>
-                        @if (
-                            $show->bookable &&
-                                $show->representations->count() > 0 &&
-                                $show->representations->sortBy('schedule')->first()->schedule > now())
-                            <span class="text-green-500 text-sm font-semibold">Réservable</span>
-                            @foreach ($show->representations->sortBy('schedule') as $representation)
-                                @if (\Carbon\Carbon::parse($representation->schedule)->isFuture())
-                                    <div>
-                                        <a href="{{ route('show.show', ['id' => $show->id, 'slug' => $show->slug]) }}"
-                                            class="text-indigo-600 font-semibold text-sm dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-200">
-                                            {{ \App\Helpers\DateHelper::formatScheduleDate($representation->schedule)['formattedDate'] }}
-                                            - {{ \Carbon\Carbon::parse($representation->schedule)->format('H:i') }}
-                                        </a>
+                        @if ($show->bookable && $show->representations->count() > 0)
+                            @php
+                                $futureRepresentations = $show->representations
+                                    ->filter(function ($representation) {
+                                        return \Carbon\Carbon::parse($representation->schedule)->isFuture();
+                                    })
+                                    ->sortBy('schedule');
+                            @endphp
+
+                            <div class="flex flex-col">
+                                @if ($futureRepresentations->count() > 0)
+                                    <div class="flex justify-between">
+                                        <div></div> <!-- Empty div to take up space on the left -->
+                                        <span class="text-green-500 text-sm font-semibold">Réservable</span>
                                     </div>
+                                    @foreach ($futureRepresentations as $representation)
+                                        <div>
+                                            <a href="{{ route('show.show', ['id' => $show->id, 'slug' => $show->slug]) }}"
+                                                class="text-indigo-600 font-semibold text-sm dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-200">
+                                                {{ \App\Helpers\DateHelper::formatScheduleDate($representation->schedule)['formattedDate'] }}
+                                                - {{ \Carbon\Carbon::parse($representation->schedule)->format('H:i') }}
+                                            </a>
+                                        </div>
+                                    @endforeach
+                                @else
+                                    <span class="text-red-500 text-sm font-semibold">Non réservable</span>
                                 @endif
-                            @endforeach
+                            </div>
                         @else
                             <span class="text-red-500 text-sm font-semibold">Non réservable</span>
                         @endif
