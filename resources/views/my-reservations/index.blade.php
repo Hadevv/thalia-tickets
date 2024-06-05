@@ -10,8 +10,8 @@
                                     <h2 class="text-2xl font-semibold">
                                         @if (
                                             $reservation->representation_reservations->isNotEmpty() &&
-                                                $reservation->representation_reservations->first()->representation)
-                                            {{ $reservation->representation_reservations->first()->representation->show->title }}
+                                                $reservation->representation_reservations->first()->representationSeat->representation)
+                                            {{ $reservation->representation_reservations->first()->representationSeat->representation->show->title }}
                                         @else
                                             Information non disponible
                                         @endif
@@ -20,7 +20,7 @@
                                 </div>
                                 <div class="flex items-center justify-between">
                                     <p>Quantité : {{ $reservation->representation_reservations->sum('quantity') }}</p>
-                                    <p>
+                                    <p
                                         @if (
                                             $reservation->representation_reservations->isNotEmpty() &&
                                                 $reservation->representation_reservations->first()->representation &&
@@ -36,9 +36,9 @@
                                         Lieu :
                                         @if (
                                             $reservation->representation_reservations->isNotEmpty() &&
-                                                $reservation->representation_reservations->first()->representation &&
-                                                $reservation->representation_reservations->first()->representation->location)
-                                            {{ $reservation->representation_reservations->first()->representation->location->designation }}
+                                                $reservation->representation_reservations->first()->representationSeat->representation &&
+                                                $reservation->representation_reservations->first()->representationSeat->representation->location)
+                                            {{ $reservation->representation_reservations->first()->representationSeat->representation->location->designation }}
                                         @else
                                             Information non disponible
                                         @endif
@@ -47,9 +47,9 @@
                                         Adresse :
                                         @if (
                                             $reservation->representation_reservations->isNotEmpty() &&
-                                                $reservation->representation_reservations->first()->representation &&
-                                                $reservation->representation_reservations->first()->representation->location)
-                                            {{ $reservation->representation_reservations->first()->representation->location->address }}
+                                                $reservation->representation_reservations->first()->representationSeat->representation &&
+                                                $reservation->representation_reservations->first()->representationSeat->representation->location)
+                                            {{ $reservation->representation_reservations->first()->representationSeat->representation->location->address }}
                                         @else
                                             Information non disponible
                                         @endif
@@ -58,11 +58,11 @@
                                         Ville :
                                         @if (
                                             $reservation->representation_reservations->isNotEmpty() &&
-                                                $reservation->representation_reservations->first()->representation &&
-                                                $reservation->representation_reservations->first()->representation->location &&
-                                                $reservation->representation_reservations->first()->representation->location->locality)
-                                            {{ $reservation->representation_reservations->first()->representation->location->locality->locality }},
-                                            {{ $reservation->representation_reservations->first()->representation->location->locality->postal_code }}
+                                                $reservation->representation_reservations->first()->representationSeat->representation &&
+                                                $reservation->representation_reservations->first()->representationSeat->representation->location &&
+                                                $reservation->representation_reservations->first()->representationSeat->representation->location->locality)
+                                            {{ $reservation->representation_reservations->first()->representationSeat->representation->location->locality->locality }},
+                                            {{ $reservation->representation_reservations->first()->representationSeat->representation->location->locality->postal_code }}
                                         @else
                                             Information non disponible
                                         @endif
@@ -72,9 +72,9 @@
                                     <p>Date et heure :
                                         @if (
                                             $reservation->representation_reservations->isNotEmpty() &&
-                                                $reservation->representation_reservations->first()->representation &&
-                                                $reservation->representation_reservations->first()->representation->schedule)
-                                            {{ \Carbon\Carbon::parse($reservation->representation_reservations->first()->representation->schedule)->format('d/m/Y H:i') }}
+                                                $reservation->representation_reservations->first()->representationSeat->representation &&
+                                                $reservation->representation_reservations->first()->representationSeat->representation->schedule)
+                                            {{ \Carbon\Carbon::parse($reservation->representation_reservations->first()->representationSeat->representation->schedule)->format('d/m/Y H:i') }}
                                         @else
                                             Aucune date et heure disponible
                                         @endif
@@ -89,9 +89,9 @@
                                         Sièges :
                                         @if ($reservation->representation_reservations)
                                             {{ $reservation->representation_reservations->filter(function ($representationReservation) {
-                                                    return $representationReservation->seat !== null;
+                                                    return $representationReservation->representationSeat->seat !== null;
                                                 })->map(function ($representationReservation) {
-                                                    return $representationReservation->seat->seat_number;
+                                                    return $representationReservation->representationSeat->seat->seat_number;
                                                 })->flatten()->implode(', ') }}
                                         @else
                                             Aucun siège réservé
