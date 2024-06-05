@@ -48,10 +48,13 @@ class ReservationController extends Controller
             $action = $request->input('action');
             $selectedSeats = $request->input('selected_seats');
 
+            // Valider la requête
             $reservationRequest->validated();
 
+            // Configurer Stripe
             Stripe::setApiKey(env('STRIPE_SECRET'));
 
+            // Créer une nouvelle réservation
             $reservation = new Reservation([
                 'user_id' => auth()->id(),
                 'booking_date' => now(),
@@ -78,7 +81,7 @@ class ReservationController extends Controller
 
                         $scheduleDate = \Carbon\Carbon::parse($representation->schedule);
 
-                        // verifier les names des sièges sélectionnés
+                        // Vérifier les noms des sièges sélectionnés
                         $seats = Seat::all();
                         Log::info('All seats:', $seats->toArray());
                         Log::info('Selected seats:', $selectedSeats);
@@ -101,31 +104,18 @@ class ReservationController extends Controller
                                     Log::info("Found representation seat:", $representationSeat->toArray());
 
                                     if ($representationSeat->status == 'available') {
-                                        RepresentationReservation::create([
-                                            'representation_seat_id' => $representationSeat->id,
-                                            'reservation_id' => $reservationId,
-                                            'price_id' => $price->id,
-                                            'quantity' => 1,
-                                        ]);
+                                        for ($i = 0; $i < $quantity; $i++) {
+                                            RepresentationReservation::create([
+                                                'representation_seat_id' => $representationSeat->id,
+                                                'reservation_id' => $reservationId,
+                                                'price_id' => $price->id,
+                                                'quantity' => 1,
+                                            ]);
+                                        }
 
                                         // Mettre à jour le statut du siège
                                         $representationSeat->status = 'reserved';
                                         $representationSeat->save();
-
-                                        $description = 'Réservation pour ' . $representation->show->title . ' le ' . $scheduleDate->format('d/m/Y H:i') . ' à ' . $representation->location->designation;
-                                        $line_items[] = [
-                                            'price_data' => [
-                                                'currency' => 'eur',
-                                                'unit_amount' => $price->price * 100,
-                                                'product_data' => [
-                                                    'name' => "{$quantity}x {$type} - {$representation->show->title}",
-                                                    'description' => $description,
-                                                ],
-                                            ],
-                                            'quantity' => 1,
-                                        ];
-
-                                        Log::info('Added line item:', end($line_items));
                                     } else {
                                         Log::info("Representation seat not available:", $representationSeat->toArray());
                                     }
@@ -136,6 +126,22 @@ class ReservationController extends Controller
                                 Log::info("Seat not found for seat number: $seatNumber");
                             }
                         }
+
+                        // Ajout de l'article pour Stripe Checkout
+                        $description = 'Réservation pour ' . $representation->show->title . ' le ' . $scheduleDate->format('d/m/Y H:i') . ' à ' . $representation->location->designation;
+                        $line_items[] = [
+                            'price_data' => [
+                                'currency' => 'eur',
+                                'unit_amount' => $price->price * 100,
+                                'product_data' => [
+                                    'name' => "{$quantity}x {$type} - {$representation->show->title}",
+                                    'description' => $description,
+                                ],
+                            ],
+                            'quantity' => $quantity,
+                        ];
+
+                        Log::info('Added line item:', end($line_items));
                     } else {
                         Log::info("Price not found for type: $type");
                     }
@@ -178,6 +184,7 @@ class ReservationController extends Controller
             return back()->with('error', 'Une erreur est survenue lors de la création de la réservation.');
         }
     }
+
 
 
     /**
@@ -225,6 +232,9 @@ class ReservationController extends Controller
             return redirect()->route('my-reservations.index')->with('error', 'Une erreur est survenue lors de la mise à jour de la réservation.');
         }
     }
+
+
+
     /**
      * Fonction qui gère l'annulation de la réservation et la libération des sièges
      * @param string $id
@@ -232,33 +242,55 @@ class ReservationController extends Controller
      * @throws \Throwable
      */
 
+
     public function cancel(string $id)
     {
         Log::info('Cancel method called', ['reservation_id' => $id]);
 
+        // Find the reservation
         $reservation = Reservation::find($id);
 
         if (!$reservation) {
             Log::warning('Reservation not found', ['reservation_id' => $id]);
             return redirect()->route('home')->with('error', 'Réservation introuvable.');
         }
-        $seats = $reservation->representation_reservations()
-            ->get()
-            ->map(function ($representationReservation) {
-                return $representationReservation->seat;
-            });
+
+        // Log reservation details
+        Log::info('Reservation found', ['reservation' => $reservation]);
+
+        // Get associated seats
+        $representationReservations = $reservation->representation_reservations;
+        $seats = $representationReservations->map(function ($representationReservation) {
+            return $representationReservation->representationSeat->seat;
+        });
+
+        Log::info('Seats associated with reservation', ['seats' => $seats]);
+
+        // Update seat status to 'available'
         foreach ($seats as $seat) {
-            $seat->status = 'available';
-            $seat->save();
+            $representationSeat = RepresentationSeat::where('representation_id', $representationReservations->first()->representationSeat->representation_id)
+                ->where('seat_id', $seat->id)
+                ->first();
+
+            if ($representationSeat) {
+                Log::info('Updating seat status to available', ['representation_seat_id' => $representationSeat->id, 'seat_id' => $seat->id]);
+                $representationSeat->status = 'available';
+                $representationSeat->save();
+            } else {
+                Log::warning('Representation seat not found', ['seat_id' => $seat->id]);
+            }
         }
 
+        // Update reservation status to 'canceled'
         $reservation->status = StatusEnum::CANCELED;
         $reservation->save();
 
-        Log::info('Reservation status updated', ['reservation_id' => $reservation->id, 'status' => $reservation->status]);
+        Log::info('Reservation status updated to canceled', ['reservation_id' => $reservation->id, 'status' => $reservation->status]);
 
         return view('reservation.cancel', compact('reservation'))->with('success', 'Réservation annulée avec succès.');
     }
+
+
 
     /**
      * Fonction qui gère l'affichage du panier de réservation en cours avec le total à payer

@@ -24,7 +24,7 @@ class MyReservationController extends ReservationController
     public function index()
     {
         $reservations = Reservation::where('user_id', auth()->user()->id)
-            ->with('representation_reservations.representation.show', 'representation_reservations.representation.location')
+            ->with('representation_reservations.representationSeat.representation.show', 'representation_reservations.representationSeat.representation.location')
             ->where('status', 'confirmed')
             ->orderBy('booking_date', 'desc')
             ->paginate(10);
@@ -57,6 +57,10 @@ class MyReservationController extends ReservationController
         try {
             // faire appel à la méthode cancel de ReservationController
             $result = parent::cancel($id);
+
+            if (!$result) {
+                throw new \Exception('Erreur lors de l\'annulation de la réservation.');
+            }
 
             // Redirection après l'annulation réussie
             return redirect()->route('my-reservations.index')->with('success', 'La réservation a été annulée avec succès.');
