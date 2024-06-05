@@ -12,7 +12,6 @@ class ShortUrlController extends Controller
     public function generateShortUrl(Show $show)
     {
         try {
-            // on lui passe à la fois l'id et le slug
             $url = route('show.show', ['id' => $show->id, 'slug' => $show->slug]);
             Log::info('Generating short URL for: ' . $url);
 
