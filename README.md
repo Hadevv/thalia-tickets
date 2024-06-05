@@ -117,6 +117,7 @@ fait le 3/05 page contat
 TODO : ternimer le panel admin pour les spectacles très simples
 
 TODO : ne pas afficher dans show show un spectale deja passé !!!
+fait le 25/05 tag parfait sauf remove
 TODO : tag refaire bien
 fait le 25/05 tag parfait sauf remove
 
