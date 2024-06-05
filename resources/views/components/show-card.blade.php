@@ -199,6 +199,7 @@
             </div>
             <div class="flex w-full justify-center gap-4 items-center mt-4">
                 @include('show.partials.share-modal', ['show' => $show])
+                @include('components.favorite-like', ['show' => $show])
             </div>
         </div>
     </div>

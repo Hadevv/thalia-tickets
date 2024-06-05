@@ -1,9 +1,9 @@
 @props(['show'])
 
 <div x-data="shortUrlComponent()">
-    <div class="flex w-full justify-center gap-4 items-center mt-4">
+    <div class="flex w-full justify-center gap-4 items-center">
         <a href="#" @click.prevent="openModal" class="focus:outline-none cursor-pointer m-2">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="gray-300" stroke-width="1.5"
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="gray" class="h-4 w-4" stroke-width="1.5"
                 stroke="currentColor"
                 class="size-3 text-gray-500 color-indigo-200 transition ease-in-out duration-150 hover:text-indigo focus:outline-none">
                 <path stroke-linecap="round" stroke-linejoin="round"
