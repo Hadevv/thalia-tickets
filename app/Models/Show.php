@@ -85,4 +85,14 @@ class Show extends Model
     {
         return $this->belongsToMany(Tag::class, 'show_tag', 'show_id', 'tag_id');
     }
+
+    public function favoritedByUsers()
+    {
+        return $this->belongsToMany(User::class, 'favorites')->withPivot('user_id', 'show_id');
+    }
+
+    public function likes()
+{
+    return $this->belongsToMany(User::class, 'likes')->withPivot('user_id', 'show_id');
+}
 }
