@@ -9,7 +9,7 @@ trait HasAvailableSeats
     public function getAvailableSeatsCount($representationId)
     {
         return RepresentationSeat::where('representation_id', $representationId)
-            ->where('status', 'available') // verifier si le status est disponible
+            ->where('status', 'available')
             ->count();
     }
 }
