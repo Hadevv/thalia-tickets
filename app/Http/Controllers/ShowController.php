@@ -48,7 +48,7 @@ class ShowController extends Controller
                     ->orWhereHas('artistTypes.type', function ($query) use ($search) {
                         $query->where('type', 'like', '%' . $search . '%');
                     })
-                    ->orWhereHas('showTags.tag', function ($query) use ($search) {
+                    ->orWhereHas('tags', function ($query) use ($search) {
                         $query->where('tag', 'like', '%' . $search . '%');
                     });
             }
@@ -61,9 +61,13 @@ class ShowController extends Controller
 
             if ($location) {
                 $query->whereHas('location.locality', function ($query) use ($location) {
-                    $query->where('locality', $location);
+                    $query->where('id', $location + 1);
+                    // Zone de test pour vérifier si la localité est bien récupérée
+                    // Attention comme pas tres propre, à supprimer
+                    Log::info("Location: {$location}");
                 });
             }
+
             // Pagination des spectacles
             $shows = $query->paginate(3);
 
