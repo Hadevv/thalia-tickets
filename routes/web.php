@@ -20,6 +20,8 @@ use App\Http\Controllers\Admin\AdminRepresentationController;
 use App\Http\Controllers\ContactFormController;
 use App\Http\Controllers\ShortUrlController;
 use AshAllenDesign\ShortURL\Facades\ShortURL;
+use App\Http\Controllers\FavoriteController;
+use App\Http\Controllers\LikeController;
 /*
 |--------------------------------------------------------------------------
 | Routes home
@@ -147,6 +149,10 @@ Route::get('/show/clear-search', [ShowController::class, 'clear'])->name('show.c
     |--------------------------------------------------------------------------
     */
 Route::middleware('auth')->group(function () {
+
+    Route::post('/show/{show}/favorite', [FavoriteController::class, 'toggleFavorite'])->name('show.favorite');
+    Route::post('/show/{show}/like', [LikeController::class, 'toggleLike'])->name('show.like');
+
     /*
     |--------------------------------------------------------------------------
     | Reservation payement Routes
