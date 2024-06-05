@@ -75,4 +75,14 @@ class User extends Authenticatable
     {
         return $this->hasMany(Review::class);
     }
+
+    public function favoriteShows()
+    {
+        return $this->belongsToMany(Show::class, 'favorites')->withPivot('user_id', 'show_id');
+    }
+
+    public function likedShows()
+    {
+        return $this->belongsToMany(Show::class, 'likes')->withPivot('user_id', 'show_id');
+    }
 }
