@@ -19,11 +19,14 @@ use App\Http\Controllers\ScheduleController;
 use App\Http\Controllers\Admin\AdminRepresentationController;
 use App\Http\Controllers\ContactFormController;
 use App\Http\Controllers\ShortUrlController;
+use AshAllenDesign\ShortURL\Facades\ShortURL;
 /*
 |--------------------------------------------------------------------------
 | Routes home
 |--------------------------------------------------------------------------
 */
+ShortURL::routes();
+
 Route::get('/generate-short-url/{show}', [ShortUrlController::class, 'generateShortUrl'])->name('generate-short-url');
 
 Route::get('/', HomeController::class)->name('home');
