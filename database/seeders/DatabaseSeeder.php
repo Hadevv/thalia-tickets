@@ -39,7 +39,7 @@ class DatabaseSeeder extends Seeder
             TagSeeder::class,
             ShowTagSeeder::class,
             RepresentationSeatSeeder::class,
-            // SeatSeeder::class,
+            SeatSeeder::class,
         ]);
     }
 }
