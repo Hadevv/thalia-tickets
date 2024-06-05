@@ -75,7 +75,7 @@ return [
     | "app.url" config value, set this field to null.
     |
     */
-    'default_url' => null,
+    'default_url' => env('APP_URL'),
 
     /*
     |--------------------------------------------------------------------------
