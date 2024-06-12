@@ -27,9 +27,9 @@
                     <x-nav-link :href="route('schedule.index')" :active="request()->routeIs('schedule.index')">
                         {{ __('Horaire') }}
                     </x-nav-link>
-                    <x-nav-link :href="route('theatre.index')" :active="request()->routeIs('theatre.index')">
+                    {{-- <x-nav-link :href="route('theatre.index')" :active="request()->routeIs('theatre.index')">
                         {{ __('Théâtre') }}
-                    </x-nav-link>
+                    </x-nav-link> --}}
                     <x-nav-link :href="route('contact')" :active="request()->routeIs('contact')">
                         {{ __('Contact') }}
                     </x-nav-link>
