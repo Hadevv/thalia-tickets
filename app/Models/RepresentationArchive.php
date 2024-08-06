@@ -28,4 +28,9 @@ class RepresentationArchive extends Model
     {
         return $this->belongsTo(Show::class);
     }
+
+    public function representation()
+    {
+        return $this->belongsTo(Representation::class);
+    }
 }
