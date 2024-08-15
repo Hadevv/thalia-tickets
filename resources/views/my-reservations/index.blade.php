@@ -8,6 +8,7 @@
                             <div class="flex flex-col space-y-4">
                                 <div class="flex items-center justify-between">
                                     <h2 class="text-2xl font-semibold">
+                                        {{-- Spectacle --}}
                                         @if (
                                             $reservation->representation_reservations->isNotEmpty() &&
                                                 $reservation->representation_reservations->first()->representationSeat->representation)
