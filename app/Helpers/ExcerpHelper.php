@@ -18,4 +18,7 @@ if (!function_exists('getExcerpt')) {
 
         return implode(' ', array_slice($words, 0, $limit)) . '...';
     }
+
+    
 }
+
