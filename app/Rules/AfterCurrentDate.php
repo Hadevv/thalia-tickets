@@ -19,4 +19,23 @@ class AfterCurrentDate implements ValidationRule
             $fail("The $attribute must be a date after the current date.");
         }
     }
+
+    /**
+     * Récupère le message d'erreur de validation.
+     *
+     * @return string
+     */
+
+    public function message(): string
+    {
+        return 'The :attribute must be a date after the current date.';
+    }
+
+    public function passes($attribute, $value)
+    {
+        return false;
+    }
+
 }
+
+
