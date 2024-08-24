@@ -405,4 +405,17 @@ class ReservationController extends Controller
             return back()->with('error', 'Une erreur est survenue lors du paiement.');
         }
     }
+
+    /**
+     * Fonction qui permet de récupérer les réservations de l'utilisateur connecté
+     * @return \Illuminate\Contracts\View\View
+     */
+    public function recupReservations()
+    {
+        $reservations = Reservation::where('user_id', auth()->id())
+            ->where('status', StatusEnum::CONFIRMED)
+            ->get();
+
+        return view('reservation.index', compact('reservations'));
+    }
 }
